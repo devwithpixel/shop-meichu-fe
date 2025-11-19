@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
-import { Geist, Geist_Mono, Rubik } from "next/font/google";
+import { Geist, Geist_Mono, Rubik, Outfit } from "next/font/google";
 import "../styles/globals.css";
+import { Toaster } from "@/components/ui/sonner";
 
 const rubik = localFont({
   src: "../../public/fonts/Inter-VariableFont_opsz,wght.ttf",
@@ -21,10 +22,14 @@ const arial = localFont({
   display: "swap",
 });
 
-
-// const rubik = Rubik({ 
+// const rubik = Rubik({
 //   variable: "--font-rubik"
 // });
+
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Shop Meichu",
@@ -39,9 +44,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${rubik.variable} ${inter.variable} ${arial.variable} antialiased`}
+        className={`${rubik.variable} ${inter.variable} ${arial.variable} ${outfit.variable} antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );
