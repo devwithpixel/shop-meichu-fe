@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -86,7 +85,8 @@ export default function StyleSection() {
 
   useGSAP(
     () => {
-      if (window.innerWidth <= 748) return;
+      if (window.innerWidth <= 768) return;
+
       gsap.set(".multi-image-container", { opacity: 0, scale: 0.8 });
 
       let splitTitle = new SplitText(".split-title", {
@@ -180,7 +180,7 @@ export default function StyleSection() {
       mainTimeline
         .fromTo(
           ".single-image-container",
-          { x: -600, scale: 0.5, opacity: 0.5},
+          { x: -600, scale: 0.5, opacity: 0.5 },
           {
             x: 0,
             scale: 1,
@@ -265,131 +265,136 @@ export default function StyleSection() {
   );
 
   return (
-    <div
-      ref={styleRef}
-      className="w-full min-h-screen bg-black text-white px-8 pt-8"
-    >
-      <div>
-        <div className="w-full flex justify-center">
-          <div className="absolute max-w-6xl w-full flex justify-center items-center gap-6">
-            <div className="title-main">
-              <h1 className="text-4xl md:text-6xl font-bold text-slate-200 leading-tight font-rubik flex justify-center items-center text-center">
-                STYLE CRAFTED TO PERFECTION
-              </h1>
-              <p className="mt-8 text-base leading-relaxed opacity-80 font-inter flex justify-center items-center text-center">
-                Discover fashion that fits every mood! Explore our diverse
-                collections, from casual essentials to statement trends. Find
-                the perfect style for every occasion
-              </p>
-            </div>
+    <>
+      {/* Desktop & Ipad */}
+      <div className="hidden md:block" ref={styleRef}>
+        <div className="relative w-full min-h-screen bg-black text-white px-8 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="lg:h-96 h-[900px] lg:w-1/2 w-9/11 rounded-full bg-lime-500/15 blur-3xl"></div>
           </div>
-        </div>
-
-        <div className="relative category z-200 w-full flex justify-center mb-16">
-          <div className="max-w-6xl w-full flex justify-center items-center gap-6">
-            {categories.map((category) => {
-              const isActive = activeCategory === category.id;
-
-              return (
-                <div
-                  key={category.id}
-                  onClick={() => setActiveCategory(category.id)}
-                  className={`rounded-full h-20 flex items-center cursor-pointer transition-all duration-300
-                  ${
-                    isActive
-                      ? "bg-white text-black shadow-md border-2 border-black justify-start w-[40%] gap-4 px-3"
-                      : "bg-white/20 backdrop-blur-lg w-24 border border-white justify-center"
-                  }
-                `}
-                >
-                  <img
-                    src={category.image}
-                    alt={category.title}
-                    className={`object-contain transition-all duration-300
-                    ${
-                      isActive
-                        ? "w-[65px] h-[65px] absolute"
-                        : "w-[70px] h-[70px]"
-                    }
-                  `}
-                  />
-
-                  {isActive && (
-                    <h1 className="text-[26px] font-arial font-normal flex-1 text-center">
-                      {category.title}
-                    </h1>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="relative w-full flex justify-center z-0">
-          <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-4 justify-center items-center px-12">
-            <div className="title-description">
-              <h1 className="split-title text-4xl md:text-5xl font-bold text-white leading-tight font-rubik max-w-[480px]">
-                {activeCategoryData.mainTitle}
-              </h1>
-
-              <p className="mt-8 text-sm leading-relaxed opacity-80 font-inter max-w-2xl">
-                {activeCategoryData.description1}
-              </p>
-
-              <p className="mt-8 text-sm leading-relaxed opacity-80 font-inter">
-                {activeCategoryData.description2}
-              </p>
-            </div>
-
-            <div className="image-transform-trigger relative w-full">
-              <div className="button-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] z-30">
-                <div className="button bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-inter">
-                  <span className="text-btn flex items-center flex-1 font-inter text-sm md:text-base lg:text-lg text-gray-900 truncate">
-                    {activeCategoryData.buttonText}
-                  </span>
-
-                  <Button className="arrow-btn w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
-                    <MdOutlineArrowOutward className="w-5 h-5" />
-                  </Button>
+          <div className="relative z-10">
+            <div className="w-full flex justify-center">
+              <div className="absolute max-w-6xl w-full flex justify-center items-center gap-6">
+                <div className="title-main">
+                  <h1 className="text-4xl md:text-5xl font-bold text-slate-200 leading-tight font-rubik flex justify-center items-center text-center">
+                    STYLE CRAFTED TO PERFECTION
+                  </h1>
+                  <p className="mt-8 text-base leading-relaxed opacity-80 font-inter flex justify-center items-center text-center">
+                    Discover fashion that fits every mood! Explore our diverse
+                    collections, from casual essentials to statement trends.
+                    Find the perfect style for every occasion
+                  </p>
                 </div>
               </div>
+            </div>
 
-              <div className="single-image-container w-full z-10">
-                <div className="relative w-full h-[500px]">
-                  <img
-                    src={activeCategoryData.mainImage}
-                    alt="model"
-                    className="w-full h-[500px] object-cover rounded-3xl"
-                  />
-                </div>
+            <div className="relative category z-40 w-full flex justify-center mb-16">
+              <div className="max-w-6xl w-full flex justify-center items-center gap-6">
+                {categories.map((category) => {
+                  const isActive = activeCategory === category.id;
+
+                  return (
+                    <div
+                      key={category.id}
+                      onClick={() => setActiveCategory(category.id)}
+                      className={`rounded-full h-20 flex items-center cursor-pointer transition-all duration-300
+                      ${
+                        isActive
+                          ? "bg-white text-black shadow-md border-2 border-black justify-start w-[40%] gap-4 px-3"
+                          : "bg-white/20 backdrop-blur-lg w-24 border border-white justify-center"
+                      }
+                    `}
+                    >
+                      <img
+                        src={category.image}
+                        alt={category.title}
+                        className={`object-contain transition-all duration-300
+                        ${
+                          isActive
+                            ? "w-[65px] h-[65px] absolute"
+                            : "w-[70px] h-[70px]"
+                        }
+                      `}
+                      />
+
+                      {isActive && (
+                        <h1 className="text-[26px] font-arial font-normal flex-1 text-center">
+                          {category.title}
+                        </h1>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
+            </div>
 
-              <div className="multi-image-container absolute inset-0 w-full">
-                <div className="px-4 grid grid-cols-2 gap-5 w-full">
-                  <div className="image-item-1 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
-                    <img
-                      src={activeCategoryData.gridImages[0]}
-                      alt="image-1"
-                      className="w-full h-48 object-cover"
-                    />
-                  </div>
+            <div className="relative w-full flex justify-center z-0">
+              <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-4 justify-center items-center px-12">
+                <div className="title-description">
+                  <h1 className="split-title text-4xl md:text-3xl lg:text-5xl font-bold text-white leading-tight font-rubik max-w-[480px]">
+                    {activeCategoryData.mainTitle}
+                  </h1>
 
-                  <div className="image-item-2 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
-                    <img
-                      src={activeCategoryData.gridImages[1]}
-                      alt="image-2"
-                      className="w-full h-48 object-cover"
-                    />
-                  </div>
+                  <p className="mt-8 text-xs lg:text-sm leading-relaxed opacity-80 font-inter max-w-2xl">
+                    {activeCategoryData.description1}
+                  </p>
+
+                  <p className="mt-8 text-xs lg:text-sm leading-relaxed opacity-80 font-inter">
+                    {activeCategoryData.description2}
+                  </p>
                 </div>
 
-                <div className="px-4 mt-28">
-                  <div className="image-item-3 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
-                    <img
-                      src={activeCategoryData.gridImages[2]}
-                      alt="image-3"
-                      className="w-full h-48 object-cover"
-                    />
+                <div className="image-transform-trigger relative w-full">
+                  <div className="button-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] z-30">
+                    <div className="button bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-inter">
+                      <span className="text-btn flex items-center flex-1 font-inter text-sm md:text-base lg:text-lg text-gray-900 truncate">
+                        {activeCategoryData.buttonText}
+                      </span>
+
+                      <Button className="arrow-btn w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
+                        <MdOutlineArrowOutward className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div className="single-image-container w-full z-10">
+                    <div className="relative w-full h-[500px]">
+                      <img
+                        src={activeCategoryData.mainImage}
+                        alt="model"
+                        className="w-full h-[500px] object-cover rounded-3xl"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="multi-image-container absolute inset-0 w-full">
+                    <div className="px-4 grid grid-cols-2 gap-5 w-full">
+                      <div className="image-item-1 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
+                        <img
+                          src={activeCategoryData.gridImages[0]}
+                          alt="image-1"
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
+
+                      <div className="image-item-2 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
+                        <img
+                          src={activeCategoryData.gridImages[1]}
+                          alt="image-2"
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="px-4 mt-28">
+                      <div className="image-item-3 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
+                        <img
+                          src={activeCategoryData.gridImages[2]}
+                          alt="image-3"
+                          className="w-full h-48 object-cover"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -397,6 +402,122 @@ export default function StyleSection() {
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Mobile */}
+      <div className="md:hidden bg-white text-black min-h-screen px-4 py-12">
+        <div className="w-full">
+          <div className="w-full flex justify-center mb-8">
+            <div className="max-w-6xl w-full">
+              <div className="title-main">
+                <h1 className="text-3xl font-medium text-gray-900 leading-tight font-rubik text-center">
+                  STYLE CRAFTED TO PERFECTION
+                </h1>
+                <p className="mt-4 text-xs leading-relaxed text-gray-600 font-inter text-center">
+                  Discover fashion that fits every mood! Explore our diverse
+                  collections, from casual essentials to statement trends. Find
+                  the perfect style for every occasion
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative w-full flex justify-center mb-8">
+            <div className="max-w-6xl w-full flex justify-center items-center gap-3">
+              {categories.map((category) => {
+                const isActive = activeCategory === category.id;
+
+                return (
+                  <div
+                    key={category.id}
+                    onClick={() => setActiveCategory(category.id)}
+                    className={`rounded-full h-16 flex items-center cursor-pointer transition-all duration-300
+                    ${
+                      isActive
+                        ? "bg-black text-white shadow-md border-2 border-black justify-start w-[60%] gap-4 px-3"
+                        : " w-16 justify-center"
+                    }
+                  `}
+                  >
+                    <img
+                      src={category.image}
+                      alt={category.title}
+                      className={`object-contain transition-all duration-300
+                      ${isActive ? "w-12 h-12 absolute" : "w-12 h-12"}
+                    `}
+                    />
+
+                    {isActive && (
+                      <h1 className="text-lg font-arial font-normal flex-1 text-center pl-10">
+                        {category.title}
+                      </h1>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="w-full my-8">
+            <h1 className="text-2xl font-medium text-gray-900 leading-tight font-rubik">
+              {activeCategoryData.mainTitle}
+            </h1>
+            <p className="mt-4 text-xs leading-relaxed text-gray-800 font-inter">
+              {activeCategoryData.description1}
+            </p>
+            <p className="mt-4 text-xs leading-relaxed text-gray-800 font-inter">
+              {activeCategoryData.description2}
+            </p>
+          </div>
+
+          <div className="w-full mb-6">
+            <div className="relative w-full h-64">
+              <img
+                src={activeCategoryData.mainImage}
+                alt="model"
+                className="w-full h-64 object-cover rounded-3xl"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 mb-4">
+            <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
+              <img
+                src={activeCategoryData.gridImages[0]}
+                alt="image-1"
+                className="w-full h-40 object-cover"
+              />
+            </div>
+            <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
+              <img
+                src={activeCategoryData.gridImages[1]}
+                alt="image-2"
+                className="w-full h-40 object-cover"
+              />
+            </div>
+          </div>
+
+          <div className="w-full mb-4">
+            <div className="button bg-white text-black pl-4 pr-2 py-3 rounded-full flex items-center gap-3 w-full font-inter">
+              <span className="flex items-center flex-1 font-inter text-sm text-black truncate">
+                {activeCategoryData.buttonText}
+              </span>
+              <Button className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
+                <MdOutlineArrowOutward className="w-5 h-5" />
+              </Button>
+            </div>
+          </div>
+
+          <div className="w-full">
+            <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
+              <img
+                src={activeCategoryData.gridImages[2]}
+                alt="image-3"
+                className="w-full h-40 object-cover"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }

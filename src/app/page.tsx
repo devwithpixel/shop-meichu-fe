@@ -7,10 +7,11 @@ import StyleSection from "@/components/sections/style-section";
 export default function Home() {
   return (
     <>
-      <AdvantageSection />
-      <StyleSection />
-      <BundleSection />
-      <h1 className="text-9xl font-bold bg-white">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus laudantium quaerat voluptatum dolor accusantium asperiores, beatae repudiandae sed blanditiis possimus cumque amet, ex minus autem, nesciunt at? Quas recusandae commodi tempore veritatis facere repudiandae eligendi. Est voluptas vero quod iusto?</h1>
+      <ScrollSmootherWrapper>
+        <AdvantageSection />
+        <StyleSection />
+        <BundleSection />
+      </ScrollSmootherWrapper>
     </>
   );
 }
