@@ -180,7 +180,7 @@ export default function BundleSection() {
                 ? isEven
                   ? -50
                   : -25
-                : 0; 
+                : 0;
 
             gsap.to(card, {
               y: distance * progress,
@@ -194,7 +194,6 @@ export default function BundleSection() {
     },
     { scope: bundleRef }
   );
-
 
   return (
     <div

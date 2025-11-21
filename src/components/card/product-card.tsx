@@ -142,8 +142,8 @@ export function ProductCard({
       </div>
 
       {/* Mobile */}
-      <div className="relative">
-        <div className="sm:hidden p-4">
+      <div className="relative md:hidden">
+        <div className="p-4">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-rubik text-white text-sm">
