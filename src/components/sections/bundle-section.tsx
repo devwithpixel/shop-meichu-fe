@@ -141,15 +141,9 @@ export default function BundleSection() {
       if (window.innerWidth <= 768) return;
 
       const cards = gsap.utils.toArray(".product-card-item");
-      const totalCards = cards.length;
 
       let cols = 5;
-      if (totalCards === 4) cols = 4;
-      if (totalCards === 3) cols = 3;
-
-      if (cols === 5 && window.innerWidth < 1024) {
-        cols = 2;
-      }
+      if (window.innerWidth < 1024) cols = 3;
 
       ScrollTrigger.create({
         trigger: cardsRef.current,
@@ -168,18 +162,10 @@ export default function BundleSection() {
                 ? isEven
                   ? -120
                   : -60
-                : cols === 4
-                ? isEven
-                  ? -90
-                  : -45
                 : cols === 3
                 ? isEven
                   ? -70
                   : -35
-                : cols === 2
-                ? isEven
-                  ? -50
-                  : -25
                 : 0;
 
             gsap.to(card, {

@@ -131,11 +131,7 @@
 
 html {
   scroll-behavior: smooth;
-}
-
-.bg-red {
-  background-color: #000000;
-}
+} 
 
 .text-outline {
   -webkit-text-stroke: 1px black;

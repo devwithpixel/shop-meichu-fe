@@ -180,7 +180,7 @@ export default function StyleSection() {
       mainTimeline
         .fromTo(
           ".single-image-container",
-          { x: -600, scale: 0.5, opacity: 0.5 },
+          { x: -550, scale: 0.5, opacity: 0.5 },
           {
             x: 0,
             scale: 1,
@@ -284,6 +284,7 @@ export default function StyleSection() {
                     collections, from casual essentials to statement trends.
                     Find the perfect style for every occasion
                   </p>
+                  <p className=""></p>
                 </div>
               </div>
             </div>

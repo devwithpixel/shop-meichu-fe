@@ -74,7 +74,7 @@ export function ProductCard({
   return (
     <div
       ref={selectRef}
-      className="product-card-item rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ease-out cursor-pointer transform-gpu will-change-transform sm:hover:scale-105"
+      className="product-card-item rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ease-out cursor-pointer transform-gpu will-change-transform lg:hover:scale-105 flex flex-col h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         if (!isSelectOpen) {
@@ -82,14 +82,15 @@ export function ProductCard({
         }
       }}
     >
-      <div className="relative w-full h-64 sm:h-80 md:h-96">
+      <div className="relative w-full h-64 sm:h-80 md:h-96 shrink-0">
         <img
           src={image}
           alt={name}
           className="object-cover w-full h-full transition-transform duration-700 ease-out"
         />
 
-        <div className="hidden sm:block absolute bottom-0 left-0 w-full p-4 bg-linear-to-t from-black/80 to-transparent">
+        {/* Desktop */}
+        <div className="hidden lg:block absolute bottom-0 left-0 w-full p-4 bg-linear-to-t from-black/80 to-transparent">
           <div
             className={`flex items-end justify-between transition-all duration-500 ease-in-out ${
               isHovered || isSelectOpen
@@ -106,7 +107,7 @@ export function ProductCard({
               </p>
             </div>
 
-            <div className="w-8 h-8 rounded-full bg-emerald-100 backdrop-blur flex items-center justify-center transition-transform duration-300">
+            <div className="w-8 h-8 rounded-full opacity-65 bg-emerald-100 backdrop-blur flex items-center justify-center transition-transform duration-300">
               <Check className="w-5 h-5 text-gray-600" />
             </div>
           </div>
@@ -115,7 +116,7 @@ export function ProductCard({
             className={`absolute inset-x-4 bottom-4 transition-all duration-500 ease-in-out ${
               isHovered || isSelectOpen
                 ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-2 pointer-events-none"
+                : "opacity-0 translate-y-4 pointer-events-none"
             }`}
           >
             <Select
@@ -139,29 +140,68 @@ export function ProductCard({
             </Select>
           </div>
         </div>
-      </div>
 
-      {/* Mobile */}
-      <div className="relative md:hidden">
-        <div className="p-4">
-          <div className="flex items-start justify-between">
-            <div className="flex-1 min-w-0">
+        {/* iPad  */}
+        <div className="hidden md:block lg:hidden absolute bottom-0 left-0 w-full p-4 bg-linear-to-t from-black/80 to-transparent">
+          <div className="flex items-end justify-between">
+            <div>
               <h3 className="font-semibold text-rubik text-white text-sm">
                 {name}
               </h3>
-              <p className="text-sm text-slate-300 mt-1">
+              <p className="text-sm text-slate-300">
+                ${price.toLocaleString("en-US")} USD
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-end gap-4 transition-all duration-500 ease-in-out mt-3">
+            <Select
+              onValueChange={handleVariantChange}
+              onOpenChange={handleSelectOpenChange}
+              value={selectedVariant}
+            >
+              <SelectTrigger className="w-3/4 rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300">
+                <SelectValue placeholder="Select Variant" />
+              </SelectTrigger>
+              <SelectContent>
+                {variants.map((variant, index) => (
+                  <SelectItem
+                    key={index}
+                    value={`${variant.size} / ($${variant.price})`}
+                  >
+                    {variant.size} / (${variant.price})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <div className="w-1/4 h-12 rounded-full opacity-65 bg-emerald-100 backdrop-blur flex items-center justify-center transition-transform duration-300">
+              <Check className="w-5 h-5 text-gray-600" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile  */}
+      <div className="block md:hidden flex-1 flex-col">
+        <div className="p-3 flex-1">
+          <div className="flex items-start justify-between mb-2">
+            <div className="flex-1 min-w-0">
+              <h3 className="font-semibold text-rubik text-white text-xs line-clamp-2 leading-tight">
+                {name}
+              </h3>
+              <p className="text-xs text-gray-300 mt-1">
                 ${price.toLocaleString("en-US")} USD
               </p>
             </div>
           </div>
         </div>
 
-        <div className="sm:hidden px-4 pb-4">
+        <div className="px-3 pb-3 mt-auto">
           <Select onValueChange={handleVariantChange} value={selectedVariant}>
-            <SelectTrigger className="w-full rounded-full bg-white text-gray-900 font-semibold h-10 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm">
-              <SelectValue placeholder="Select Variant" />
+            <SelectTrigger className="w-full rounded-full bg-gray-100 text-gray-900 font-medium h-9 border-0 hover:bg-gray-200 transition-colors duration-300 text-xs">
+              <SelectValue placeholder="Select Size" />
             </SelectTrigger>
-            <SelectContent className="text-sm">
+            <SelectContent className="text-xs">
               {variants.map((variant, index) => (
                 <SelectItem
                   key={index}
