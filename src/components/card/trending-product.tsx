@@ -26,33 +26,35 @@ export default function TrendingProduct({
   className,
 }: TrendingProductProps) {
   const [selectedImage, setSelectedImage] = useState<string>("");
+  const [activeColorIndex, setActiveColorIndex] = useState<number | null>(null);
 
-  const handleColorClick = (img: string) => {
+  const handleColorClick = (img: string, index: number) => {
     setSelectedImage(img);
+    setActiveColorIndex(index);
   };
 
   return (
-    <div className={`max-w-38 space-y-3.5 ${className || ""}`}>
-      <div className="bg-gray-400 w-fit border border-gray-500 rounded-3xl relative overflow-hidden group">
+    <div className={`w-75 lg:max-w-37 space-y-3 shrink-0 ${className || ""}`}>
+      <div className="bg-gray-400 w-fit border border-gray-500 rounded-xl lg:rounded-3xl relative overflow-hidden group">
         <img
           src={selectedImage || product.images.front}
-          className="w-38 h-45 object-cover rounded-3xl transition-all duration-700 ease-out group-hover:opacity-0 group-hover:scale-105"
+          className="w-75 h-96 lg:w-37 lg:h-45 object-cover rounded-xl lg:rounded-3xl transition-all duration-700 ease-out group-hover:opacity-0 group-hover:scale-105"
           alt=""
         />
         <img
           src={product.images.hover}
-          className="w-38 h-45 object-cover rounded-3xl absolute inset-0 opacity-0 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-105"
+          className="w-75 h-96 lg:w-37 lg:h-45 object-cover rounded-xl lg:rounded-3xl absolute inset-0 opacity-0 transition-all duration-700 ease-out group-hover:opacity-100 group-hover:scale-105"
           alt=""
         />
 
-        <div className="absolute inset-0 flex items-end justify-center text-black text-[10px] font-medium font-inter opacity-0 translate-y-full transition-all duration-400 ease-out group-hover:opacity-100 group-hover:translate-y-0">
-          <div className="w-28 group/quickview transition-all duration-300 ease-out group-hover/quickview:-translate-y-16">
-            <div className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-xl bg-gray-100 cursor-pointer">
-              <h1 className="-mb-2">QUICK VIEW</h1>
-              <FaPlus className="-mb-2" />
+        <div className="absolute inset-0 flex items-end justify-center text-black text-[10px] font-medium font-inter opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-full transition-all duration-400 ease-out lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
+          <div className="w-71.5 lg:w-32 group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16">
+            <div className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-md rounded-b-md lg:rounded-b-none lg:rounded-t-xl bg-gray-100 cursor-pointer mb-1.5 lg:mb-0">
+              <h1 className="lg:-mb-2">QUICK VIEW</h1>
+              <FaPlus className="lg:-mb-2" />
             </div>
 
-            <div className="bg-gray-100 rounded-b-xl px-3 pb-2 max-h-0 transition-all duration-800 ease-out group-hover/quickview:max-h-20 group-hover/quickview:mb-2">
+            <div className="hidden lg:block bg-gray-100 rounded-b-xl px-3 pb-2 max-h-0 transition-all duration-800 ease-out group-hover/quickview:max-h-20 group-hover/quickview:mb-2">
               <div className="pt-2">
                 <Separator className="mb-3" />
                 <div className="flex gap-1.5 flex-wrap">
@@ -72,23 +74,27 @@ export default function TrendingProduct({
       </div>
 
       <div className="text-center px-1.5 space-y-1.5 font-inter group/info relative">
-        <div className="transition-all space-y-1.5 duration-300 ease-out group-hover/info:opacity-0">
+        <div className="transition-all text-center space-y-1.5 duration-300 ease-out lg:group-hover/info:opacity-0">
           <h1 className="text-xs font-semibold">{product.title}</h1>
           <p className="text-xs">${product.price.toLocaleString()} USD</p>
         </div>
 
-        <div className="absolute inset-x-0 top-0 flex justify-center opacity-0 transition-all duration-300 ease-out group-hover/info:opacity-100">
-          <div className="flex items-center gap-1.5 overflow-x-auto px-2 py-1 max-w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+        <div className="flex justify-center lg:absolute lg:inset-x-0 lg:top-0 lg:opacity-0 transition-all duration-300 ease-out lg:group-hover/info:opacity-100">
+          <div className="flex items-center gap-1.5 overflow-x-auto px-2 py-1 max-w-full scrollbar-hide">
             {product.colors.map((color, index) => (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
                   <div
-                    className="bg-gray-400 border border-gray-300 cursor-pointer shrink-0"
-                    onClick={() => handleColorClick(color.img)}
+                    className={`bg-gray-400 cursor-pointer rounded-sm shrink-0 transition-colors ${
+                      activeColorIndex === index
+                        ? "border border-black scale-110"
+                        : "border border-gray-300"
+                    }`}
+                    onClick={() => handleColorClick(color.img, index)}
                   >
                     <img
                       src={color.img}
-                      className="w-8 h-8 object-cover"
+                      className="w-8 h-8 object-cover rounded-sm"
                       alt=""
                     />
                   </div>
