@@ -89,19 +89,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -117,19 +121,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -145,19 +153,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -173,19 +185,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -201,19 +217,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -229,19 +249,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -257,19 +281,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
@@ -285,19 +313,23 @@ export default function TrendingSection() {
       colors: [
         {
           label: "Green",
-          img: "/assets/image/arya/arya-green.png",
+          bgImg: "/assets/image/arya/arya-green.png",
+          bgColor: "bg-green-500",
         },
         {
           label: "Orange",
-          img: "/assets/image/arya/arya-orange.png",
+          bgImg: "/assets/image/arya/arya-orange.png",
+          bgColor: "bg-orange-500",
         },
         {
           label: "Blue",
-          img: "/assets/image/arya/arya-blue.png",
+          bgImg: "/assets/image/arya/arya-blue.png",
+          bgColor: "bg-blue-500",
         },
         {
           label: "Navy ",
-          img: "/assets/image/arya/arya-deepblue.png",
+          bgImg: "/assets/image/arya/arya-deepblue.png",
+          bgColor: "bg-blue-900",
         },
       ],
     },
