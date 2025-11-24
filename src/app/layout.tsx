@@ -1,14 +1,9 @@
-import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Geist, Geist_Mono, Rubik, Outfit } from "next/font/google";
 import "../styles/globals.css";
+import localFont from "next/font/local";
+import { Rubik, Outfit } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
-
-const rubik = localFont({
-  src: "../../public/fonts/Inter-VariableFont_opsz,wght.ttf",
-  variable: "--font-rubik",
-  display: "swap",
-});
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import type { Metadata } from "next";
 
 const inter = localFont({
   src: "../../public/fonts/Inter-VariableFont_opsz,wght.ttf",
@@ -22,9 +17,9 @@ const arial = localFont({
   display: "swap",
 });
 
-// const rubik = Rubik({
-//   variable: "--font-rubik"
-// });
+const rubik = Rubik({
+  variable: "--font-rubik",
+});
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -45,8 +40,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${rubik.variable} ${inter.variable} ${arial.variable} ${outfit.variable} antialiased`}
+        suppressHydrationWarning
       >
-        {children}
+        <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster />
       </body>
     </html>

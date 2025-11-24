@@ -11,14 +11,23 @@ const compat = new FlatCompat({
 
 const eslintConfig = [
   ...compat.config({
-      extends:("next","next/core-web-vitals", "next/typescript", "prettier"),
-      rules: {
-        semi: ["error"],
-        quotes: ["error","double"],
-        "prefer-arrow-callback" : ["error"],
-        "prefer-template" : ["error"]
-      }
-    }),
+    extends:
+      ("next",
+      "next/core-web-vitals",
+      "next/typescript",
+      "prettier",
+      "eslint:recommended",
+      "plugin:react/recommended",
+      "plugin:@typescript-eslint/recommended"),
+    parser: "@typescript-eslint/parser",
+    rules: {
+      semi: ["error"],
+      quotes: ["error", "double"],
+      "prefer-arrow-callback": ["error"],
+      "prefer-template": ["error"],
+      "@typescript-eslint/no-explicit-any": "off",
+    },
+  }),
   {
     ignores: [
       "node_modules/**",
