@@ -15,6 +15,7 @@ interface FavoriteProps {
   image: string;
   name: string;
   price: number;
+  bgColor: string; 
 }
 
 export default function FavoriteSection() {
@@ -22,36 +23,49 @@ export default function FavoriteSection() {
   const cardTriggerRef = useRef(null);
   const cardMainRef = useRef(null);
 
+  const bgCardColor = [
+    "#f5e98c", // lemon
+    "#b1b8f2", // lavender
+    "#d08ed4", // electric
+    "#addd35", // citrus
+    "#d68ca7", // rose
+  ];
+
   const favorites: FavoriteProps[] = [
     {
       id: 1,
       name: "Summer Shirt",
       price: 1200.0,
       image: "/assets/image/1.webp",
+      bgColor: bgCardColor[0],
     },
     {
       id: 2,
       name: "Women Sweater",
       price: 4500.0,
       image: "/assets/image/1.webp",
+      bgColor: bgCardColor[1],
     },
     {
       id: 3,
       name: "loose T-shirt",
       price: 3050.0,
       image: "/assets/image/1.webp",
+      bgColor: bgCardColor[2],
     },
     {
       id: 4,
       name: "Wool Overcout",
       price: 4500.0,
       image: "/assets/image/1.webp",
+      bgColor: bgCardColor[3],
     },
     {
       id: 5,
       name: "Sports Bra",
       price: 4500.0,
       image: "/assets/image/1.webp",
+      bgColor: bgCardColor[4],
     },
   ];
 
@@ -71,14 +85,6 @@ export default function FavoriteSection() {
     "bg-rose",
   ];
 
-  const bgColorValues = [
-    "#f5e98c", // lemon
-    "#b1b8f2", // lavender
-    "#d08ed4", // electric
-    "#addd35", // citrus
-    "#d68ca7", // rose
-  ];
-
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
@@ -90,6 +96,10 @@ export default function FavoriteSection() {
       gsap.set(".border-main", { opacity: 0 });
       gsap.set(".card-color-trigger", {
         opacity: 0,
+      });
+
+      gsap.set(".card-main", {
+        backgroundColor: "#ffffff",
       });
 
       gsap.set(cards, {
@@ -167,12 +177,12 @@ export default function FavoriteSection() {
             opacity: 0,
           })
           .to(".card-main", {
-            backgroundColor: (i) => bgColorValues[i],
+            backgroundColor: (i) => bgCardColor[i],
             duration: 0.5,
           })
           .to(".card-color-trigger", {
             zIndex: 0,
-          })
+          });
       });
 
       mm.add("(min-width: 1020px) and (max-width: 1301px)", () => {
@@ -228,12 +238,12 @@ export default function FavoriteSection() {
             opacity: 0,
           })
           .to(".card-main", {
-            backgroundColor: (i) => bgColorValues[i],
+            backgroundColor: (i) => bgCardColor[i],
             duration: 0.5,
           })
           .to(".card-color-trigger", {
             zIndex: 0,
-          })
+          });
       });
 
       mm.add("(min-width: 749px) and (max-width: 1020px)", () => {
@@ -289,12 +299,12 @@ export default function FavoriteSection() {
             opacity: 0,
           })
           .to(".card-main", {
-            backgroundColor: (i) => bgColorValues[i],
+            backgroundColor: (i) => bgCardColor[i],
             duration: 0.5,
           })
           .to(".card-color-trigger", {
             zIndex: 0,
-          })
+          });
       });
 
       ScrollTrigger.create({
@@ -366,7 +376,7 @@ export default function FavoriteSection() {
 
                 <div className="image-trigger-favorite relative w-full">
                   <div ref={cardTriggerRef} className="">
-                    <div className="card-color-trigger md:grid hidden absolute inset-0  p-3 gap-3 z-10">
+                    <div className="card-color-trigger hidden md:grid absolute inset-0 p-3 gap-3 z-10">
                       {favorites.map((favorite, index) => {
                         if (favorite.id > 5) {
                           return null;
@@ -384,8 +394,8 @@ export default function FavoriteSection() {
                       })}
                     </div>
 
-                    <div className="border-main border border-gray-500 rounded-3xl">
-                      <div className="grid gap-3 relative p-3 z-0">
+                    <div className="border-main md:border border-gray-500 rounded-3xl">
+                      <div className="grid gap-3 relative md:p-3 p-0 z-0">
                         {favorites.map((favorite, index) => {
                           if (favorite.id > 5) {
                             return null;
@@ -394,7 +404,10 @@ export default function FavoriteSection() {
                             <div
                               key={`main-${favorite.id}`}
                               ref={cardMainRef}
-                              className={`card-main flex items-center gap-5 rounded-3xl p-2 bg-white`}
+                              className={`card-main flex items-center gap-5 rounded-3xl p-2`}
+                              style={{
+                                backgroundColor: favorite.bgColor,
+                              }}
                             >
                               <img
                                 className="aspect-square object-cover rounded-3xl w-20 h-20 md:w-24 md:h-24"
