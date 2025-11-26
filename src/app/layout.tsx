@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { Geist, Geist_Mono, Rubik, Outfit } from "next/font/google";
 import "../styles/globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import Navbar from "@/components/navbar/navbar";
 
 const rubik = localFont({
   src: "../../public/fonts/Rubik-VariableFont_wght.ttf",
@@ -46,6 +47,7 @@ export default function RootLayout({
       <body
         className={`${rubik.variable} ${inter.variable} ${arial.variable} ${outfit.variable} antialiased`}
       >
+        <Navbar/>
         {children}
         <Toaster />
       </body>
