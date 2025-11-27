@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   ImageCrop,
@@ -16,7 +16,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Pencil, X } from "lucide-react";
-import { base64ToFile, fetchImageAsFile, fileToBase64 } from "@/lib/utils";
+import {
+  base64ToFile,
+  bytesToMB,
+  fetchImageAsFile,
+  fileToBase64,
+} from "@/lib/utils";
 
 import type {
   ControllerRenderProps,
@@ -24,6 +29,7 @@ import type {
   FieldValues,
 } from "react-hook-form";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { maxFileSize } from "@/config/form";
 
 export function ImageField<
   TFieldValues extends FieldValues = FieldValues,
@@ -40,6 +46,10 @@ export function ImageField<
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const maxImageSizeReadable = useMemo(
+    () => bytesToMB(maxFileSize),
+    [maxFileSize]
+  );
 
   useEffect(() => {
     if (!defaultValue) return;
@@ -124,7 +134,7 @@ export function ImageField<
             <DialogHeader>
               <DialogTitle>Edit image</DialogTitle>
             </DialogHeader>
-            <ImageCropContent className="max-w-md" />
+            <ImageCropContent className="w-fit mx-auto" />
             <DialogFooter>
               <ImageCropApply asChild>
                 <Button size="sm" variant="outline">
@@ -153,11 +163,16 @@ export function ImageField<
       </ImageCrop>
     </>
   ) : (
-    <Input
-      accept="image/*"
-      onChange={handleFileChange}
-      maxLength={1}
-      type="file"
-    />
+    <>
+      <Input
+        accept="image/*"
+        onChange={handleFileChange}
+        maxLength={1}
+        type="file"
+      />
+      <p className="text-xs text-muted-foreground">
+        Note: Max file size is {maxImageSizeReadable} MB
+      </p>
+    </>
   );
 }

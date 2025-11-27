@@ -1,5 +1,5 @@
-import { CreateCategoryForm } from "@/components/form/admin/create-form";
+import { UpsertCategoryForm } from "@/components/form/admin/forms";
 
 export default async function Page() {
-  return <CreateCategoryForm />;
+  return <UpsertCategoryForm type="create" />;
 }

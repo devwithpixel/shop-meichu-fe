@@ -1,7 +1,7 @@
 import "../styles/globals.css";
 import localFont from "next/font/local";
 import { Rubik, Outfit } from "next/font/google";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { Metadata } from "next";
 
@@ -43,7 +43,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <NuqsAdapter>{children}</NuqsAdapter>
-        <Toaster />
+        <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
   );

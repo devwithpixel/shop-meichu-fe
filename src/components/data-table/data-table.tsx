@@ -25,6 +25,8 @@ export function DataTable<TData>({
   className,
   ...props
 }: DataTableProps<TData>) {
+  "use no memo";
+
   return (
     <div
       className={cn("flex w-full flex-col gap-2.5 overflow-auto", className)}

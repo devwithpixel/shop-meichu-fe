@@ -28,6 +28,7 @@ export function DataTableViewOptions<TData>({
   table,
   ...props
 }: DataTableViewOptionsProps<TData>) {
+  "use no memo";
   const columns = React.useMemo(
     () =>
       table
@@ -42,22 +43,21 @@ export function DataTableViewOptions<TData>({
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button
-          aria-label="Toggle columns"
-          role="combobox"
-          variant="outline"
-          size="sm"
-          className="ml-auto hidden h-8 font-normal lg:flex"
-        >
+        <Button aria-label="Toggle columns" role="combobox" variant="outline">
           <Settings2 className="text-muted-foreground" />
           View
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-44 p-0" {...props}>
+      <PopoverContent className="w-48 p-3 border-gray-800!" {...props}>
         <Command>
-          <CommandInput placeholder="Search columns..." />
+          <CommandInput
+            className="text-white"
+            placeholder="Search columns..."
+          />
           <CommandList>
-            <CommandEmpty>No columns found.</CommandEmpty>
+            <CommandEmpty className="text-white">
+              No columns found.
+            </CommandEmpty>
             <CommandGroup>
               {columns.map((column) => (
                 <CommandItem
@@ -65,6 +65,7 @@ export function DataTableViewOptions<TData>({
                   onSelect={() =>
                     column.toggleVisibility(!column.getIsVisible())
                   }
+                  className="text-white data-[selected=true]:text-gray-900!"
                 >
                   <span className="truncate">
                     {column.columnDef.meta?.label ?? column.id}

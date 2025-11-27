@@ -6,6 +6,11 @@ export default async function Page() {
     <DataTableFetcher
       columns={categoriesColumn}
       model="categories"
+      populate={{
+        products: {
+          count: true,
+        },
+      }}
       enableDelete
     />
   );

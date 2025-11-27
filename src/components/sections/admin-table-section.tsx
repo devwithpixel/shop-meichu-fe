@@ -1,26 +1,19 @@
 "use client";
+"use no memo";
 
 import Link from "next/link";
 import { DataTable } from "@/components/data-table/data-table";
 import { DataTableToolbar } from "@/components/data-table/data-table-toolbar";
+import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "../ui/skeleton";
 import { Plus } from "lucide-react";
 import { useDataTable } from "@/hooks/use-data-table";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { parseAsInteger, parseAsJson, useQueryStates } from "nuqs";
 import { getAllItem } from "@/actions/admin";
 import { deleteItem as deleteItemAdmin } from "@/actions/admin";
 
-import type { StrapiPagination } from "@/types/strapi/pagination";
-import type { ColumnDef } from "@tanstack/react-table";
 import type { ColumnWithDelete, ColumnWithoutDelete } from "@/types/data-table";
-
-function getSortKey(sorts: { id: string; desc: boolean }[]): string {
-  return sorts
-    .map((s, i) => `sort[${i}][id]=${s.id}-sort[${i}][desc]=${s.desc}`)
-    .join("-");
-}
 
 interface DataTableFetcherWithDelete<T> {
   columns: ColumnWithDelete<T>;
@@ -44,7 +37,15 @@ function useTableFetcher<T>({
   model,
   populate,
 }: Pick<DataTableFetchProps<T>, "model" | "populate">) {
-  const [counter, setCounter] = useState(0);
+  const counterRef = useRef(0);
+  const [data, setData] = useState<T[]>([]);
+  const [pagination, setPagination] = useState({
+    pageCount: -1,
+    page: 1,
+    pageSize: 1,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
   const [{ sort, page, perPage }] = useQueryStates({
     sort: parseAsJson<Array<{ id: string; desc: boolean }>>((value) => {
       if (
@@ -65,12 +66,8 @@ function useTableFetcher<T>({
     perPage: parseAsInteger.withDefault(20),
   });
 
-  const [data, setData] = useState<T[]>([]);
-  const [pagination, setPagination] = useState<StrapiPagination | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-
   const deleteItem = () => {
-    setCounter(counter + 1);
+    counterRef.current++;
   };
 
   useEffect(() => {
@@ -92,8 +89,12 @@ function useTableFetcher<T>({
           strapiSort.length > 0 ? strapiSort : undefined
         );
 
-        setData(result.data);
-        setPagination(result.meta?.pagination || null);
+        setData([...result.data]);
+        setPagination({
+          pageCount: result.meta?.pagination?.pageCount || -1,
+          page: result.meta?.pagination?.page || 1,
+          pageSize: result.meta?.pagination?.pageSize || 1,
+        });
       } catch (error) {
         console.error("Failed to fetch products:", error);
         throw error;
@@ -103,17 +104,13 @@ function useTableFetcher<T>({
     };
 
     fetchData();
-  }, [sort, page, perPage, model, populate, counter]);
+  }, [sort, page, perPage, model, populate, counterRef.current]);
 
   return {
     data,
     pagination,
     isLoading,
     deleteItem,
-    counter,
-    sort,
-    page,
-    perPage,
   };
 }
 
@@ -123,65 +120,42 @@ export function DataTableFetcher<T>({
   populate,
   enableDelete,
 }: DataTableFetchProps<T>) {
-  const {
-    data,
-    pagination,
-    isLoading,
-    deleteItem,
-    counter,
-    sort,
-    page,
-    perPage,
-  } = useTableFetcher<T>({
+  "use no memo";
+
+  const { data, pagination, isLoading, deleteItem } = useTableFetcher<T>({
     model,
     populate,
   });
 
-  const resolvedColumns = enableDelete
-    ? columns(async (identifier: string, documentId: string) => {
-        const result = await deleteItemAdmin(identifier, documentId);
-        if (result.type === "success") deleteItem();
-      })
-    : columns();
-
-  const key = useMemo(
-    () => `table-${counter}-${getSortKey(sort)}-${page}-${perPage}`,
-    [counter, sort, page, perPage]
+  const resolvedColumns = useMemo(
+    () =>
+      enableDelete
+        ? columns(async (identifier: string, documentId: string) => {
+            const result = await deleteItemAdmin(identifier, documentId);
+            if (result.type === "success") deleteItem();
+          })
+        : columns(),
+    [enableDelete, columns, deleteItem]
   );
-  return data.length !== 0 || !isLoading ? (
-    <AdminTableSection
-      key={key}
-      data={data}
-      columns={resolvedColumns}
-      pagination={pagination!}
-      model={model}
-    />
-  ) : (
-    <Skeleton className="w-full h-screen" />
-  );
-}
 
-export default function AdminTableSection<T>({
-  data,
-  columns,
-  pagination,
-  model,
-}: {
-  data: T[];
-  columns: ColumnDef<T>[];
-  pagination: StrapiPagination;
-  model: string;
-}) {
   const { table } = useDataTable({
-    data,
-    columns,
+    data: data,
+    columns: resolvedColumns,
     pageCount: pagination.pageCount,
     initialState: {
       pagination: { pageIndex: pagination.page, pageSize: pagination.pageSize },
     },
   });
 
-  return (
+  useEffect(() => {
+    table.setState((oldValue) => {
+      oldValue.pagination.pageIndex = pagination.page - 1;
+      oldValue.pagination.pageSize = pagination.pageSize;
+      return oldValue;
+    });
+  }, [pagination]);
+
+  return data.length !== 0 || !isLoading ? (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
         <Button asChild>
@@ -192,5 +166,7 @@ export default function AdminTableSection<T>({
         </Button>
       </DataTableToolbar>
     </DataTable>
+  ) : (
+    <DataTableSkeleton columnCount={resolvedColumns.length} />
   );
 }

@@ -81,3 +81,22 @@ export async function fetchImageAsFile(
 export function bytesToMB(bytes: number) {
   return bytes / (1024 * 1024);
 }
+
+export function getAvatarInitials(username: string): string {
+  if (!username) return "";
+
+  const cleaned = username.trim();
+  if (!cleaned) return "";
+
+  const parts = cleaned.split(/\s+/);
+
+  if (parts.length >= 2) {
+    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+
+  if (cleaned.length === 1) {
+    return cleaned[0].toUpperCase();
+  }
+
+  return (cleaned[0] + cleaned[1]).toUpperCase();
+}

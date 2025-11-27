@@ -32,7 +32,9 @@ export function SidebarNavigationGroup({
 }
 
 function SidebarMenuLink({ item }: { item: SidebarSubNavigationProps }) {
+  "use no memo";
   const { setOpenMobile } = useSidebar();
+
   return (
     <SidebarMenuItem>
       <SidebarMenuButton

@@ -14,10 +14,42 @@ import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 import Image from "@/components/global/image";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 import type { Product } from "@/types/strapi/models/product";
 import type { Category } from "@/types/strapi/models/category";
 import type { StrapiImage } from "@/types/strapi/image";
+
+function ActionMenu({
+  model,
+  row,
+  deleteAction,
+}: {
+  model: string;
+  row: Row<Category>;
+  deleteAction: (identifier: string, documentId: string) => Promise<void>;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon">
+          <MoreHorizontal className="h-4 w-4" />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="border-gray-800 text-white">
+        <DropdownMenuItem asChild>
+          <Link href={`/admin/${model}/edit/${row.original.slug}`}>Edit</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={() => deleteAction(model, row.original.documentId)}
+        >
+          Delete
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export const categoriesColumn: ColumnWithDelete<Category> = (
   deleteAction: (identifier: string, documentId: string) => Promise<void>
@@ -31,6 +63,9 @@ export const categoriesColumn: ColumnWithDelete<Category> = (
       ),
       enableColumnFilter: true,
       size: 12,
+      meta: {
+        label: "ID",
+      },
     },
     {
       id: "name",
@@ -40,6 +75,9 @@ export const categoriesColumn: ColumnWithDelete<Category> = (
       ),
       cell: ({ row }) => <div>{row.getValue("name")}</div>,
       enableColumnFilter: true,
+      meta: {
+        label: "Name",
+      },
     },
     {
       id: "slug",
@@ -48,37 +86,36 @@ export const categoriesColumn: ColumnWithDelete<Category> = (
         <DataTableColumnHeader column={column} label="Slug" />
       ),
       enableColumnFilter: true,
+      meta: {
+        label: "Slug",
+      },
+    },
+    {
+      id: "products",
+      accessorKey: "products",
+      header: ({ column }) => (
+        <DataTableColumnHeader column={column} label="Total Products" />
+      ),
+      cell: ({ row }) => {
+        const products = row.getValue("products") as {
+          count: number;
+        };
+        return <div>{products.count}</div>;
+      },
+      enableColumnFilter: true,
+      meta: {
+        label: "Total Products",
+      },
     },
     {
       id: "actions",
-      cell: ({ row }) => {
-        return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreHorizontal className="h-4 w-4" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem asChild>
-                <Link href={`/admin/categories/edit/${row.original.slug}`}>
-                  Edit
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                variant="destructive"
-                onClick={() =>
-                  deleteAction("categories", row.original.documentId)
-                }
-              >
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        );
-      },
+      cell: ({ row }) => (
+        <ActionMenu model="categories" row={row} deleteAction={deleteAction} />
+      ),
       size: 32,
+      meta: {
+        label: "Actions",
+      },
     },
   ];
 };
@@ -94,6 +131,9 @@ export const productsColumn: ColumnWithDelete<Product> = (
         <DataTableColumnHeader column={column} label="ID" />
       ),
       enableColumnFilter: true,
+      meta: {
+        label: "ID",
+      },
     },
     {
       id: "name",
@@ -103,6 +143,9 @@ export const productsColumn: ColumnWithDelete<Product> = (
       ),
       cell: ({ row }) => <div>{row.getValue("name")}</div>,
       enableColumnFilter: true,
+      meta: {
+        label: "Name",
+      },
     },
     {
       id: "price",
@@ -112,6 +155,9 @@ export const productsColumn: ColumnWithDelete<Product> = (
       ),
       cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
       enableColumnFilter: true,
+      meta: {
+        label: "Price",
+      },
     },
     {
       id: "stock",
@@ -123,6 +169,9 @@ export const productsColumn: ColumnWithDelete<Product> = (
         <div>{(row.getValue("stock") as number).toLocaleString()}</div>
       ),
       enableColumnFilter: true,
+      meta: {
+        label: "Stock",
+      },
     },
     {
       id: "image",
@@ -142,33 +191,19 @@ export const productsColumn: ColumnWithDelete<Product> = (
       },
       enableSorting: false,
       enableColumnFilter: false,
+      meta: {
+        label: "Image",
+      },
     },
     {
       id: "actions",
       cell: ({ row }) => (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal className="h-4 w-4" />
-              <span className="sr-only">Open menu</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem asChild>
-              <Link href={`/admin/products/edit/${row.original.slug}`}>
-                Edit
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              variant="destructive"
-              onClick={() => deleteAction("products", row.original.documentId)}
-            >
-              Delete
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <ActionMenu model="products" row={row} deleteAction={deleteAction} />
       ),
       size: 32,
+      meta: {
+        label: "Actions",
+      },
     },
   ];
 };

@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/card";
 import { Field } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
+import { useRef } from "react";
 
 interface ModelProps {
   singular: string;
@@ -58,6 +59,7 @@ export default function UpsertForm<
     z.core.$strip
   >,
 >(props: UpsertFormProps<TData, TForm>) {
+  const formElemRef = useRef<HTMLFormElement>(null);
   const form = useForm<TData>({
     resolver: zodResolver(props.formSchema) as unknown as Resolver<
       TData,
@@ -78,6 +80,7 @@ export default function UpsertForm<
 
       <CardContent>
         <form
+          ref={formElemRef}
           id={`form-${props.id}`}
           onSubmit={form.handleSubmit((data) => props.onSubmit(form, data))}
         >
@@ -91,7 +94,7 @@ export default function UpsertForm<
             Reset
           </Button>
           <Button type="submit" form={`form-${props.id}`}>
-            Submit
+            {props.type === "create" ? "Create" : "Update"}
           </Button>
         </Field>
       </CardFooter>

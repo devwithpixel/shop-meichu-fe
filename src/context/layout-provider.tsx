@@ -12,7 +12,7 @@ const LAYOUT_VARIANT_COOKIE_NAME = "layout_variant";
 const LAYOUT_COOKIE_MAX_AGE = 60 * 60 * 24 * 7; // 7 days
 
 // Default values
-const DEFAULT_VARIANT = "left";
+const DEFAULT_VARIANT = "inset";
 const DEFAULT_COLLAPSIBLE = "icon";
 
 type LayoutContextType = {
@@ -77,7 +77,6 @@ export function LayoutProvider({ children }: LayoutProviderProps) {
 }
 
 // Define the hook for the provider
-// eslint-disable-next-line react-refresh/only-export-components
 export function useLayout() {
   const context = useContext(LayoutContext);
   if (!context) {

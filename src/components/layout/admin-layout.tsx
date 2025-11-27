@@ -1,17 +1,23 @@
 "use client";
 
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import {
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import { LayoutProvider } from "@/context/layout-provider";
-import AdminSidebar from "@/components/sidebar/admin-sidebar";
-import React from "react";
 import { User } from "@/types/strapi/user";
+import { ProfileDropdown } from "@/components/dropdown/profile-dropdown";
+import AdminSidebar from "@/components/sidebar/admin-sidebar";
+
+import type { ReactNode } from "react";
 
 export default function AdminLayout({
   user,
   children,
 }: {
   user: User;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }) {
   return (
     <LayoutProvider>
@@ -19,6 +25,10 @@ export default function AdminLayout({
         <div className="relative flex min-h-screen w-full dark font-outfit bg-background-admin text-white">
           <AdminSidebar user={user} />
           <SidebarInset className="bg-background-admin! flex flex-col p-8">
+            <div className="flex items-center justify-between mb-5">
+              <SidebarTrigger />
+              <ProfileDropdown user={user} />
+            </div>
             {children}
           </SidebarInset>
         </div>

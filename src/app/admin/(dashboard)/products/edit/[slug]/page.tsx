@@ -1,5 +1,5 @@
 import { getAllItem, getSpecificItem } from "@/actions/admin";
-import { UpdateProductForm } from "@/components/form/admin/update-form";
+import { UpsertProductForm } from "@/components/form/admin/forms";
 
 import type { Category } from "@/types/strapi/models/category";
 import type { Product } from "@/types/strapi/models/product";
@@ -13,5 +13,7 @@ export default async function Page({
   const { data } = await getSpecificItem<Product>("products", slug);
   const { data: categories } = await getAllItem<Category>("categories");
 
-  return <UpdateProductForm categories={categories} product={data} />;
+  return (
+    <UpsertProductForm type="update" data={data} categories={categories} />
+  );
 }

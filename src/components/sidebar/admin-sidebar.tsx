@@ -17,6 +17,7 @@ import type { User } from "@/types/strapi/user";
 
 export default function AdminSidebar({ user }: { user: User }) {
   const { collapsible, variant } = useLayout();
+
   return (
     <Sidebar collapsible={collapsible} variant={variant}>
       <SidebarHeader>
