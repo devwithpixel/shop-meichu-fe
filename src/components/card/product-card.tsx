@@ -82,7 +82,7 @@ export function ProductCard({
   return (
     <div
       ref={selectRef}
-      className="product-card-item rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ease-out cursor-pointer transform-gpu will-change-transform lg:hover:scale-105 flex flex-col h-full bg-gray-900/50 backdrop-blur-sm border border-gray-800/50"
+      className="product-card-item rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ease-out cursor-pointer transform-gpu will-change-transform lg:hover:scale-105 flex flex-col h-full"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         if (!isSelectOpen) {
@@ -94,7 +94,7 @@ export function ProductCard({
         <img
           src={image}
           alt={name}
-          className="object-cover w-full h-full transition-transform duration-700 ease-out"
+          className="object-cover w-full h-full transition-transform duration-700 ease-out rounded-2xl"
         />
 
         {/* Desktop */}
@@ -190,7 +190,7 @@ export function ProductCard({
       </div>
 
       {/* Mobile */}
-      <div className="block md:hidden flex-1 flex-col">
+      <div className="block md:hidden flex-1 flex-col bg-transparent">
         <div className="p-4 flex-1">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">

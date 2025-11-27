@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <>
       <ScrollSmootherWrapper>
-        <AdvantageSection />
+        {/* <AdvantageSection /> */}
         <StyleSection />
         <BundleSection />
         <FavoriteSection />

@@ -47,8 +47,8 @@ export default function RootLayout({
       <body
         className={`${rubik.variable} ${inter.variable} ${arial.variable} ${outfit.variable} antialiased`}
       >
-        <Navbar/>
-        {children}
+        <Navbar />
+        <main className="pt-16 pb-16 sm:pb-0">{children}</main>
         <Toaster />
       </body>
     </html>

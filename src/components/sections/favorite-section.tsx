@@ -122,7 +122,7 @@ export default function FavoriteSection() {
           scrub: 2,
           toggleActions: "play none none reverse",
           invalidateOnRefresh: true,
-          markers: true,
+          // markers: true,
         },
       });
       mm.add("(min-width: 1300px)", () => {
