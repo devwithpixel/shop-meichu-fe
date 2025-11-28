@@ -1,13 +1,10 @@
 "use client";
-
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { IoIosArrowRoundUp } from "react-icons/io";
 import { useGSAP } from "@gsap/react";
-
 gsap.registerPlugin(ScrollTrigger);
-
 export default function BestSellerSection() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -135,7 +132,6 @@ export default function BestSellerSection() {
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
-
   return (
     <>
       <div
@@ -156,13 +152,13 @@ export default function BestSellerSection() {
           </div>
         </div>
         <div className="videoContainer relative md:h-screen lg:w-full lg:h-full md:z-10 flex justify-center items-start md:items-center mt-8 md:mt-0">
-          <div className="absolute inset-0 flex items-center justify-center z-0 md:-z-10">
+          <div className="absolute inset-0 flex items-center justify-center z-0">
             <div className="w-9/11 md:w-3/4 h-120 md:h-196 lg:h-206 bg-lime-500/20 blur-3xl rounded-full "></div>
           </div>
-          <div className="relative flex justify-center items-center">
+          <div className="relative flex justify-center items-center lg:static lg:block">
             <video
               ref={videoRef}
-              className="w-full h-96 md:w-full md:h-110 lg:absolute lg:inset-0 lg:w-full lg:h-full px-4 md:px-0 object-cover z-10 md:z-0"
+              className="relative z-10 w-full h-96 md:w-full md:h-110 lg:absolute lg:inset-0 lg:w-full lg:h-full px-4 md:px-0 object-cover"
               loop
               muted
               playsInline
@@ -178,7 +174,6 @@ export default function BestSellerSection() {
             </button>
           </div>
         </div>
-
         <div className="running-wrapper absolute top-150 md:top-0 md:left-0 w-full h-full md:overflow-hidden z-0 pointer-events-none space-y-1 md:space-y-2 lg:space-y-6 pt-16">
           <div className="row -rotate-5">
             <div className="running-right flex flex-row-reverse text-nowrap">
