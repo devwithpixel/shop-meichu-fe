@@ -88,19 +88,22 @@ export default function AdvantageSection() {
   return (
     <section
       ref={sectionRef}
-      className="w-full min-h-fit sm:min-h-screen bg-gray-100 flex flex-col items-center justify-center overflow-x-hidden sm:h-screen sm:overflow-hidden"
+      className="w-full min-h-screen bg-gray-100 overflow-x-hidden sm:h-screen sm:overflow-hidden"
     >
       <div className="w-full flex flex-col sm:flex-row sm:items-center py-10">
-        <div className="leftBox min-w-90 lg:min-w-[28%] max-w-86 sm:max-w-96 space-y-5 mb-10 sm:mb-0 mx-5 lg:ml-16 md:mr-30 lg:mr-20">
-          <h1 className="font-medium text-3xl md:text-4xl lg:text-5xl font-rubik">
+        {/* LEFT BOX */}
+        <div className="leftBox sm:min-w-[28%] max-w-86 sm:max-w-96 space-y-5 mb-10 sm:mb-0 mx-5 sm:ml-16 sm:mr-20">
+          <h1 className="font-medium text-3xl sm:text-5xl font-rubik">
             <span className="text-transparent text-outline">FASHION</span> THAT
             FLOWS WITH THE SEASONS
           </h1>
+
           <p className="font-rubik text-xs">
             Explore our latest collection of timeless fashion. From classic
             styles to modern trends, find the perfect look for every season.
             Shop now and elevate your wardrobe!
           </p>
+
           <div className="flex items-center gap-0.5 cursor-pointer group">
             <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
             <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5">
@@ -111,7 +114,7 @@ export default function AdvantageSection() {
 
         <div
           ref={wrapperRef}
-          className="w-full sm:min-w-max sm:flex-1 overflow-x-auto sm:overflow-visible me-4"
+          className="w-full sm:flex-1 overflow-x-auto sm:overflow-visible me-4"
         >
           <div className="flex gap-8 sm:gap-12 px-5 sm:px-0 sm:pr-16 mb-6 pe-4">
             {items.map((item) => (
