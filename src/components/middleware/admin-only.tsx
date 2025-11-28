@@ -5,11 +5,13 @@ import AdminLayout from "@/components/layout/admin-layout";
 
 export default async function AdminOnly({
   children,
+  fallback,
 }: {
   children: React.ReactNode;
+  fallback: string;
 }) {
   const session = await getSession();
 
-  if (!session.isLoggedIn) redirect("/admin/login");
+  if (!session.isLoggedIn) redirect(fallback);
   return <AdminLayout user={session.user!}>{children}</AdminLayout>;
 }

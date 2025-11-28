@@ -6,5 +6,5 @@ export default async function DashboardLayout({
 }: {
   children?: ReactNode;
 }) {
-  return <AdminOnly>{children}</AdminOnly>;
+  return <AdminOnly fallback="/admin/login">{children}</AdminOnly>;
 }
