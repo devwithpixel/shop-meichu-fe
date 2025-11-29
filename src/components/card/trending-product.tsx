@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FaPlus, FaMinus } from "react-icons/fa6";
 import { LuBox } from "react-icons/lu";
 import { FaCheck } from "react-icons/fa";
@@ -15,8 +15,26 @@ import {
 } from "@/components/ui/tooltip";
 import { Drawer, DrawerContent } from "@/components/ui/drawer";
 
+const sizeClassTemplate = {
+  sm: {
+    wrapper: "lg:max-w-35 xl:max-w-35",
+    dekstop: "lg:w-35 xl:w-35 lg:h-45",
+    mobile: "w-75 h-90",
+    quickView: "md:w-55 lg:w-32",
+    sizeP: "px-2",
+    colorImg: "w-8 h-8",
+  },
+  md: {
+    wrapper: "md:max-w-48 lg:max-w-38 xl:max-w-48",
+    dekstop: "md:w-48 md:h-65 lg:w-38 lg:h-50 xl:w-48 xl:h-70",
+    mobile: "w-75 h-96",
+    quickView: "md:w-43 lg:w-50 xl:w-45",
+    sizeP: "px-4",
+    colorImg: "w-10 h-10",
+  },
+};
+
 interface TrendingProductProps {
-  className?: string;
   product: {
     id: number;
     title: string;
@@ -25,42 +43,35 @@ interface TrendingProductProps {
     sizes: string[];
     colors: { label: string; bgImg: string; bgColor: string }[];
   };
+  className?: string;
   size?: "sm" | "md";
 }
 
 export default function TrendingProduct({
   product,
   className,
-  size,
+  size = "md",
 }: TrendingProductProps) {
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [activeColorIndex, setActiveColorIndex] = useState<number | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
 
-  const allImages = [
-    product.images.front,
-    product.images.hover,
-    ...product.colors.map((color) => color.bgImg),
-  ];
-
-  const handleColorClick = (img: string, index: number) => {
+  const handleColorClick = useCallback((img: string, index: number) => {
     setSelectedImage(img);
     setActiveColorIndex(index);
-    setCurrentImageIndex(index + 2);
-  };
+  }, []);
 
-  const handleQuickViewClick = () => {
+  const handleQuickViewClick = useCallback(() => {
     setIsDrawerOpen(true);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setIsDrawerOpen(false);
-  };
+  }, []);
 
-  const prevImage = () => {
+  const prevImage = useCallback(() => {
     const newIndex =
       activeColorIndex === null || activeColorIndex === 0
         ? product.colors.length - 1
@@ -68,9 +79,9 @@ export default function TrendingProduct({
 
     setActiveColorIndex(newIndex);
     setSelectedImage(product.colors[newIndex].bgImg);
-  };
+  }, []);
 
-  const nextImage = () => {
+  const nextImage = useCallback(() => {
     const newIndex =
       activeColorIndex === null
         ? 0
@@ -78,26 +89,9 @@ export default function TrendingProduct({
 
     setActiveColorIndex(newIndex);
     setSelectedImage(product.colors[newIndex].bgImg);
-  };
+  }, []);
 
-  const sizeClass = {
-    sm: {
-      wrapper: "lg:max-w-35 xl:max-w-35",
-      dekstop: "lg:w-35 xl:w-35 lg:h-45",
-      mobile: "w-75 h-90",
-      quickView: "md:w-55 lg:w-32",
-      sizeP: "px-2",
-      colorImg: "w-8 h-8",
-    },
-    md: {
-      wrapper: "md:max-w-48 lg:max-w-38 xl:max-w-48",
-      dekstop: "md:w-48 md:h-65 lg:w-38 lg:h-50 xl:w-48 xl:h-70",
-      mobile: "w-75 h-96",
-      quickView: "md:w-43 lg:w-50 xl:w-45",
-      sizeP: "px-4",
-      colorImg: "w-10 h-10",
-    },
-  }[size || "md"];
+  const sizeClass = useMemo(() => sizeClassTemplate[size], [size]);
 
   return (
     <>
@@ -207,10 +201,10 @@ export default function TrendingProduct({
                       activeColorIndex === index
                         ? "opacity-100 translate-x-0"
                         : activeColorIndex === null && index === 0
-                        ? "opacity-100 translate-x-0"
-                        : index < (activeColorIndex || 0)
-                        ? "opacity-0 -translate-x-full"
-                        : "opacity-0 translate-x-full"
+                          ? "opacity-100 translate-x-0"
+                          : index < (activeColorIndex || 0)
+                            ? "opacity-0 -translate-x-full"
+                            : "opacity-0 translate-x-full"
                     }`}
                     alt=""
                   />
