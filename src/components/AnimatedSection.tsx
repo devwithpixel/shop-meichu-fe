@@ -127,7 +127,7 @@ export default function CircleTransformSection() {
                     <div
                         key={i}
                         ref={(el) => { bubblesRef.current[i] = el; }}
-                        className="absolute bg-amber-300 shadow-xl rounded-full w-48 h-48 text-black font-medium text-lg"
+                        className="absolute bg-amber-300 shadow-xl rounded-full w-48 h-48 text-black font-medium text-lg flex items-center justify-center"
                         style={{
                             top: ["29%", "29%", "29%", "29%"][i], // lebih naik dan simetris
                             left: ["58%", "28%", "72%", "14%"][i],

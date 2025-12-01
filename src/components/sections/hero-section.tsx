@@ -2,10 +2,10 @@
 
 import React, { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import gsap from "gsap";
+import { HiOutlineArrowUpRight } from "react-icons/hi2";
 
 const collections = [
   { label: "Men Collections", img: "/men.jpg" },
@@ -175,13 +175,11 @@ export default function HeroSection() {
             fringilla libero a turpis viverra vehicula.
           </p>
 
-          <div className="mt-10 flex gap-2">
-            <Button className="size-14! bg-white text-black rounded-full">
-              <ArrowUpRight />
-            </Button>
-            <Button className="h-14! px-8 bg-white text-black rounded-full">
-              EXPLORE NOW
-            </Button>
+          <div className="flex items-center gap-0.5 cursor-pointer group">
+            <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
+            <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5">
+              Explore More
+            </p>
           </div>
         </div>
 
