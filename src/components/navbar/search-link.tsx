@@ -41,171 +41,6 @@ interface Product {
   colors: ProductColor[];
 }
 
-const popularCollections: Collection[] = [
-  {
-    id: 1,
-    name: "Sneakers Collection",
-    href: "#",
-  },
-  {
-    id: 2,
-    name: "Running Essentials",
-    href: "#",
-  },
-  {
-    id: 3,
-    name: "Formal Wear",
-    href: "#",
-  },
-  {
-    id: 4,
-    name: "Casual Comfort",
-    href: "#",
-  },
-  {
-    id: 5,
-    name: "Sports Performance",
-    href: "#",
-  },
-  {
-    id: 6,
-    name: "Outdoor Adventure",
-    href: "#",
-  },
-  {
-    id: 7,
-    name: "Limited Edition",
-    href: "#",
-  },
-  {
-    id: 8,
-    name: "Eco-Friendly Line",
-    href: "#",
-  },
-];
-
-const initialRecentSearches = [{ id: 1, text: "White Sneakers" }];
-
-const sampleProducts = [
-  {
-    id: 1,
-    title: "Classic White Sneakers",
-    price: 129,
-    images: {
-      front: "./assets/gallery/girl4.jpg",
-      hover: "./assets/gallery/girl4.jpg",
-    },
-    sizes: ["38", "39", "40", "41", "42"],
-    colors: [
-      {
-        label: "White",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-white",
-      },
-      {
-        label: "Black",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-black",
-      },
-    ],
-  },
-  {
-    id: 2,
-    title: "Running Shoes Pro",
-    price: 159,
-    images: {
-      front: "./assets/gallery/girl4.jpg",
-      hover: "./assets/gallery/girl4.jpg",
-    },
-    sizes: ["40", "41", "42", "43", "44"],
-    colors: [
-      {
-        label: "Blue",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-blue-500",
-      },
-      {
-        label: "Red",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-red-500",
-      },
-    ],
-  },
-  {
-    id: 3,
-    title: "Casual Loafers",
-    price: 89,
-    images: {
-      front: "./assets/gallery/girl4.jpg",
-      hover: "./assets/gallery/girl4.jpg",
-    },
-    sizes: ["39", "40", "41", "42"],
-    colors: [
-      {
-        label: "Brown",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-amber-800",
-      },
-      {
-        label: "Navy",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-blue-800",
-      },
-    ],
-  },
-  {
-    id: 4,
-    title: "Basketball Shoes",
-    price: 149,
-    images: {
-      front: "./assets/gallery/girl4.jpg",
-      hover: "./assets/gallery/girl4.jpg",
-    },
-    sizes: ["40", "41", "42", "43"],
-    colors: [
-      {
-        label: "Red",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-red-600",
-      },
-    ],
-  },
-  {
-    id: 5,
-    title: "Hiking Boots",
-    price: 199,
-    images: {
-      front: "./assets/gallery/girl4.jpg",
-      hover: "./assets/gallery/girl4.jpg",
-    },
-    sizes: ["41", "42", "43", "44"],
-    colors: [
-      {
-        label: "Green",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-green-700",
-      },
-    ],
-  },
-  {
-    id: 6,
-    title: "Formal Shoes",
-    price: 179,
-    images: {
-      front: "./assets/gallery/girl4.jpg",
-      hover: "./assets/gallery/girl4.jpg",
-    },
-    sizes: ["39", "40", "41", "42"],
-    colors: [
-      {
-        label: "Black",
-        bgImg: "./assets/gallery/girl4.jpg",
-        bgColor: "bg-black",
-      },
-    ],
-  },
-];
-
 export default function SearchLink() {
   const [isOpenSearch, setIsOpenSearch] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -216,6 +51,176 @@ export default function SearchLink() {
   const [hoveredCollectionId, setHoveredCollectionId] = useState<number | null>(
     null
   );
+
+  const popularCollections: Collection[] = [
+    {
+      id: 1,
+      name: "Sneakers Collection",
+      href: "#",
+    },
+    {
+      id: 2,
+      name: "Running Essentials",
+      href: "#",
+    },
+    {
+      id: 3,
+      name: "Formal Wear",
+      href: "#",
+    },
+    {
+      id: 4,
+      name: "Casual Comfort",
+      href: "#",
+    },
+    {
+      id: 5,
+      name: "Sports Performance",
+      href: "#",
+    },
+    {
+      id: 6,
+      name: "Outdoor Adventure",
+      href: "#",
+    },
+    {
+      id: 7,
+      name: "Limited Edition",
+      href: "#",
+    },
+    {
+      id: 8,
+      name: "Eco-Friendly Line",
+      href: "#",
+    },
+    {
+      id: 9,
+      name: "Eco-Friendly Line",
+      href: "#",
+    },
+  ];
+
+  const initialRecentSearches = [{ id: 1, text: "White Sneakers" }];
+
+  const sampleProducts = [
+    {
+      id: 1,
+      title: "Classic White Sneakers",
+      price: 129,
+      images: {
+        front: "./assets/gallery/girl4.jpg",
+        hover: "./assets/gallery/girl4.jpg",
+      },
+      sizes: ["38", "39", "40", "41", "42"],
+      colors: [
+        {
+          label: "White",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-white",
+        },
+        {
+          label: "Black",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-black",
+        },
+      ],
+    },
+    {
+      id: 2,
+      title: "Running Shoes Pro",
+      price: 159,
+      images: {
+        front: "./assets/gallery/girl4.jpg",
+        hover: "./assets/gallery/girl4.jpg",
+      },
+      sizes: ["40", "41", "42", "43", "44"],
+      colors: [
+        {
+          label: "Blue",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-blue-500",
+        },
+        {
+          label: "Red",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-red-500",
+        },
+      ],
+    },
+    {
+      id: 3,
+      title: "Casual Loafers",
+      price: 89,
+      images: {
+        front: "./assets/gallery/girl4.jpg",
+        hover: "./assets/gallery/girl4.jpg",
+      },
+      sizes: ["39", "40", "41", "42"],
+      colors: [
+        {
+          label: "Brown",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-amber-800",
+        },
+        {
+          label: "Navy",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-blue-800",
+        },
+      ],
+    },
+    {
+      id: 4,
+      title: "Basketball Shoes",
+      price: 149,
+      images: {
+        front: "./assets/gallery/girl4.jpg",
+        hover: "./assets/gallery/girl4.jpg",
+      },
+      sizes: ["40", "41", "42", "43"],
+      colors: [
+        {
+          label: "Red",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-red-600",
+        },
+      ],
+    },
+    {
+      id: 5,
+      title: "Hiking Boots",
+      price: 199,
+      images: {
+        front: "./assets/gallery/girl4.jpg",
+        hover: "./assets/gallery/girl4.jpg",
+      },
+      sizes: ["41", "42", "43", "44"],
+      colors: [
+        {
+          label: "Green",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-green-700",
+        },
+      ],
+    },
+    {
+      id: 6,
+      title: "Formal Shoes",
+      price: 179,
+      images: {
+        front: "./assets/gallery/girl4.jpg",
+        hover: "./assets/gallery/girl4.jpg",
+      },
+      sizes: ["39", "40", "41", "42"],
+      colors: [
+        {
+          label: "Black",
+          bgImg: "./assets/gallery/girl4.jpg",
+          bgColor: "bg-black",
+        },
+      ],
+    },
+  ];
 
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [recentSearches, setRecentSearches] = useState<RecentSearch[]>(
@@ -241,6 +246,11 @@ export default function SearchLink() {
   };
 
   const handleMouseDown = (e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest("button")) {
+      return;
+    }
+
     if (!scrollContainerRef.current) return;
     setIsDragging(true);
     setStartX(e.pageX - scrollContainerRef.current.offsetLeft);
@@ -324,9 +334,13 @@ export default function SearchLink() {
             <Search className="h-5 w-5" />
           </button>
         </SheetTrigger>
-        <SheetContent side="top" className="border-none bg-[#f2f2f2]">
+        <SheetContent
+          side="top"
+          defaultTop="data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
+          className="border-none bg-[#f2f2f2]"
+        >
           <div className="relative w-full">
-            <div className="fixed top-0 left-0 h-full bg-white px-3.5 py-3.5 w-14 z-50">
+            <div className="hidden lg:block fixed top-0 left-0 h-full bg-white px-3.5 py-3.5 w-14 z-50">
               <SheetTitle
                 className="group cursor-pointer p-1 transition-all duration-200 rounded-none hover:bg-[#f2f2f2] hover:rounded-full"
                 onClick={() => setIsOpenSearch(false)}
@@ -335,19 +349,19 @@ export default function SearchLink() {
               </SheetTitle>
             </div>
 
-            <div className="flex">
-              <div className="ml-24 mt-20 w-1/2">
+            <div className="overflow-y-scroll max-h-screen lg:max-h-none lg:flex">
+              <div className="lg:ml-24 lg:mt-20 lg:w-1/2">
                 <div className="text-left">
-                  <div className="flex items-start border-b border-gray-300 text-left">
+                  <div className="flex items-center lg:items-start bg-white lg:border-b lg:border-gray-300 text-left py-3 px-6 mb-3 lg:mb-0">
                     <Input
                       type="text"
                       value={searchQuery}
                       onChange={handleSearchChange}
                       onKeyDown={handleSearchSubmit}
-                      className="border-none shadow-none rounded-none w-full h-12 text-2xl! placeholder:text-2xl px-0! focus-visible:ring-0 focus-visible:ring-offset-0 text-left"
+                      className="border-none shadow-none rounded-none w-full h-12 text-base lg:text-2xl lg:placeholder:text-2xl placeholder:text-base px-0 focus-visible:ring-0 focus-visible:ring-offset-0 text-left"
                       placeholder="Search"
                     />
-                    <div className="px-4 flex items-center">
+                    <div className="gap-4 flex items-center">
                       {searchQuery ? (
                         <button
                           onClick={handleClearSearch}
@@ -356,19 +370,26 @@ export default function SearchLink() {
                           Clear
                         </button>
                       ) : (
-                        <IoSearchOutline className="w-7 h-7" />
+                        <IoSearchOutline className="w-6 h-6 lg:w-7 lg:h-7" />
                       )}
+                      <button
+                        onClick={() => setIsOpenSearch(false)}
+                        className="group cursor-pointer p-1 transition-all duration-200 bg-[#f2f2f2] rounded-full"
+                      >
+                        <IoClose className="w-5 h-5 transition-all duration-200 group-hover:rotate-180" />
+                      </button>
                     </div>
                   </div>
 
-                  <ScrollArea className="h-[calc(100vh-180px)] pr-4">
-                    <div className="mt-10 flex flex-col gap-6 text-left">
+                  <div className="overflow-y-auto lg:h-146 lg:pr-4">
+                    <div className="lg:mt-10 p-4 flex flex-col gap-4 text-left bg-white lg:bg-transparent">
                       <div className="">
                         <h1 className="font-medium text-xl font-rubik text-left">
                           Recent search
                         </h1>
                       </div>
-                      <div className="flex gap-4 text-left flex-wrap">
+                      {/* desktop */}
+                      <div className="hidden lg:flex gap-4 text-left flex-wrap">
                         {recentSearches.map((search) => (
                           <div
                             key={search.id}
@@ -403,78 +424,123 @@ export default function SearchLink() {
                           </div>
                         ))}
                       </div>
+
+                      {/* mobile */}
+                      <div className="flex lg:hidden flex-col-reverse text-left">
+                        {recentSearches.map((search) => (
+                          <div
+                            key={search.id}
+                            onClick={() => handleRecentSearchClick(search.text)}
+                            onMouseEnter={() => setHoveredSearchId(search.id)}
+                            onMouseLeave={() => setHoveredSearchId(null)}
+                            className="rounded-full cursor-pointer transition-colors text-left"
+                          >
+                            <div className="">
+                              <div className="flex items-center justify-between gap-2 text-left">
+                                <div className="relative overflow-hidden h-5 ">
+                                  <div
+                                    className={`transition-transform duration-300  ${
+                                      hoveredSearchId === search.id
+                                        ? "-translate-y-5"
+                                        : "translate-y-0"
+                                    }`}
+                                  >
+                                    <div className="h-5 flex items-center">
+                                      <h1 className="font-inter text-xs lg:text-sm font-light text-left">
+                                        {search.text}
+                                      </h1>
+                                    </div>
+                                    <div className="h-5 flex items-center">
+                                      <h1 className="font-inter text-xs lg:text-sm font-light text-left">
+                                        {search.text}
+                                      </h1>
+                                    </div>
+                                  </div>
+                                </div>
+                                <MdOutlineArrowOutward className="w-3 h-3" />
+                              </div>
+                              <Separator
+                                orientation="vertical"
+                                className="h-4"
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="mt-10 text-left">
-                      <div className="flex items-center justify-between text-left">
-                        <h1 className="font-semibold text-2xl font-rubik text-left">
-                          {searchQuery
-                            ? `RESULTS FOR "${searchQuery}"`
-                            : "YOU MAY ALSO LIKE"}
+
+                    <div className="my-3 lg:mt-10 text-left bg-white lg:bg-transparent pl-5">
+                      <div className="flex items-center justify-between text-left py-6">
+                        <h1 className="font-medium lg:font-semibold text-xl lg:text-2xl font-rubik text-left">
+                          {searchQuery ? "RESULTS FOR" : "YOU MAY ALSO LIKE"}
                         </h1>
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 pr-4 lg:pr-0">
                           <button
                             onClick={handleScrollLeft}
-                            className="bg-white p-4 rounded-full border border-black hover:bg-gray-100 transition-all duration-300"
+                            className="bg-white p-2 lg:p-4 rounded-full border border-black hover:bg-gray-100 transition-all duration-300 z-10 relative"
                           >
                             <MdKeyboardArrowLeft className="w-5 h-5" />
                           </button>
                           <button
                             onClick={handleScrollRight}
-                            className="bg-white p-4 rounded-full border border-black hover:bg-gray-100 transition-all duration-300"
+                            className="bg-white p-2 lg:p-4 rounded-full border border-black hover:bg-gray-100 transition-all duration-300 z-10 relative"
                           >
                             <MdKeyboardArrowRight className="w-5 h-5" />
                           </button>
                         </div>
                       </div>
-                      <div className="mt-6 text-left">
-                        {filteredProducts.length > 0 ? (
-                          <div
-                            ref={scrollContainerRef}
-                            onMouseDown={handleMouseDown}
-                            onMouseUp={handleMouseUp}
-                            onMouseMove={handleMouseMove}
-                            onMouseLeave={handleMouseLeave}
-                            className="flex gap-6 pb-4 overflow-x-scroll scrollbar-hide cursor-grab select-none"
-                            style={{
-                              scrollbarWidth: "none",
-                              msOverflowStyle: "none",
-                            }}
-                          >
-                            {filteredProducts.map((product) => (
-                              <div
-                                key={product.id}
-                                className="inline-block shrink-0"
-                              >
-                                <TrendingProduct
-                                  product={product}
-                                  size="sm"
-                                  className="pointer-events-none"
-                                />
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="text-center py-10">
-                            <p className="text-gray-500 text-lg">
-                              No products found for "{searchQuery}"
-                            </p>
-                          </div>
-                        )}
-                      </div>
+
+                      {filteredProducts.length > 0 ? (
+                        <div
+                          ref={scrollContainerRef}
+                          onMouseDown={handleMouseDown}
+                          onMouseUp={handleMouseUp}
+                          onMouseMove={handleMouseMove}
+                          onMouseLeave={handleMouseLeave}
+                          className="flex gap-6 pb-4 overflow-x-auto scrollbar-hide cursor-grab select-none"
+                          style={{
+                            scrollbarWidth: "none",
+                            msOverflowStyle: "none",
+                          }}
+                        >
+                          {filteredProducts.map((product) => (
+                            <div
+                              key={product.id}
+                              className="inline-block shrink-0"
+                            >
+                              <TrendingProduct
+                                product={product}
+                                size="sm"
+                                className="pointer-events-none"
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-10">
+                          <p className="text-gray-500 text-lg">
+                            No products found for "{searchQuery}"
+                          </p>
+                        </div>
+                      )}
                     </div>
-                  </ScrollArea>
+                  </div>
                 </div>
               </div>
-              <div className="w-3/8 fixed top-0 right-0 h-full bg-white px-10 py-10 rounded-3xl text-left">
+
+              <div className="lg:w-3/8 lg:fixed lg:top-0 lg:right-0 lg:h-full w-full bg-white px-10 py-10 lg:rounded-3xl text-left mt-1 lg:mt-0">
                 <div className="flex flex-col text-left">
                   <div className="">
-                    <h1 className="text-5xl font-medium font-rubik text-left">
+                    <h1 className="text-xl lg:text-5xl font-medium font-rubik text-left">
                       POPULAR COLLECTIONS
                     </h1>
                   </div>
-                  <ScrollArea className="h-125 mt-10 text-left">
+                  <ScrollArea className="lg:h-125 mt-4 lg:mt-10 text-left">
                     {popularCollections.map((collection) => (
-                      <div key={collection.id} className="flex flex-col gap-2 mt-3">
+                      <div
+                        key={collection.id}
+                        className="flex flex-col gap-2 mt-1 lg:mt-3"
+                      >
                         <Link
                           href={collection.href}
                           onMouseEnter={() =>
@@ -484,7 +550,7 @@ export default function SearchLink() {
                           className="flex gap-3 items-center group hover:translate-x-1 transition-transform"
                         >
                           <div className="p-1 border rounded-full group-hover:border-black transition-colors">
-                            <MdOutlineArrowOutward className="w-4 h-4" />
+                            <MdOutlineArrowOutward className="lg:w-4 lg:h-4 w-2 h-2" />
                           </div>
                           <div className="relative overflow-hidden h-9">
                             <div
@@ -495,12 +561,12 @@ export default function SearchLink() {
                               }`}
                             >
                               <div className="h-9 flex items-center">
-                                <h1 className="text-2xl font-rubik font-medium text-left">
+                                <h1 className="text-base lg:text-2xl font-rubik font-medium text-left">
                                   {collection.name}
                                 </h1>
                               </div>
                               <div className="h-9 flex items-center">
-                                <h1 className="text-2xl font-rubik font-medium text-left">
+                                <h1 className="text-base lg:text-2xl font-rubik font-medium text-left">
                                   {collection.name}
                                 </h1>
                               </div>

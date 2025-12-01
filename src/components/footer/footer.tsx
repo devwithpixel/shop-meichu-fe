@@ -43,7 +43,7 @@ export default function Footer() {
   ];
 
   return (
-    <div ref={footerRef} className="bg-carbon text-white mt-20">
+    <div ref={footerRef} className="bg-carbon text-white">
       <div className="relative w-full overflow-hidden">
         <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-carbon to-transparent z-20" />
         <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-carbon to-transparent z-20" />
@@ -139,10 +139,9 @@ export default function Footer() {
           </div>
         </div>
       </div>
-
-      {/* COPYRIGHT */}
+      
       <div className="text-center py-4 bg-blackfull text-white text-sm">
-        © 2025 Maya. Powered by Shopify
+        © 2025 Meichu. Powered by Pixel
       </div>
     </div>
   );

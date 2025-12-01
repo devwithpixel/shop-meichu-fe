@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import {
   Search,
@@ -27,6 +27,7 @@ import {
 import Link from "next/link";
 import NavLink from "./nav-link";
 import SearchLink from "./search-link";
+import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -35,8 +36,8 @@ export default function Navbar() {
   const [isOpenHomeCategory, setIsOpenHomeCategory] = useState(false);
   const [isOpenCatalog, setIsOpenCatalog] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
   const [isScrolled, setIsScrolled] = useState(false);
+  const lastScrollY = useRef(0);
   const [selectedHomeCategory, setSelectedHomeCategory] = useState<{
     title: string;
     href: string;
@@ -143,63 +144,36 @@ export default function Navbar() {
   ];
 
   useEffect(() => {
-    const controlNavbar = () => {
-      if (typeof window !== "undefined") {
-        if (!isHomePage) {
-          setIsScrolled(true);
-          if (window.scrollY > lastScrollY && window.scrollY > 100) {
-            setIsVisible(false);
-          } else {
-            setIsVisible(true);
-          }
-          setLastScrollY(window.scrollY);
-          return;
-        }
+    const handleScroll = () => {
+      const current = window.scrollY;
 
-        const heroHeight = window.innerHeight;
+      setIsScrolled(current > 1000);
 
-        if (window.scrollY > heroHeight - 50) {
-          setIsScrolled(true);
-        } else {
-          setIsScrolled(false);
-        }
-
-        if (window.scrollY > lastScrollY && window.scrollY > 100) {
-          setIsVisible(false);
-        } else {
-          setIsVisible(true);
-        }
-        setLastScrollY(window.scrollY);
+      if (current > lastScrollY.current && current > 100) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
       }
+
+      lastScrollY.current = current;
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", controlNavbar);
-      controlNavbar();
-      return () => {
-        window.removeEventListener("scroll", controlNavbar);
-      };
-    }
-  }, [lastScrollY, isHomePage]);
-
-  useEffect(() => {
-    if (!isHomePage) {
-      setIsScrolled(true);
-    } else {
-      setIsScrolled(false);
-    }
-  }, [isHomePage]);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <>
       <nav
-        className={`font-inter text-white border-b fixed top-0 left-0 right-0 z-50 transition-all duration-500 ease-in-out ${
-          isVisible ? "translate-y-0" : "-translate-y-full"
-        } ${
-          isScrolled
-            ? "bg-black border-[#222121]"
-            : "bg-transparent border-[#222121]/20"
-        }`}
+        className={cn(
+          "fixed top-0 left-0 right-0 z-50 font-inter transition-all duration-300 text-white",
+          isVisible ? "translate-y-0" : "-translate-y-full",
+          isHomePage
+            ? isScrolled
+              ? "bg-black border-b border-[#222121]"
+              : "bg-transparent border-b border-[#222121]/20"
+            : "bg-black border-b border-[#222121]"
+        )}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-6 lg:py-1">
           <div className="flex justify-between items-center h-16">
@@ -214,6 +188,7 @@ export default function Navbar() {
                   </SheetTrigger>
                   <SheetContent
                     side="left"
+                    defaultLeft="data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
                     className="bg-black text-white w-screen h-screen p-0 fixed inset-0 max-w-none"
                   >
                     <div className="flex flex-col h-full">
@@ -278,6 +253,7 @@ export default function Navbar() {
                               </div>
                               <SheetContent
                                 side="right"
+                                defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
                                 className="bg-white text-black"
                               >
                                 <SheetHeader
@@ -328,6 +304,7 @@ export default function Navbar() {
                                       </div>
                                       <SheetContent
                                         side="right"
+                                        defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
                                         className="bg-white text-black"
                                       >
                                         <SheetHeader
@@ -402,6 +379,7 @@ export default function Navbar() {
                               </div>
                               <SheetContent
                                 side="right"
+                                defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
                                 className="bg-white text-black"
                               >
                                 <SheetHeader
@@ -507,21 +485,21 @@ export default function Navbar() {
             </div>
 
             {/* Icons */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center">
               <div className="">
                 <SearchLink />
               </div>
 
               <Link
                 href="#"
-                className="text-white hover:bg-gray-400 p-1 rounded-full hidden lg:flex items-center justify-center"
+                className="text-white hover:bg-gray-900 p-2 rounded-full hidden lg:flex items-center justify-center"
               >
                 <FaRegUserCircle className="h-5 w-5" />
               </Link>
 
               <Link
                 href="#"
-                className="text-white hover:bg-gray-400 p-1 rounded-full flex items-center justify-center"
+                className="text-white hover:bg-gray-900 p-2 rounded-full flex items-center justify-center"
               >
                 <FiShoppingBag className="h-5 w-5" />
               </Link>
