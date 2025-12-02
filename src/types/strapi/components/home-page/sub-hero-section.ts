@@ -1,7 +1,7 @@
-import type { Category } from "@/types/strapi/models/category";
+import type { SubHeroItem } from "@/types/strapi/components/home-page-item/sub-hero-item";
 
 export interface SubHeroSection {
   id: number;
   description: string;
-  categories?: Category[];
+  items: SubHeroItem[];
 }

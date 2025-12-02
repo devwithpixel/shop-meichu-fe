@@ -1,5 +1,5 @@
 import FilterCard from "@/components/card/filter-card";
-import TrendingProduct from "@/components/card/trending-product";
+import TrendingProduct from "@/components/card/product-card";
 import HeaderPage from "@/components/header/header-page";
 import { products } from "@/lib/data/product";
 

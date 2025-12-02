@@ -8,7 +8,7 @@ import { useRef, useState } from "react";
 import OverviewSection from "@/components/sections/overview-section";
 import DescriptionSection from "@/components/sections/description-section";
 import SpecificationsSection from "@/components/sections/specifications-section";
-import TrendingProduct from "@/components/card/trending-product";
+import TrendingProduct from "@/components/card/product-card";
 
 gsap.registerPlugin(ScrollTrigger);
 

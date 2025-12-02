@@ -1,229 +1,364 @@
 "use client";
 
-import { Check } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useState, useRef, useEffect } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { FaPlus } from "react-icons/fa6";
+import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
+import { cn, formatCurrency } from "@/lib/utils";
+import Image from "@/components/global/image";
 
-interface Variant {
-  size: string;
-  price: number;
+import type { Product } from "@/types/strapi/models/product";
+
+const sizeClassTemplate = {
+  sm: {
+    width: "w-75",
+    wrapper: "lg:max-w-35 xl:max-w-35",
+    dekstop: "lg:w-35 xl:w-35 lg:h-45",
+    mobile: "w-75 h-90",
+    quickView: "w-71.5 md:w-55 lg:w-32",
+    sizeP: "px-2",
+    colorImg: "w-8 h-8",
+  },
+  md: {
+    width: "w-75",
+    wrapper: "md:max-w-48 lg:max-w-38 xl:max-w-48",
+    dekstop: "md:w-48 md:h-65 lg:w-38 lg:h-50 xl:w-48 xl:h-70",
+    mobile: "w-75 h-96",
+    quickView: "w-71.5 md:w-43 lg:w-50 xl:w-45",
+    sizeP: "px-4",
+    colorImg: "w-10 h-10",
+  },
+  lg: {
+    width: "w-42",
+    wrapper: "md:max-w-48 lg:max-w-38 xl:max-w-48",
+    dekstop: "md:w-48 md:h-65 lg:w-38 lg:h-50 xl:w-48 xl:h-70",
+    mobile: "w-42 h-62",
+    quickView: "w-38.5 md:w-43 lg:w-50 xl:w-45",
+    sizeP: "px-4",
+    colorImg: "w-10 h-10",
+  },
+};
+
+interface TrendingProductProps {
+  product: Product;
+  className?: string;
+  size?: "sm" | "md" | "lg";
 }
 
-interface ProductCardProps {
-  name: string;
-  price: number;
-  image: string;
-  variants?: Variant[];
-  onSelectVariant?: (variant: string, variantPrice: number) => void;
-}
+export default function ProductCard({
+  product,
+  className,
+  size = "md",
+}: TrendingProductProps) {
+  const images = useMemo(
+    () =>
+      (product?.images ?? []).map((image) => ({
+        ...image,
+        url: `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${image.url}`,
+      })),
+    [product?.images]
+  );
+  const sizeClass = useMemo(() => sizeClassTemplate[size], [size]);
 
-export function ProductCard({
-  name,
-  price,
-  image,
-  variants = [],
-  onSelectVariant,
-}: ProductCardProps) {
-  const [isHovered, setIsHovered] = useState(false);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
-  const [selectedVariant, setSelectedVariant] = useState("");
-  const selectRef = useRef<HTMLDivElement>(null);
+  const [activeColorIndex, setActiveColorIndex] = useState<number>(0);
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    images?.[activeColorIndex]?.url
+  );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        selectRef.current &&
-        !selectRef.current.contains(event.target as Node)
-      ) {
-        setIsSelectOpen(false);
-        if (!selectRef.current.parentElement?.matches(":hover")) {
-          setIsHovered(false);
-        }
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+  const changeQuickViewImage = useCallback((index: number) => {
+    setActiveColorIndex(index);
+    setSelectedImage(images?.[index]?.url);
   }, []);
-
-  const handleSelectOpenChange = (open: boolean) => {
-    setIsSelectOpen(open);
-    if (open) {
-      setIsHovered(true);
-    }
-  };
-
-  const handleVariantChange = (value: string) => {
-    setSelectedVariant(value);
-    const selectedVariantData = variants.find(
-      (v) => `${v.size} / ($${v.price})` === value
-    );
-    if (selectedVariantData && onSelectVariant) {
-      onSelectVariant(selectedVariantData.size, selectedVariantData.price);
-    }
-  };
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-    }).format(price);
-  };
 
   return (
     <div
-      ref={selectRef}
-      className="product-card-item rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-500 ease-out cursor-pointer transform-gpu will-change-transform lg:hover:scale-105 flex flex-col h-full"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        if (!isSelectOpen) {
-          setIsHovered(false);
-        }
-      }}
+      className={cn(
+        `${sizeClass.width} md:w-60 ${sizeClass.wrapper} space-y-3 shrink-0`,
+        className
+      )}
     >
-      <div className="relative w-full h-64 sm:h-80 md:h-96 shrink-0">
-        <img
-          src={image}
-          alt={name}
-          className="object-cover w-full h-full transition-transform duration-700 ease-out rounded-2xl"
-        />
+      <div className="bg-gray-400 w-fit border border-gray-500 rounded-xl md:rounded-2xl lg:rounded-3xl relative overflow-hidden group">
+        {images.length > 0 && (
+          <img
+            src={selectedImage}
+            className={`${sizeClass.mobile}  ${sizeClass.dekstop} object-cover rounded-xl md:rounded-3xl transition-all duration-700 ease-out hover:scale-105`}
+          />
+        )}
 
-        {/* Desktop */}
-        <div className="hidden lg:block absolute bottom-0 left-0 w-full p-4 bg-linear-to-t from-black/90 via-black/50 to-transparent">
+        <div className="absolute inset-0 flex items-end justify-center text-black text-[10px] font-medium font-inter opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-full transition-all duration-400 ease-out lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
           <div
-            className={`flex items-end justify-between transition-all duration-500 ease-in-out ${
-              isHovered || isSelectOpen
-                ? "opacity-0 translate-y-2 pointer-events-none"
-                : "opacity-100 translate-y-0"
-            }`}
+            className={`${sizeClass.quickView} group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16`}
           >
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold font-rubik text-white text-sm line-clamp-2">
-                {name}
-              </h3>
-              <p className="text-sm text-slate-300 mt-1">
-                {formatPrice(price)}
-              </p>
-            </div>
-
-            <div className="w-8 h-8 rounded-full opacity-80 bg-emerald-100 backdrop-blur flex items-center justify-center transition-transform duration-300 ml-2 shrink-0">
-              <Check className="w-4 h-4 text-gray-700" />
-            </div>
-          </div>
-
-          <div
-            className={`absolute inset-x-4 bottom-4 transition-all duration-500 ease-in-out ${
-              isHovered || isSelectOpen
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-4 pointer-events-none"
-            }`}
-          >
-            <Select
-              onValueChange={handleVariantChange}
-              onOpenChange={handleSelectOpenChange}
-              value={selectedVariant}
+            <div
+              className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-md rounded-b-md lg:rounded-b-none lg:rounded-t-xl bg-gray-100 cursor-pointer mb-1.5 lg:mb-0"
+              // onClick={handleQuickViewClick}
             >
-              <SelectTrigger className="w-full rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm">
-                <SelectValue placeholder="Select Size" />
-              </SelectTrigger>
-              <SelectContent>
-                {variants.map((variant, index) => (
-                  <SelectItem
-                    key={index}
-                    value={`${variant.size} / ${formatPrice(variant.price)}`}
-                  >
-                    {variant.size} / {formatPrice(variant.price)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Tablet  */}
-        <div className="hidden md:block lg:hidden absolute bottom-0 left-0 w-full p-4 bg-linear-to-t from-black/90 via-black/50 to-transparent">
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold font-rubik text-white text-sm line-clamp-2">
-                {name}
-              </h3>
-              <p className="text-sm text-slate-300 mt-1">
-                {formatPrice(price)}
-              </p>
+              <h1 className="lg:-mb-2">QUICK VIEW</h1>
+              <FaPlus className="lg:-mb-2" />
             </div>
-          </div>
 
-          <div className="flex items-center gap-3">
-            <Select
-              onValueChange={handleVariantChange}
-              onOpenChange={handleSelectOpenChange}
-              value={selectedVariant}
-            >
-              <SelectTrigger className="flex-1 rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm">
-                <SelectValue placeholder="Select Size" />
-              </SelectTrigger>
-              <SelectContent>
-                {variants.map((variant, index) => (
-                  <SelectItem
-                    key={index}
-                    value={`${variant.size} / ${formatPrice(variant.price)}`}
-                  >
-                    {variant.size} / {formatPrice(variant.price)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <div className="w-12 h-12 rounded-full opacity-80 bg-emerald-100 backdrop-blur flex items-center justify-center transition-transform duration-300 shrink-0">
-              <Check className="w-5 h-5 text-gray-700" />
+            <div className="hidden lg:block bg-gray-100 rounded-b-xl px-3 pb-2 max-h-0 transition-all duration-800 ease-out group-hover/quickview:max-h-20 group-hover/quickview:mb-2">
+              <div className="pt-2">
+                <Separator className="mb-3" />
+                <div className="flex gap-1.5 flex-wrap">
+                  {images.map((image, index) => (
+                    <Button
+                      key={image.id}
+                      variant="outline"
+                      className={cn(
+                        "size-8! p-0 overflow-hidden",
+                        activeColorIndex === index
+                          ? "border-black scale-110"
+                          : "border-gray-300"
+                      )}
+                      onClick={() => changeQuickViewImage(index)}
+                    >
+                      <Image
+                        src={image.url}
+                        className="object-cover size-full"
+                      />
+                    </Button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile */}
-      <div className="block md:hidden flex-1 flex-col bg-transparent">
-        <div className="p-4 flex-1">
-          <div className="flex items-start justify-between">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-semibold font-rubik text-white text-sm line-clamp-2 leading-tight">
-                {name}
-              </h3>
-              <p className="text-xs text-gray-300 mt-1">{formatPrice(price)}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="px-4 pb-4 mt-auto">
-          <Select
-            onValueChange={handleVariantChange}
-            value={selectedVariant}
-            onOpenChange={handleSelectOpenChange}
-          >
-            <SelectTrigger className="w-full rounded-full bg-gray-100 text-gray-900 font-medium h-10 border-0 hover:bg-gray-200 transition-colors duration-300 text-xs">
-              <SelectValue placeholder="Select Size" />
-            </SelectTrigger>
-            <SelectContent className="text-xs">
-              {variants.map((variant, index) => (
-                <SelectItem
-                  key={index}
-                  value={`${variant.size} / ${formatPrice(variant.price)}`}
-                >
-                  {variant.size} / {formatPrice(variant.price)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
+      <div className="text-center px-1.5 space-y-1.5 font-inter transition-all duration-300 ease-out relative">
+        <h1 className="text-xs font-semibold">{product.name}</h1>
+        <p className="text-xs">{formatCurrency(product.price)}</p>
       </div>
     </div>
   );
 }
+
+/*
+  <Drawer
+        open={isDrawerOpen}
+        direction={
+          typeof window !== "undefined" && window.innerWidth < 1024
+            ? "bottom"
+            : "right"
+        }
+        onOpenChange={handleClose}
+      >
+        <DrawerContent className="h-[95vh] lg:h-[90vh] w-full lg:min-w-[76vw] lg:ml-auto rounded-t-3xl lg:rounded-3xl bg-transparent p-0 lg:mr-6 flex items-center border-none">
+          <div className="h-full w-full rounded-t-3xl lg:rounded-3xl bg-white p-0 flex flex-col lg:flex-row overflow-y-auto lg:overflow-hidden scrollbar-hide pb-32 lg:pb-0">
+            <div className="w-full lg:w-1/2 h-[50vh] lg:h-full p-3 lg:p-0 rounded-t-3xl lg:rounded-l-3xl lg:rounded-tr-none relative overflow-hidden shrink-0">
+              <div className="h-full relative">
+                {product.colors.map((color, index) => (
+                  <img
+                    key={index}
+                    src={color.bgImg}
+                    className={`h-full w-full object-cover bg-gray-300 rounded-2xl lg:rounded-l-3xl lg:rounded-tr-none absolute inset-0 transition-all duration-500 ease-in-out ${
+                      activeColorIndex === index
+                        ? "opacity-100 translate-x-0"
+                        : activeColorIndex === null && index === 0
+                          ? "opacity-100 translate-x-0"
+                          : index < (activeColorIndex || 0)
+                            ? "opacity-0 -translate-x-full"
+                            : "opacity-0 translate-x-full"
+                    }`}
+                    alt=""
+                  />
+                ))}
+              </div>
+
+              <div className="absolute bottom-0 left-0 right-0 p-3 lg:p-4">
+                <div className="flex items-center justify-between lg:justify-evenly gap-2 lg:gap-3 p-4 lg:p-0">
+                  <button
+                    onClick={prevImage}
+                    className="bg-black text-white p-3 lg:p-4 rounded-full transition-all duration-300 shadow-lg shrink-0"
+                  >
+                    <IoIosArrowBack className="w-4 h-4 lg:w-5 lg:h-5" />
+                  </button>
+
+                  <div className="hidden lg:flex items-center gap-2 overflow-x-auto scrollbar-hide">
+                    {product.colors.map((color, index) => (
+                      <Tooltip key={index}>
+                        <TooltipTrigger asChild>
+                          <div
+                            className={`cursor-pointer rounded-lg shrink-0 transition-all duration-300 ${
+                              activeColorIndex === index
+                                ? "border-2 border-black scale-105"
+                                : "border-2 border-gray-300 hover:border-gray-400"
+                            }`}
+                            onClick={() => handleColorClick(color.bgImg, index)}
+                          >
+                            <img
+                              src={color.bgImg}
+                              className="w-14 h-14 lg:w-20 lg:h-20 object-cover bg-gray-300 rounded-lg"
+                              alt=""
+                            />
+                          </div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-white">{color.label}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={nextImage}
+                    className="bg-black text-white p-3 lg:p-4 rounded-full transition-all duration-300 shadow-lg shrink-0"
+                  >
+                    <IoIosArrowForward className="w-4 h-4 lg:w-5 lg:h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="w-full lg:w-1/2 flex-1 bg-white rounded-b-3xl lg:rounded-r-3xl lg:rounded-bl-none border border-white flex flex-col relative lg:overflow-hidden">
+              <div className="flex-1 lg:max-h-full lg:overflow-y-auto scrollbar-hide py-4 px-4 lg:py-6 lg:px-8 lg:pb-6">
+                <div>
+                  <h1 className="font-semibold text-base lg:text-lg font-rubik cursor-pointer hover:text-gray-400">
+                    {product.title}
+                  </h1>
+                  <p className="text-sm lg:text-md text-gray-800">SDZ1056</p>
+                  <p className="text-lg lg:text-xl leading-9 font-inter">
+                    ${product.price.toLocaleString()} USD
+                  </p>
+                </div>
+
+                <Separator className="my-4 lg:my-5" />
+
+                <div className="flex items-center space-x-1.5">
+                  <FaCheck className="p-1 text-white bg-green-600 rounded-full" />
+                  <p className="text-xs">30 in stock</p>
+                </div>
+
+                <div className="my-4 lg:my-5">
+                  <p className="font-rubik font-bold text-xs mb-2">
+                    COLOR:{" "}
+                    {activeColorIndex !== null
+                      ? product.colors[activeColorIndex].label.toUpperCase()
+                      : product.colors[0].label.toUpperCase()}
+                  </p>
+                  <div className="flex items-center gap-1.5 py-1 max-w-full flex-wrap">
+                    {product.colors.map((color, index) => (
+                      <Tooltip key={index}>
+                        <TooltipTrigger asChild>
+                          <div
+                            className={`w-7 h-7 ${
+                              color.bgColor
+                            } cursor-pointer rounded-sm shrink-0 transition-colors ${
+                              activeColorIndex === index
+                                ? "border border-black scale-110"
+                                : "border border-gray-300"
+                            }`}
+                            onClick={() => handleColorClick(color.bgImg, index)}
+                          ></div>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-white">{color.label}</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="my-4 lg:my-5">
+                  <p className="font-rubik font-bold text-xs mb-2">
+                    SIZE: {selectedSize || product.sizes[0]}
+                  </p>
+                  <div className="flex gap-1.5 flex-wrap">
+                    {product.sizes.map((size) => (
+                      <button
+                        key={size}
+                        onClick={() => setSelectedSize(size)}
+                        className={`px-3 lg:px-4 py-1 text-[10px] border rounded transition-colors ${
+                          selectedSize === size ||
+                          (!selectedSize && size === product.sizes[0])
+                            ? "bg-black text-white border-black"
+                            : "border-gray-300 hover:bg-black hover:text-white"
+                        }`}
+                      >
+                        {size}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="my-4 lg:my-5">
+                  <p className="font-rubik font-bold text-xs mb-2">Quantity</p>
+                  <div className="w-fit flex items-center justify-start gap-6 lg:gap-8 border border-black px-3 lg:px-4 py-2 lg:py-2.5 rounded-sm">
+                    <FaMinus
+                      size={14}
+                      className={`cursor-pointer transition-colors ${
+                        quantity === 1
+                          ? "text-gray-400 cursor-not-allowed"
+                          : "text-black hover:text-gray-600"
+                      }`}
+                      onClick={() => {
+                        if (quantity > 1) {
+                          setQuantity(quantity - 1);
+                        }
+                      }}
+                    />
+                    <p className="font-medium">{quantity}</p>
+                    <FaPlus
+                      size={14}
+                      className="cursor-pointer hover:text-gray-600 transition-colors"
+                      onClick={() => setQuantity(quantity + 1)}
+                    />
+                  </div>
+                </div>
+
+                <div className="my-4 lg:my-5 bg-cyan-50 p-2 lg:p-3 border border-gray-300 flex flex-col lg:flex-row items-start justify-between gap-3 lg:gap-16 rounded">
+                  <div className="flex items-start gap-3 lg:gap-4">
+                    <LuBox
+                      size={20}
+                      className="lg:w-[22px] lg:h-[22px] shrink-0 mt-0.5"
+                    />
+                    <div>
+                      <p className="font-medium text-xs">
+                        Pickup available at Pakis Warehouse
+                      </p>
+                      <p className="text-xs text-gray-600">
+                        Usually ready in 24 hours
+                      </p>
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-xs underline cursor-pointer hover:text-gray-600">
+                      Check availability at other stores
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex h-5 items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <LiaShippingFastSolid size={20} className="shrink-0" />
+                    <p className="text-xs">
+                      Free delivery on February 7th - 13th
+                    </p>
+                  </div>
+                  <Separator
+                    orientation="vertical"
+                    className="block h-6 w-px bg-gray-400"
+                  />
+                  <div className="flex items-center gap-2">
+                    <BsBoxSeam className="shrink-0" />
+                    <p className="text-xs">Free + easy returns</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="fixed lg:relative bottom-0 left-0 right-0 border-t border-gray-200 p-4 lg:p-6 bg-white rounded-b-3xl lg:rounded-br-3xl lg:rounded-bl-none z-10">
+                <div className="flex flex-col lg:flex-row items-center justify-center gap-3 lg:gap-4">
+                  <button className="w-full lg:w-auto px-12 lg:px-16 py-3 lg:py-4 border border-black bg-black text-white hover:bg-gray160 hover:text-black transition-all duration-300 ease-in-out rounded-full text-sm lg:text-base font-medium text-nowrap">
+                    Add to cart
+                  </button>
+                  <button className="w-full lg:w-auto px-12 lg:px-16 py-3 lg:py-4 border border-black bg-black text-white hover:bg-gray-200 hover:text-black transition-all duration-300 ease-in-out rounded-full text-sm lg:text-base font-medium text-nowrap">
+                    Buy it now
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
+*/

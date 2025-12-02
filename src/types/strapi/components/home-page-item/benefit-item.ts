@@ -1,6 +1,7 @@
 import type { Product } from "@/types/strapi/models/product";
 
-export interface TrendingProductSection {
+export interface BenefitItem {
   id: number;
-  products?: Product[];
+  badge: string;
+  product?: Product;
 }

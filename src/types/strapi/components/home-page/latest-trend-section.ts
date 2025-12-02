@@ -5,7 +5,7 @@ import type { StrapiImage } from "@/types/strapi/media/image";
 export interface LatestTrendSection {
   id: number;
   section: BaseSection;
-  ctaButton: CTAButton;
-  leftImage: StrapiImage;
-  rightImage: StrapiImage:
+  ctaButton?: CTAButton;
+  leftImage?: StrapiImage;
+  rightImage?: StrapiImage;
 }

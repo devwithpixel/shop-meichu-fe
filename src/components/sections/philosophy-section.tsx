@@ -11,6 +11,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import Image from "@/components/global/image";
 
+import type { PhilosophySection } from "@/types/strapi/components/home-page/philosophy-section";
+
 interface CardProps {
   id: number;
   sizeClass: string;
@@ -47,7 +49,11 @@ const rightCards: CardProps[] = [
   },
 ];
 
-export default function AboutSection() {
+export default function PhilosophySection({
+  data,
+}: {
+  data: PhilosophySection;
+}) {
   "use no memo";
   const sectionRef = useRef<HTMLDivElement>(null);
   const circleBackgroundRef = useRef<HTMLDivElement>(null);
@@ -144,10 +150,7 @@ export default function AboutSection() {
       className="px-6 md:px-10 flex flex-col items-center lg:justify-start justify-center bg-[#C8F51D] md:bg-white font-rubik py-12 md:min-h-screen overflow-hidden relative"
     >
       <h3 className="text-2xl md:text-3xl font-semibold md:font-medium text-center max-w-5xl w-full mb-5 xl:text-5xl relative z-1000">
-        MAYA BLENDS TIMELESS ELEGANCE WITH MODERN TRENDS, CRAFTING FASHION THAT
-        EMPOWERS CONFIDENCE AND GRACE. WITH PREMIUM FABRICS AND UNIQUE DESIGNS,
-        WE CREATE STYLES THAT REDEFINE BEAUTY, ENSURING YOU SHINE EFFORTLESSLY
-        IN EVERY MOMENT.
+        {data.description}
       </h3>
 
       <div className="flex items-center justify-center md:absolute md:bottom-5 md:left-0 md:w-full">
@@ -205,7 +208,7 @@ export default function AboutSection() {
             />
             <text fill="#000" fontSize="17" letterSpacing="5" fontWeight="500">
               <textPath xlinkHref="#circlePath" startOffset="0%">
-                PREMIUM DESIGN • ELEVATED EXPERIENCE • PREMIUM DESIGN •
+                {data.ctxText}
               </textPath>
             </text>
           </svg>

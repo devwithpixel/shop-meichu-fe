@@ -6,26 +6,22 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { productDesc } from "@/lib/data/descProduct";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 
-export default function CustomerHelpSection() {
+import type { FAQSection } from "@/types/strapi/components/home-page/faq-section";
+
+export default function FAQSection({ data }: { data: FAQSection }) {
   return (
     <div className="bg-white w-full h-fit font-rubik flex flex-col items-start space-y-10 py-20">
       <div className="px-5 md:px-5 lg:px-10 space-y-4">
         <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold">
-          Customer Help Center
+          {data.section.title}
         </h1>
-        <p>
-          Welcome to our Customer Help Center! We’re here to assist you with any
-          questions or concerns you may have. Whether you need help with orders,
-          shipping, returns, or product details, you’ll find all the answers
-          right here.
-        </p>
+        <p>{data.section.description}</p>
       </div>
       <Accordion type="single" collapsible className="w-full">
         <Separator />
-        {productDesc.map((item) => (
+        {data.questions.map((item) => (
           <AccordionItem
             key={item.id}
             value={`item-${item.id}`}

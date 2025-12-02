@@ -7,6 +7,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useRef, useState } from "react";
+import type { CollectionSection } from "@/types/strapi/components/home-page/collection-section";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
 
@@ -22,63 +23,67 @@ interface CategoryProps {
   gridImages: string[];
 }
 
-export default function StyleSection() {
+const categories: CategoryProps[] = [
+  {
+    id: "1",
+    image: "/assets/image/3.svg",
+    title: "Winter Warmth",
+    mainTitle: "WRAP YOURSELF IN WINTER WARMTH",
+    description1:
+      "Stay warm and stylish this winter! Explore cozy layers, trendy outerwear, and must-have essentials for the chilly season. From snuggly knits to bold boots, find pieces that bring the heat to your winter wardrobe. Wrap yourself in comfort and confidence-because cold weather deserves hot looks.",
+    description2:
+      "From plush textures to elegant finishes, every detail is chosen to enhance your winter experience. Embrace the season with confidence and comfort-because staying warm should always feel this good.",
+    buttonText: "Wrap Yourself in Winter Warmth",
+    mainImage: "/assets/image/my.png",
+    gridImages: [
+      "/assets/image/1.webp",
+      "/assets/image/1.webp",
+      "/assets/image/1.webp",
+    ],
+  },
+  {
+    id: "2",
+    image: "/assets/image/4.svg",
+    title: "Stylish Layers",
+    mainTitle: "STYLISH LAYERS FOR THE PERFECT LOOK",
+    description1:
+      "Our curated collection for the perfect look features sleek jackets, smart knits, and versatile outerwear designed to keep you warm while making a statement. Top it off with timeless accessories that turn everyday moments into style milestones.",
+    description2:
+      "Designed to complement each other seamlessly, these layers offer endless outfit possibilities while keeping you comfortable in changing temperatures. Create depth, add dimension, and showcase your personal flair with every layer you wear.",
+    buttonText: "Stylish Layers for the perfect look",
+    mainImage: "/assets/image/1.webp",
+    gridImages: [
+      "/assets/image/my.png",
+      "/assets/image/my.png",
+      "/assets/image/my.png",
+    ],
+  },
+  {
+    id: "3",
+    image: "/assets/image/2.svg",
+    title: "Bold Basics",
+    mainTitle: "STRONG STYLE FOR STRONG MOVES",
+    description1:
+      "From sharp tailoring to bold essentials, each piece is designed to empower your every move-whether you're closing deals, breaking boundaries, or making your mark. Dress like you mean it, because power looks better when it's personal.",
+    description2:
+      "With a fit that feels like a second skin and a look that commands attention, you'll stay focused, fierce, and ready to take on any challenge. Because when you look strong, you move even stronger.",
+    buttonText: "Strong Style for Strong Moves",
+    mainImage: "/assets/image/1.webp",
+    gridImages: [
+      "/assets/image/my.png",
+      "/assets/image/my.png",
+      "/assets/image/my.png",
+    ],
+  },
+];
+
+export default function CollectionSection({
+  data,
+}: {
+  data: CollectionSection;
+}) {
   const styleRef = useRef(null);
   const [activeCategory, setActiveCategory] = useState("2");
-
-  const categories: CategoryProps[] = [
-    {
-      id: "1",
-      image: "/assets/image/3.svg",
-      title: "Winter Warmth",
-      mainTitle: "WRAP YOURSELF IN WINTER WARMTH",
-      description1:
-        "Stay warm and stylish this winter! Explore cozy layers, trendy outerwear, and must-have essentials for the chilly season. From snuggly knits to bold boots, find pieces that bring the heat to your winter wardrobe. Wrap yourself in comfort and confidence-because cold weather deserves hot looks.",
-      description2:
-        "From plush textures to elegant finishes, every detail is chosen to enhance your winter experience. Embrace the season with confidence and comfort-because staying warm should always feel this good.",
-      buttonText: "Wrap Yourself in Winter Warmth",
-      mainImage: "/assets/image/my.png",
-      gridImages: [
-        "/assets/image/1.webp",
-        "/assets/image/1.webp",
-        "/assets/image/1.webp",
-      ],
-    },
-    {
-      id: "2",
-      image: "/assets/image/4.svg",
-      title: "Stylish Layers",
-      mainTitle: "STYLISH LAYERS FOR THE PERFECT LOOK",
-      description1:
-        "Our curated collection for the perfect look features sleek jackets, smart knits, and versatile outerwear designed to keep you warm while making a statement. Top it off with timeless accessories that turn everyday moments into style milestones.",
-      description2:
-        "Designed to complement each other seamlessly, these layers offer endless outfit possibilities while keeping you comfortable in changing temperatures. Create depth, add dimension, and showcase your personal flair with every layer you wear.",
-      buttonText: "Stylish Layers for the perfect look",
-      mainImage: "/assets/image/1.webp",
-      gridImages: [
-        "/assets/image/my.png",
-        "/assets/image/my.png",
-        "/assets/image/my.png",
-      ],
-    },
-    {
-      id: "3",
-      image: "/assets/image/2.svg",
-      title: "Bold Basics",
-      mainTitle: "STRONG STYLE FOR STRONG MOVES",
-      description1:
-        "From sharp tailoring to bold essentials, each piece is designed to empower your every move-whether you're closing deals, breaking boundaries, or making your mark. Dress like you mean it, because power looks better when it's personal.",
-      description2:
-        "With a fit that feels like a second skin and a look that commands attention, you'll stay focused, fierce, and ready to take on any challenge. Because when you look strong, you move even stronger.",
-      buttonText: "Strong Style for Strong Moves",
-      mainImage: "/assets/image/1.webp",
-      gridImages: [
-        "/assets/image/my.png",
-        "/assets/image/my.png",
-        "/assets/image/my.png",
-      ],
-    },
-  ];
 
   const activeCategoryData =
     categories.find((cat) => cat.id === activeCategory) || categories[1];
@@ -281,15 +286,8 @@ export default function StyleSection() {
             <div className="w-full flex justify-center">
               <div className="absolute max-w-6xl w-full flex justify-center items-center gap-6">
                 <div className="title-style">
-                  <h1 className="text-4xl md:text-5xl font-bold text-slate-200 leading-tight font-rubik flex justify-center items-center text-center">
-                    STYLE CRAFTED TO PERFECTION
-                  </h1>
-                  <p className="mt-8 text-base leading-relaxed opacity-80 font-inter flex justify-center items-center text-center">
-                    Discover fashion that fits every mood! Explore our diverse
-                    collections, from casual essentials to statement trends.
-                    Find the perfect style for every occasion
-                  </p>
-                  <p className=""></p>
+                  <h1 className="text-4xl md:text-5xl font-bold text-slate-200 leading-tight font-rubik flex justify-center items-center text-center"></h1>
+                  <p className="mt-8 text-base leading-relaxed opacity-80 font-inter flex justify-center items-center text-center"></p>
                 </div>
               </div>
             </div>

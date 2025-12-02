@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
-import TrendingProduct from "@/components/card/trending-product";
+import TrendingProduct from "@/components/card/product-card";
 import { Product } from "@/types/navigation";
 
 interface ProductResultsProps {

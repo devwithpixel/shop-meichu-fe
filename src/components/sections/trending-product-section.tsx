@@ -1,12 +1,17 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
-import { products } from "@/data/products";
-import TrendingProduct from "@/components/card/trending-product";
+import { gsap } from "gsap";
+import TrendingProduct from "@/components/card/product-card";
 
-export default function TrendingSection() {
+import type { TrendingProductSection } from "@/types/strapi/components/home-page/trending-product-section";
+
+export default function TrendingProductSection({
+  data,
+}: {
+  data: TrendingProductSection;
+}) {
   const sectionTrending = useRef<HTMLDivElement | null>(null);
 
   useGSAP(
@@ -85,10 +90,10 @@ export default function TrendingSection() {
       </div>
 
       <div className="trendCard lg:absolute bg-transparent flex items-center justify-start lg:justify-center gap-2 md:gap-6 lg:gap-4.5 p-4 md:p-6 mb-6 overflow-x-scroll lg:overflow-x-hidden">
-        {products.map((p) => (
+        {data.products?.map((product) => (
           <TrendingProduct
-            key={p.id}
-            product={p}
+            key={product.id}
+            product={product}
             className="trendingCard"
             size="sm"
           />

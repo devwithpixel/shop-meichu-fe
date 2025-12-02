@@ -1,6 +1,7 @@
 import type { Product } from "@/types/strapi/models/product";
 
-export interface TrendingProductSection {
+export interface OrderItem {
   id: number;
-  products?: Product[];
+  product: Product;
+  count: number;
 }

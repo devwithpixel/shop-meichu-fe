@@ -18,5 +18,14 @@ export interface HomePage {
   subHeroSection: SubHeroSection;
   trendingProductSection: TrendingProductSection;
   benefitSection: BenefitSection;
-  philosophySection?: PhilosophySection;
+  philosophySection: PhilosophySection;
+  collectionSection?: CollectionSection;
+  bundleSection?: BundleSection;
+  recommendationSection?: RecommendationSection;
+  trendingStyleSection?: TrendingStyleSection;
+  bestSellerSection?: BestSellerSection;
+  featuredCategorySection?: FeaturedCategorySection;
+  reviewSection?: ReviewSection;
+  latestTrendSection?: LatestTrendSection;
+  faqSection?: FAQSection;
 }
