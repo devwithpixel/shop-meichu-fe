@@ -5,7 +5,7 @@ import { products } from "@/lib/data/product";
 
 export default function CollectionsPage() {
   return (
-    <div className="bg-white h-screen md:overflow-x-hidden overflow-y-scroll">
+    <div className="bg-white h-full overflow-hidden">
       <HeaderPage
         type="collections"
         img="/assets/gallery/girl3.jpg"
