@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 import Image from "@/components/global/image";
 
@@ -76,14 +77,18 @@ export default function AboutSection() {
 
     const media = gsap.matchMedia();
     media.add("(min-width: 768px)", () => {
+      ScrollTrigger.create({
+        trigger: sectionRef.current!,
+        start: "top top",
+        end: "bottom top",
+        pin: true,
+      });
+
       const timeline = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current!,
-          start: "top top",
-          end: "bottom top",
+          start: "top center",
           scrub: true,
-          pin: true,
-          pinSpacing: true,
         },
       });
 

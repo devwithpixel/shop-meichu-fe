@@ -8,57 +8,37 @@ import gsap from "gsap";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 
 const collections = [
-  { label: "Men Collections", img: "/men.jpg" },
-  { label: "Women Collections", img: "/woman.jpg" },
-  { label: "Popular Collections", img: "/popular.jpg" },
+  { label: "Men Collections", img: "/assets/image/my.png" },
+  { label: "Women Collections", img: "/assets/image/my.png" },
+  { label: "Popular Collections", img: "/assets/image/my.png" },
 ];
 
-function NextSection({
-  ref,
-  timeline,
-}: {
-  ref: React.RefObject<HTMLElement>;
-  timeline: React.RefObject<gsap.core.Timeline>;
-}) {
+function NextSection({ ref }: { ref: React.RefObject<HTMLElement> }) {
   const collectionsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     const buttons = gsap.utils.selector(collectionsRef.current!)("button");
 
-    if (!timeline.current) return;
-
-    timeline.current.fromTo(
-      collectionsRef.current!,
-      {
-        opacity: 0,
-        y: 20,
-      },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1,
-        ease: "power3.out",
-      }
-    );
-
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger: collectionsRef.current!,
         start: "top bottom",
+        scrub: 1,
       },
     });
 
-    buttons.forEach((button) =>
+    buttons.forEach((button, i) =>
       tl.fromTo(
         button,
         {
-          y: 20,
+          y: 80 * (i % 2 ? 1 : -1),
         },
         {
           y: 0,
           duration: 1,
           ease: "power3.out",
-        }
+        },
+        i && "<"
       )
     );
   }, []);
@@ -87,7 +67,7 @@ function NextSection({
 
       <div
         ref={collectionsRef}
-        className="flex flex-wrap justify-center gap-6 mt-12"
+        className="flex flex-wrap justify-center gap-6 mt-20"
       >
         {collections.map((item, i) => (
           <Button
@@ -128,6 +108,7 @@ export default function HeroSection() {
         trigger: nextSectionRef.current!,
         start: "top bottom",
         end: "top top",
+        scrub: true,
       },
     });
 
@@ -141,7 +122,7 @@ export default function HeroSection() {
         xPercent: -100,
         y: `-${mainSectionRef.current!.offsetHeight}px`,
         ease: "none",
-        duration: 1,
+        duration: 10,
       }
     );
   }, []);
@@ -196,10 +177,7 @@ export default function HeroSection() {
         </div>
       </section>
 
-      <NextSection
-        ref={nextSectionRef as React.RefObject<HTMLElement>}
-        timeline={timelineRef as React.RefObject<gsap.core.Timeline>}
-      />
+      <NextSection ref={nextSectionRef as React.RefObject<HTMLElement>} />
     </>
   );
 }

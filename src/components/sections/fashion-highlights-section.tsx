@@ -27,7 +27,6 @@ export default function FashionHighlightsSection() {
         end: "bottom 60%",
         scrub: 1,
         toggleActions: "play reverse play reverse",
-        markers: true,
         animation: gsap.to(".imgLeft", {
           x: -60,
           duration: 0.8,
@@ -41,7 +40,6 @@ export default function FashionHighlightsSection() {
         end: "bottom 60%",
         scrub: 1,
         toggleActions: "play reverse play reverse",
-        markers: true,
         animation: gsap.to(".imgRight", {
           x: 60,
           duration: 0.8,
@@ -60,7 +58,6 @@ export default function FashionHighlightsSection() {
         end: "bottom 60%",
         scrub: 1,
         toggleActions: "play reverse play reverse",
-        markers: true,
         animation: gsap.to(".imgLeft", {
           x: -60,
           duration: 0.8,
@@ -74,7 +71,6 @@ export default function FashionHighlightsSection() {
         end: "bottom 60%",
         scrub: 1,
         toggleActions: "play reverse play reverse",
-        markers: true,
         animation: gsap.to(".imgRight", {
           x: 60,
           duration: 0.8,
