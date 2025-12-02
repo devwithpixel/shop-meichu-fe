@@ -36,7 +36,7 @@ export default function RootLayout({
       >
         <NuqsAdapter>
           <Navbar />
-          <main className="md:pb-0 pb-16">{children}</main>
+          <main className="md:pb-0 pb-16 md:pt-16">{children}</main>
         </NuqsAdapter>
         <Toaster position="top-center" reverseOrder={false} />
       </body>

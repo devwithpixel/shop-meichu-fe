@@ -8,15 +8,16 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { NavItem, Category } from "@/types/navigation";
 
 interface NavLinkProps {
   href?: string;
   text: string;
-  items?: { title: string; href: string }[];
-  categories?: any[];
+  items?: NavItem[];
+  categories?: Category[];
   isDropdown?: boolean;
   className?: string;
-  isHome?: boolean; 
+  isHome?: boolean;
 }
 
 export default function NavLink({
@@ -111,7 +112,7 @@ export default function NavLink({
           {isCatalogMenu ? (
             <div className="p-6">
               <div className="flex flex-col gap-1">
-                {categories?.map((category: any) => (
+                {categories?.map((category) => (
                   <Link
                     key={category.title}
                     href={category.href}
@@ -126,7 +127,7 @@ export default function NavLink({
             <div className="py-10 px-20">
               <div className="flex items-start gap-10">
                 {categories && categories.length > 0
-                  ? categories.map((category: any) => (
+                  ? categories.map((category) => (
                       <div
                         key={category.title || category.href}
                         className="flex flex-col gap-2"
@@ -135,7 +136,7 @@ export default function NavLink({
                           {category.title}
                         </h1>
                         {category.subcategories &&
-                          category.subcategories.map((sub: any) => (
+                          category.subcategories.map((sub) => (
                             <Link
                               key={sub.title}
                               href={sub.href}

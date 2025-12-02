@@ -352,12 +352,12 @@ export default function StyleSection() {
 
                 <div className="image-transform-trigger relative w-full">
                   <div className="button-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] z-30">
-                    <div className="button bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-inter">
+                    <div className=" bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-inter">
                       <span className="text-btn flex items-center flex-1 font-inter text-sm md:text-base lg:text-lg text-gray-900 truncate">
                         {activeCategoryData.buttonText}
                       </span>
 
-                      <Button className="arrow-btn w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
+                      <Button className=" w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
                         <MdOutlineArrowOutward className="w-5 h-5" />
                       </Button>
                     </div>

@@ -207,7 +207,7 @@
             </div>
           </div>
         </div>
-        <div ref={spacerRef} className="w-full bg-black"></div>
+        <div ref={spacerRef} className="w-full bg-transparent"></div>
       </>
     );
   }

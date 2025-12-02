@@ -2,9 +2,15 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef } from "react";
-import { Separator } from "../ui/separator";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { FooterLink } from "./footer-link";
 
 export default function Footer() {
@@ -65,8 +71,8 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="py-16 pl-6 font-inter">
-        <div className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-1 gap-4">
+      <div className="py-16 px-6 font-inter">
+        <div className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-1 gap-8">
           <div className="lg:col-span-2 leading-7">
             <p>
               Whether you're looking for chic essentials, statement outfits, or
@@ -93,7 +99,7 @@ export default function Footer() {
             className="hidden lg:block h-44 mx-auto bg-white/20 lg:col-start-3"
           />
 
-          <div className="space-y-6 lg:col-start-4">
+          <div className="hidden lg:block space-y-6 lg:col-start-4">
             <h1 className="font-semibold text-xl">Quick links</h1>
             <ul className="space-y-2 text-white/70">
               {quickLinks.map((link) => (
@@ -108,7 +114,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="space-y-6 lg:col-start-5">
+          <div className="hidden lg:block space-y-6 lg:col-start-5">
             <h1 className="font-semibold text-xl">Support</h1>
             <ul className="space-y-2 text-white/70">
               {supportLinks.map((link) => (
@@ -123,7 +129,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          <div className="space-y-6 lg:col-start-6">
+          <div className="hidden lg:block space-y-6 lg:col-start-6">
             <h1 className="font-semibold text-xl">Follow us on</h1>
             <ul className="space-y-2 text-white/70">
               {socialLinks.map((link) => (
@@ -137,9 +143,70 @@ export default function Footer() {
               ))}
             </ul>
           </div>
+
+          <div className="lg:hidden lg:col-span-4">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="quick-links" className="border-white/20">
+                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+                  Quick links
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-2 text-white/70 pt-2">
+                    {quickLinks.map((link) => (
+                      <li key={link.href}>
+                        <FooterLink
+                          href={link.href}
+                          title={link.title}
+                          icon={link.icon}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="support" className="border-white/20">
+                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+                  Support
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-2 text-white/70 pt-2">
+                    {supportLinks.map((link) => (
+                      <li key={link.href}>
+                        <FooterLink
+                          href={link.href}
+                          title={link.title}
+                          icon={link.icon}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="social" className="border-white/20">
+                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+                  Follow us on
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="space-y-2 text-white/70 pt-2">
+                    {socialLinks.map((link) => (
+                      <li key={link.href}>
+                        <FooterLink
+                          href={link.href}
+                          title={link.title}
+                          icon={link.icon}
+                        />
+                      </li>
+                    ))}
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
         </div>
       </div>
-      
+
       <div className="text-center py-4 bg-blackfull text-white text-sm">
         © 2025 Meichu. Powered by Pixel
       </div>
