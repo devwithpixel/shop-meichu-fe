@@ -17,18 +17,29 @@ import { Drawer, DrawerContent } from "@/components/ui/drawer";
 
 const sizeClassTemplate = {
   sm: {
+    width: "w-75",
     wrapper: "lg:max-w-35 xl:max-w-35",
     dekstop: "lg:w-35 xl:w-35 lg:h-45",
     mobile: "w-75 h-90",
-    quickView: "md:w-55 lg:w-32",
+    quickView: "w-71.5 md:w-55 lg:w-32",
     sizeP: "px-2",
     colorImg: "w-8 h-8",
   },
   md: {
+    width: "w-75",
     wrapper: "md:max-w-48 lg:max-w-38 xl:max-w-48",
     dekstop: "md:w-48 md:h-65 lg:w-38 lg:h-50 xl:w-48 xl:h-70",
     mobile: "w-75 h-96",
-    quickView: "md:w-43 lg:w-50 xl:w-45",
+    quickView: "w-71.5 md:w-43 lg:w-50 xl:w-45",
+    sizeP: "px-4",
+    colorImg: "w-10 h-10",
+  },
+  lg: {
+    width: "w-42",
+    wrapper: "md:max-w-48 lg:max-w-38 xl:max-w-48",
+    dekstop: "md:w-48 md:h-65 lg:w-38 lg:h-50 xl:w-48 xl:h-70",
+    mobile: "w-42 h-62",
+    quickView: "w-38.5 md:w-43 lg:w-50 xl:w-45",
     sizeP: "px-4",
     colorImg: "w-10 h-10",
   },
@@ -44,7 +55,7 @@ interface TrendingProductProps {
     colors: { label: string; bgImg: string; bgColor: string }[];
   };
   className?: string;
-  size?: "sm" | "md";
+  size?: "sm" | "md" | "lg";
 }
 
 export default function TrendingProduct({
@@ -96,7 +107,7 @@ export default function TrendingProduct({
   return (
     <>
       <div
-        className={`w-75 md:w-60 ${sizeClass.wrapper} space-y-3 shrink-0 ${
+        className={`${sizeClass.width} md:w-60 ${sizeClass.wrapper} space-y-3 shrink-0 ${
           className || ""
         }`}
       >
@@ -114,7 +125,7 @@ export default function TrendingProduct({
 
           <div className="absolute inset-0 flex items-end justify-center text-black text-[10px] font-medium font-inter opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-full transition-all duration-400 ease-out lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
             <div
-              className={`w-71.5 ${sizeClass.quickView} group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16`}
+              className={`${sizeClass.quickView} group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16`}
             >
               <div
                 className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-md rounded-b-md lg:rounded-b-none lg:rounded-t-xl bg-gray-100 cursor-pointer mb-1.5 lg:mb-0"
