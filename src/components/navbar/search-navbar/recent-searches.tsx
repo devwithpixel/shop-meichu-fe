@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { Separator } from "@/components/ui/separator";
-import { RecentSearch } from "@/types/navigation";
+import { RecentSearch } from "@/types/search";
 
 interface RecentSearchesProps {
   searches: RecentSearch[];

@@ -7,7 +7,7 @@ import { IoCloseCircleOutline } from "react-icons/io5";
 import { FaRegUserCircle } from "react-icons/fa";
 import { GoArrowUpRight } from "react-icons/go";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
-import { Separator } from "../ui/separator";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -66,7 +66,7 @@ export default function MobileMenu({
                 </div>
                 <div className="pr-4">
                   <Link
-                    href="#"
+                    href="/auth/login"
                     className="text-white hover:bg-gray-900 p-2 rounded-full flex items-center justify-center"
                   >
                     <FaRegUserCircle className="h-7 w-7" />

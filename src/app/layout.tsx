@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { Metadata } from "next";
 import Navbar from "@/components/navbar/navbar";
+import MainWrapper from "@/context/main-wrapper";
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -36,7 +37,7 @@ export default function RootLayout({
       >
         <NuqsAdapter>
           <Navbar />
-          <main className="md:pb-0 pb-16 md:pt-16">{children}</main>
+          <MainWrapper>{children}</MainWrapper>
         </NuqsAdapter>
         <Toaster position="top-center" reverseOrder={false} />
       </body>

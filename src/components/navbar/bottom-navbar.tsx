@@ -32,7 +32,7 @@ export default function BottomNav({ items, isVisible }: BottomNavProps) {
         isVisible ? "translate-y-full" : "translate-y-0"
       }`}
     >
-      <div className="grid grid-cols-6 h-16">
+      <div className="grid grid-cols-3 h-16">
         {items.map((item) => {
           const Icon = iconMap[item.icon as keyof typeof iconMap];
           return (

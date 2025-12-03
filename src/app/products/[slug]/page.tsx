@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import ProductDetailSection from "@/components/sections/detail-product/product-detail-section";
 import { products } from "@/lib/data/product";
 import { productDesc } from "@/lib/data/descProduct";
+import Footer from "@/components/footer/footer";
 
 export default async function ProductDetailPage({
   params,
@@ -21,10 +22,13 @@ export default async function ProductDetailPage({
   const relatedProducts = products.filter((p) => p.id !== product.id);
 
   return (
-    <ProductDetailSection
-      product={product}
-      relatedProducts={relatedProducts}
-      productDesc={productDesc}
-    />
+    <>
+      <ProductDetailSection
+        product={product}
+        relatedProducts={relatedProducts}
+        productDesc={productDesc}
+      />
+      <Footer/>
+    </>
   );
 }

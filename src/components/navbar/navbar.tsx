@@ -20,10 +20,16 @@ export default function Navbar() {
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const lastScrollY = useRef(0);
+  const checkoutRoutes = ["/checkout"];
 
   const isHomePage = pathname === "/";
+  const isCheckoutPage = checkoutRoutes.some((route) =>
+    pathname?.startsWith(route)
+  );
 
   useEffect(() => {
+    if (!isHomePage) return;
+
     const handleScroll = () => {
       const current = window.scrollY;
 
@@ -40,13 +46,18 @@ export default function Navbar() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage]);
+
+
+  if (isCheckoutPage) {
+    return null;
+  }
 
   return (
     <>
       <nav
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 font-inter transition-all duration-300 text-white",
+          "fixed top-0 left-0 right-0 z-50 font-inter transition-all duration-300 text-white select-none",
           isVisible ? "translate-y-0" : "-translate-y-full",
           isHomePage
             ? isScrolled
@@ -77,7 +88,10 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <BottomNav items={bottomNavItems} isVisible={isVisible} />
+      <BottomNav
+        items={bottomNavItems}
+        isVisible={isHomePage ? isVisible : false}
+      />
     </>
   );
 }

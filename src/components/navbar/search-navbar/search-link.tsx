@@ -17,8 +17,8 @@ import {
   popularCollections,
   initialRecentSearches,
   sampleProducts,
-} from "@/lib/data/navbar";
-import { RecentSearch, Product } from "@/types/navigation";
+} from "@/lib/data/search";
+import { RecentSearch, Product } from "@/types/search";
 
 export default function SearchLink() {
   const [isOpenSearch, setIsOpenSearch] = useState(false);
@@ -73,6 +73,10 @@ export default function SearchLink() {
     setFilteredProducts(filtered);
   };
 
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+  };
+
   return (
     <Sheet open={isOpenSearch} onOpenChange={setIsOpenSearch}>
       <SheetTrigger asChild>
@@ -82,8 +86,12 @@ export default function SearchLink() {
       </SheetTrigger>
       <SheetContent
         side="top"
-        defaultTop="data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
-        className="border-none bg-[#f2f2f2] p-0"
+        className="border-none data-[state=closed]:slide-out-to-top data-[state=open]:slide-in-from-top transition-all duration-300 ease-in-out inset-y-0 h-full w-full bg-[#f2f2f2] p-0"
+        onInteractOutside={(e) => {
+          if (e.type === "wheel" || e.type === "touchmove") {
+            e.preventDefault();
+          }
+        }}
       >
         <div className="hidden lg:block fixed top-0 left-0 h-full bg-white px-3.5 py-3.5 w-14 z-50">
           <SheetTitle
@@ -94,7 +102,12 @@ export default function SearchLink() {
           </SheetTitle>
         </div>
 
-        <div className="h-screen overflow-y-scroll lg:flex lg:overflow-hidden">
+        <div
+          className="h-screen overflow-y-scroll lg:flex lg:overflow-hidden"
+          onScroll={handleScroll}
+          onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
+        >
           <div className="lg:h-156 lg:ml-24 lg:mt-20 lg:w-1/2 flex flex-col overflow-hidden">
             <div className="shrink-0">
               <SearchInput
@@ -106,7 +119,12 @@ export default function SearchLink() {
               />
             </div>
 
-            <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            <div
+              className="flex-1 overflow-y-auto overflow-x-hidden"
+              onScroll={handleScroll}
+              onWheel={(e) => e.stopPropagation()}
+              onTouchMove={(e) => e.stopPropagation()}
+            >
               <div className="lg:pr-4">
                 <RecentSearches
                   searches={recentSearches}
@@ -121,7 +139,7 @@ export default function SearchLink() {
             </div>
           </div>
 
-            <PopularCollections collections={popularCollections} />
+          <PopularCollections collections={popularCollections} />
         </div>
       </SheetContent>
     </Sheet>

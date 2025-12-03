@@ -87,21 +87,14 @@ export default function FavoriteSection() {
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
       if (window.innerWidth <= 748) return;
 
       const cards = gsap.utils.toArray<HTMLElement>(".card-color");
       const cardTexts = gsap.utils.toArray<HTMLElement>(".text-color");
 
       gsap.set(".border-main", { opacity: 0 });
-      gsap.set(".card-color-trigger", {
-        opacity: 0,
-      });
-
-      gsap.set(".card-main", {
-        backgroundColor: "#ffffff",
-      });
-
+      gsap.set(".card-color-trigger", { opacity: 0 });
+      gsap.set(".card-main", { backgroundColor: "#ffffff" });
       gsap.set(cards, {
         rotation: 35,
         scale: 0.45,
@@ -109,10 +102,13 @@ export default function FavoriteSection() {
         y: (i) => i * -130,
         z: (i) => -i * 50,
       });
+      gsap.set(cardTexts, { fontSize: "60px" });
 
-      gsap.set(cardTexts, {
-        fontSize: "60px",
-      });
+      const getTextX = () => {
+        if (window.innerWidth >= 1300) return -200;
+        if (window.innerWidth >= 1020) return -120;
+        return -20;
+      };
 
       const favoriteTimeline = gsap.timeline({
         scrollTrigger: {
@@ -124,187 +120,31 @@ export default function FavoriteSection() {
           invalidateOnRefresh: true,
         },
       });
-      mm.add("(min-width: 1300px)", () => {
-        favoriteTimeline
-          .to(".card-color-trigger", {
-            opacity: 1,
-          })
-          .to(".card-color-trigger", {
-            y: 200,
-          })
-          .to(cardTexts, {
-            fontSize: "28px",
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * -140,
-            rotation: 0,
-            scale: 1,
-            yPercent: 0,
-          })
-          .to(".card-color-trigger", {
-            y: 0,
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * 0,
-          })
-          .to(".border-main", {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cardMainRef, {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cards, {
-            scale: 0.7,
-          })
-          .to(cards, {
-            height: "40px",
-            y: 22,
-          })
-          .to(
-            cardTexts,
-            {
-              fontSize: "24px",
-              x: -200,
-            },
-            "<"
-          )
-          .to(cards, {
-            opacity: 0,
-          })
-          .to(".card-main", {
-            backgroundColor: (i) => bgCardColor[i],
-            duration: 0.5,
-          })
-          .to(".card-color-trigger", {
-            zIndex: 0,
-          });
-      });
 
-      mm.add("(min-width: 1020px) and (max-width: 1301px)", () => {
-        favoriteTimeline
-          .to(".card-color-trigger", {
-            opacity: 1,
-          })
-          .to(".card-color-trigger", {
-            y: 200,
-          })
-          .to(cardTexts, {
-            fontSize: "28px",
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * -140,
-            rotation: 0,
-            scale: 1,
-            yPercent: 0,
-          })
-          .to(".card-color-trigger", {
-            y: 0,
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * 0,
-          })
-          .to(".border-main", {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cardMainRef, {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cards, {
-            scale: 0.7,
-          })
-          .to(cards, {
-            height: "40px",
-            y: 22,
-          })
-          .to(
-            cardTexts,
-            {
-              fontSize: "24px",
-              x: -120,
-            },
-            "<"
-          )
-          .to(cards, {
-            duration: 0.5,
-            opacity: 0,
-          })
-          .to(".card-main", {
-            backgroundColor: (i) => bgCardColor[i],
-            duration: 0.5,
-          })
-          .to(".card-color-trigger", {
-            zIndex: 0,
-          });
-      });
-
-      mm.add("(min-width: 749px) and (max-width: 1020px)", () => {
-        favoriteTimeline
-          .to(".card-color-trigger", {
-            opacity: 1,
-          })
-          .to(".card-color-trigger", {
-            y: 200,
-          })
-          .to(cardTexts, {
-            fontSize: "28px",
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * -140,
-            rotation: 0,
-            scale: 1,
-            yPercent: 0,
-          })
-          .to(".card-color-trigger", {
-            y: 0,
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * 0,
-          })
-          .to(".border-main", {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cardMainRef, {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cards, {
-            scale: 0.7,
-          })
-          .to(cards, {
-            height: "40px",
-            y: 22,
-          })
-          .to(
-            cardTexts,
-            {
-              fontSize: "24px",
-              x: -20,
-            },
-            "<"
-          )
-          .to(cards, {
-            duration: 0.5,
-            opacity: 0,
-          })
-          .to(".card-main", {
-            backgroundColor: (i) => bgCardColor[i],
-            duration: 0.5,
-          })
-          .to(".card-color-trigger", {
-            zIndex: 0,
-          });
-      });
+      favoriteTimeline
+        .to(".card-color-trigger", { opacity: 1 })
+        .to(".card-color-trigger", { y: 200 })
+        .to(cardTexts, { fontSize: "28px" })
+        .to(cards, {
+          duration: 1,
+          y: (i) => i * -140,
+          rotation: 0,
+          scale: 1,
+          yPercent: 0,
+        })
+        .to(".card-color-trigger", { y: 0 })
+        .to(cards, { duration: 1, y: 0 })
+        .to(".border-main", { duration: 1, opacity: 1 })
+        .to(cardMainRef, { duration: 1, opacity: 1 })
+        .to(cards, { scale: 0.7 })
+        .to(cards, { height: "40px", y: 22 })
+        .to(cardTexts, { fontSize: "24px", x: getTextX() }, "<")
+        .to(cards, { duration: 0.5, opacity: 0 })
+        .to(".card-main", {
+          backgroundColor: (i) => bgCardColor[i],
+          duration: 0.5,
+        })
+        .to(".card-color-trigger", { zIndex: 0 });
 
       ScrollTrigger.create({
         trigger: favoriteRef.current,

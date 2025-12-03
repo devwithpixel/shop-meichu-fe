@@ -3,7 +3,9 @@
 import { useRef, useState } from "react";
 import { MdKeyboardArrowLeft, MdKeyboardArrowRight } from "react-icons/md";
 import TrendingProduct from "@/components/card/trending-product";
-import { Product } from "@/types/navigation";
+import { Product } from "@/types/search";
+import { useIsMobile } from "@/hooks/use-mobile";
+import Link from "next/link";
 
 interface ProductResultsProps {
   products: Product[];
@@ -18,6 +20,7 @@ export default function ProductResults({
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
   const [scrollLeft, setScrollLeft] = useState(0);
+  const isMobile = useIsMobile();
 
   const handleScrollLeft = () => {
     if (!scrollContainerRef.current) return;
@@ -99,19 +102,17 @@ export default function ProductResults({
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="flex gap-6 pb-4 overflow-x-auto scrollbar-hide cursor-grab select-none"
-          style={{
-            scrollbarWidth: "none",
-            msOverflowStyle: "none",
-          }}
+          className="flex gap-6 pb-4 overflow-x-auto scrollbar-hide no-scrollbar cursor-grab select-none"
         >
           {products.map((product) => (
             <div key={product.id} className="inline-block shrink-0">
-              <TrendingProduct
-                product={product}
-                size="sm"
-                className="pointer-events-none"
-              />
+              <Link href={product.href} className="cursor-pointer">
+                <TrendingProduct
+                  product={product}
+                  size={isMobile ? "lg" : "sm"}
+                  className="pointer-events-none"
+                />
+              </Link>
             </div>
           ))}
         </div>

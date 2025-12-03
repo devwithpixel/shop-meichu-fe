@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { Collection } from "@/types/navigation";
+import { Collection } from "@/types/search";
 
 interface PopularCollectionsProps {
   collections: Collection[];

@@ -146,17 +146,17 @@ export default function HeroSection() {
         </video>
         <div className="absolute inset-0 bg-black/40" />
 
-        <div className="relative ms-6">
+        <div className="relative ms-6 flex flex-col gap-6">
           <h1 className="text-white text-5xl font-medium leading-none">
             TIMELESS FASHION <br /> ESSENCE
           </h1>
 
-          <p className="mt-6 text-white/90 max-w-xl">
+          <p className="text-white/90 max-w-xl">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer
             fringilla libero a turpis viverra vehicula.
           </p>
 
-          <div className="flex items-center gap-0.5 cursor-pointer group">
+          <div className="flex items-center gap-0.5 cursor-pointer group w-fit">
             <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
             <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5">
               Explore More

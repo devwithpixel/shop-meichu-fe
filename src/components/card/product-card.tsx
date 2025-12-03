@@ -132,14 +132,15 @@ export function ProductCard({
               onOpenChange={handleSelectOpenChange}
               value={selectedVariant}
             >
-              <SelectTrigger className="w-full rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm">
+              <SelectTrigger className="w-full rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm font-inter placeholder:text-sm">
                 <SelectValue placeholder="Select Size" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white font-inter">
                 {variants.map((variant, index) => (
                   <SelectItem
                     key={index}
                     value={`${variant.size} / ${formatPrice(variant.price)}`}
+                    className="bg-white hover:bg-blue-500! rounded-sm hover:text-white!"
                   >
                     {variant.size} / {formatPrice(variant.price)}
                   </SelectItem>
@@ -168,14 +169,15 @@ export function ProductCard({
               onOpenChange={handleSelectOpenChange}
               value={selectedVariant}
             >
-              <SelectTrigger className="flex-1 rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm">
+              <SelectTrigger className="w-full rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-sm font-inter placeholder:text-sm">
                 <SelectValue placeholder="Select Size" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white font-inter">
                 {variants.map((variant, index) => (
                   <SelectItem
                     key={index}
                     value={`${variant.size} / ${formatPrice(variant.price)}`}
+                    className="bg-white hover:bg-blue-500! rounded-sm hover:text-white!"
                   >
                     {variant.size} / {formatPrice(variant.price)}
                   </SelectItem>
@@ -208,14 +210,15 @@ export function ProductCard({
             value={selectedVariant}
             onOpenChange={handleSelectOpenChange}
           >
-            <SelectTrigger className="w-full rounded-full bg-gray-100 text-gray-900 font-medium h-10 border-0 hover:bg-gray-200 transition-colors duration-300 text-xs">
+            <SelectTrigger className="w-full rounded-full bg-white text-gray-900 font-semibold h-12 border-0 hover:bg-gray-100 transition-colors duration-300 text-xs font-inter placeholder:text-xs">
               <SelectValue placeholder="Select Size" />
             </SelectTrigger>
-            <SelectContent className="text-xs">
+            <SelectContent className="text-xs bg-white">
               {variants.map((variant, index) => (
                 <SelectItem
                   key={index}
                   value={`${variant.size} / ${formatPrice(variant.price)}`}
+                  className="bg-white hover:bg-blue-500! rounded-sm hover:text-white!"
                 >
                   {variant.size} / {formatPrice(variant.price)}
                 </SelectItem>
