@@ -30,12 +30,12 @@ const videoData = {
     {
       title: "Explore Edgy Everyday Wear",
       desc: "Discover bold, street-smart styles crafted for comfort and everyday confidence.",
-      link: "/explore",
+      link: "/collections/all",
     },
     {
       title: "100% ORIGINAL",
       desc: "At Our Store, we take pride in offering 100% original products, crafted with premium materials.",
-      link: "/original",
+      link: "/collections",
     },
   ],
 };

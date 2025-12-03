@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
+import Link from "next/link";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -165,11 +166,11 @@ export default function VideoSection({
             </h1>
             <p className="font-inter text-sm">{item.desc}</p>
 
-            <a href={item.link}>
+            <Link href={item.link}>
               <button className="font-inter bg-white text-sm py-3 px-8 border border-black rounded-full mt-2">
                 EXPLORE
               </button>
-            </a>
+            </Link>
           </div>
         ))}
       </div>
