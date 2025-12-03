@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import ProductDetailSection from "@/components/sections/product-detail-section";
+import ProductDetailSection from "@/components/sections/detail-product/product-detail-section";
 import { products } from "@/lib/data/product";
 import { productDesc } from "@/lib/data/descProduct";
 
