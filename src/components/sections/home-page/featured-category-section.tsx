@@ -1,9 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@radix-ui/react-scroll-area";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+import type { FeaturedCategorySection } from "@/types/strapi/components/home-page/featured-category-section";
 
 interface HeroData {
   image: string;
@@ -33,126 +35,130 @@ interface GalleryItem {
   cards: CardData[];
 }
 
-export default function GallerySection() {
+const galleryData: GalleryItem[] = [
+  {
+    id: 1,
+    hero: {
+      image: "/assets/gallery/girl1.webp",
+      title: "Stay Warm & Stylish",
+      description:
+        "Stay cozy without compromising on style with our Stay Warm & Stylish collection.",
+    },
+    cards: [
+      {
+        type: "text",
+        bg: "#e6dbcc",
+        textColor: "#634d11",
+        title: "Stylish & Functional",
+        description:
+          "Discover the perfect blend of style & practicality with our Stylish & Functional collection.",
+      },
+      {
+        type: "image",
+        image: "/assets/gallery/girl3.jpg",
+      },
+      {
+        type: "image",
+        image: "/assets/gallery/girl2.jpg",
+      },
+      {
+        type: "text",
+        bg: "#c69d9d",
+        textColor: "#461033",
+        title: "Casual Outfits",
+        description:
+          "Effortless style meets everyday comfort in our Casual & Everyday Outfits collection.",
+        hasButton: true,
+      },
+      {
+        type: "image",
+        image: "/assets/gallery/girl4.jpg",
+      },
+      {
+        type: "text",
+        bg: "#eafce3",
+        textColor: "#114a10",
+        title: "Eco-Friendly Styles",
+        description:
+          "Explore our collection and make a difference with every outfit you wear.",
+      },
+      {
+        type: "text",
+        bg: "#eadcf5",
+        textColor: "#440E6F",
+        title: "Trendy & Comfort",
+        description:
+          "Trendy & Comfortable collection combines the latest trends.",
+      },
+    ],
+  },
+  {
+    id: 2,
+    hero: {
+      image: "/assets/gallery/girl4.jpg",
+      title: "Modern & Chic",
+      description:
+        "Embrace contemporary fashion with our Modern & Chic collection that defines elegance.",
+    },
+    cards: [
+      {
+        type: "text",
+        bg: "#d4a5a5",
+        textColor: "#2d0a0a",
+        title: "Urban Style",
+        description:
+          "City-inspired fashion that blends comfort with street-smart aesthetics.",
+      },
+      {
+        type: "image",
+        image: "/assets/gallery/girl2.jpg",
+      },
+      {
+        type: "image",
+        image: "/assets/gallery/girl3.jpg",
+      },
+      {
+        type: "text",
+        bg: "#b8d4e3",
+        textColor: "#0a2d3d",
+        title: "Elegant Wear",
+        description:
+          "Sophisticated designs for those special moments and formal occasions.",
+        hasButton: true,
+      },
+      {
+        type: "image",
+        image: "/assets/gallery/girl1.webp",
+      },
+      {
+        type: "text",
+        bg: "#ffd4e5",
+        textColor: "#4d0a20",
+        title: "Summer Vibes",
+        description:
+          "Light and breezy outfits perfect for warm weather adventures.",
+      },
+      {
+        type: "text",
+        bg: "#e3d4ff",
+        textColor: "#2d0a4d",
+        title: "Classic Collection",
+        description:
+          "Timeless pieces that never go out of style, perfect for any wardrobe.",
+      },
+    ],
+  },
+];
+
+export default function FeaturedCategorySection({
+  data,
+}: {
+  data: FeaturedCategorySection;
+}) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [nextIndex, setNextIndex] = useState(0);
   const [isPosition, setIsPosition] = useState("right");
   const [isAnimating, setIsAnimating] = useState(false);
-
-  const galleryData: GalleryItem[] = [
-    {
-      id: 1,
-      hero: {
-        image: "/assets/gallery/girl1.webp",
-        title: "Stay Warm & Stylish",
-        description:
-          "Stay cozy without compromising on style with our Stay Warm & Stylish collection.",
-      },
-      cards: [
-        {
-          type: "text",
-          bg: "#e6dbcc",
-          textColor: "#634d11",
-          title: "Stylish & Functional",
-          description:
-            "Discover the perfect blend of style & practicality with our Stylish & Functional collection.",
-        },
-        {
-          type: "image",
-          image: "/assets/gallery/girl3.jpg",
-        },
-        {
-          type: "image",
-          image: "/assets/gallery/girl2.jpg",
-        },
-        {
-          type: "text",
-          bg: "#c69d9d",
-          textColor: "#461033",
-          title: "Casual Outfits",
-          description:
-            "Effortless style meets everyday comfort in our Casual & Everyday Outfits collection.",
-          hasButton: true,
-        },
-        {
-          type: "image",
-          image: "/assets/gallery/girl4.jpg",
-        },
-        {
-          type: "text",
-          bg: "#eafce3",
-          textColor: "#114a10",
-          title: "Eco-Friendly Styles",
-          description:
-            "Explore our collection and make a difference with every outfit you wear.",
-        },
-        {
-          type: "text",
-          bg: "#eadcf5",
-          textColor: "#440E6F",
-          title: "Trendy & Comfort",
-          description:
-            "Trendy & Comfortable collection combines the latest trends.",
-        },
-      ],
-    },
-    {
-      id: 2,
-      hero: {
-        image: "/assets/gallery/girl4.jpg",
-        title: "Modern & Chic",
-        description:
-          "Embrace contemporary fashion with our Modern & Chic collection that defines elegance.",
-      },
-      cards: [
-        {
-          type: "text",
-          bg: "#d4a5a5",
-          textColor: "#2d0a0a",
-          title: "Urban Style",
-          description:
-            "City-inspired fashion that blends comfort with street-smart aesthetics.",
-        },
-        {
-          type: "image",
-          image: "/assets/gallery/girl2.jpg",
-        },
-        {
-          type: "image",
-          image: "/assets/gallery/girl3.jpg",
-        },
-        {
-          type: "text",
-          bg: "#b8d4e3",
-          textColor: "#0a2d3d",
-          title: "Elegant Wear",
-          description:
-            "Sophisticated designs for those special moments and formal occasions.",
-          hasButton: true,
-        },
-        {
-          type: "image",
-          image: "/assets/gallery/girl1.webp",
-        },
-        {
-          type: "text",
-          bg: "#ffd4e5",
-          textColor: "#4d0a20",
-          title: "Summer Vibes",
-          description:
-            "Light and breezy outfits perfect for warm weather adventures.",
-        },
-        {
-          type: "text",
-          bg: "#e3d4ff",
-          textColor: "#2d0a4d",
-          title: "Classic Collection",
-          description:
-            "Timeless pieces that never go out of style, perfect for any wardrobe.",
-        },
-      ],
-    },
-  ];
 
   const currentData: GalleryItem = galleryData[currentIndex];
   const nextData: GalleryItem = galleryData[nextIndex];

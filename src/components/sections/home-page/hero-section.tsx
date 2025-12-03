@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import Image from "@/components/global/image";
-import SubHeroSection from "@/components/sections/sub-hero-section";
+import SubHeroSection from "@/components/sections/home-page/sub-hero-section";
 import ScrollTrigger from "gsap/ScrollTrigger";
 import gsap from "gsap";
 

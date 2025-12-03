@@ -1,17 +1,17 @@
 import Footer from "@/components/footer/footer";
 import ScrollSmootherWrapper from "@/components/ScrollSmootherWrapper";
-import HeroSection from "@/components/sections/hero-section";
-import TrendingProductSection from "@/components/sections/trending-product-section";
-import BenefitSection from "@/components/sections/benefit-section";
-import PhilosophySection from "@/components/sections/philosophy-section";
-import BundleSection from "@/components/sections/bundle-section";
-import RecommendationSection from "@/components/sections/recommendation-section";
-import TrendingStyleSection from "@/components/sections/trending-style-section";
-import BestSellerSection from "@/components/sections/best-seller-section";
-import LatestTrendSection from "@/components/sections/latest-trend-section";
-import FAQSection from "@/components/sections/faq-section";
-// import FavoriteSection from "@/components/sections/favorite-section";
-// import GallerySection from "@/components/sections/gallery-section";
+import HeroSection from "@/components/sections/home-page/hero-section";
+import TrendingProductSection from "@/components/sections/home-page/trending-product-section";
+import BenefitSection from "@/components/sections/home-page/benefit-section";
+import PhilosophySection from "@/components/sections/home-page/philosophy-section";
+import CollectionSection from "@/components/sections/home-page/collection-section";
+import BundleSection from "@/components/sections/home-page/bundle-section";
+import RecommendationSection from "@/components/sections/home-page/recommendation-section";
+import TrendingStyleSection from "@/components/sections/home-page/trending-style-section";
+import BestSellerSection from "@/components/sections/home-page/best-seller-section";
+import FeaturedCategorySection from "@/components/sections/home-page/featured-category-section";
+import LatestTrendSection from "@/components/sections/home-page/latest-trend-section";
+import FAQSection from "@/components/sections/home-page/faq-section";
 
 import type { StrapiResponse } from "@/types/strapi/response";
 import type { HomePage } from "@/types/strapi/single-type/home-page";
@@ -35,6 +35,9 @@ export default async function Home() {
       <TrendingProductSection data={homePageData.data.trendingProductSection} />
       <BenefitSection data={homePageData.data.benefitSection} />
       <PhilosophySection data={homePageData.data.philosophySection} />
+      {homePageData.data.collectionSection && (
+        <CollectionSection data={homePageData.data.collectionSection} />
+      )}
       {homePageData.data.bundleSection && (
         <BundleSection data={homePageData.data.bundleSection} />
       )}
@@ -47,17 +50,18 @@ export default async function Home() {
       {homePageData.data.bestSellerSection && (
         <BestSellerSection data={homePageData.data.bestSellerSection} />
       )}
+      {homePageData.data.reviewSection && null}
+      {homePageData.data.featuredCategorySection && (
+        <FeaturedCategorySection
+          data={homePageData.data.featuredCategorySection}
+        />
+      )}
       {homePageData.data.latestTrendSection && (
         <LatestTrendSection data={homePageData.data.latestTrendSection} />
       )}
       {homePageData.data.faqSection && (
         <FAQSection data={homePageData.data.faqSection} />
       )}
-      {/*
-      
-      <FavoriteSection />
-      <GallerySection />
-       */}
       <Footer />
     </ScrollSmootherWrapper>
   );

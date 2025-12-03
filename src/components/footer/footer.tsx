@@ -1,7 +1,5 @@
 "use client";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { useRef } from "react";
+
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,74 +10,41 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { FooterLink } from "./footer-link";
+import { Skeleton } from "@/components/ui/skeleton";
+import FooterRunningText from "./footer-running-text";
+import useSWR from "swr";
+
+import type { Footer } from "@/types/strapi/components/shared/footer";
+import type { StrapiResponse } from "@/types/strapi/response";
+
+const fetcher = (url: string) =>
+  fetch(url).then((r) => r.json() as Promise<StrapiResponse<Footer>>);
+
+const columnClasses = ["lg:col-start-4", "lg:col-start-5", "lg:col-start-6"];
 
 export default function Footer() {
-  const footerRef = useRef(null);
+  const {
+    data: response,
+    error,
+    isLoading,
+  } = useSWR(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/global/footer`,
+    fetcher
+  );
 
-  useGSAP(() => {
-    gsap.to(".footer-text", {
-      xPercent: -100,
-      repeat: -1,
-      ease: "none",
-      duration: 22,
-    });
-  });
+  if (error) return <div>Failed to load</div>;
+  if (isLoading) return <Skeleton className="h-64" />;
 
-  const quickLinks = [
-    { title: "Home", href: "/", icon: false },
-    { title: "Search", href: "/search", icon: false },
-    { title: "Collections", href: "/collections", icon: false },
-    { title: "About Us", href: "/about", icon: false },
-    { title: "News", href: "/news", icon: false },
-  ];
-
-  const supportLinks = [
-    { title: "Privacy Policy", href: "/privacy", icon: false },
-    { title: "Refund Policy", href: "/refund", icon: false },
-    { title: "Shipping Policy", href: "/shipping", icon: false },
-    { title: "Contact", href: "/contact", icon: false },
-    { title: "FAQ", href: "/faq", icon: false },
-  ];
-
-  const socialLinks = [
-    { title: "Facebook", href: "https://facebook.com", icon: true },
-    { title: "X (Twitter)", href: "https://twitter.com", icon: true },
-    { title: "Instagram", href: "https://instagram.com", icon: true },
-    { title: "YouTube", href: "https://youtube.com", icon: true },
-  ];
+  const data = response!.data;
 
   return (
-    <div ref={footerRef} className="bg-carbon text-white">
-      <div className="relative w-full overflow-hidden">
-        <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-carbon to-transparent z-20" />
-        <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-carbon to-transparent z-20" />
-
-        <div className="footer-text flex whitespace-nowrap font-rubik pt-5">
-          <p className="text-7xl md:text-8xl font-medium">
-            Your Favorite Styles at &nbsp;
-          </p>
-          <p className="text-7xl md:text-8xl font-medium text-transparent text-outline-white">
-            Unmissable Princess! &nbsp;
-          </p>
-
-          <p className="text-7xl md:text-8xl font-medium">
-            Your Favorite Styles at &nbsp;
-          </p>
-          <p className="text-7xl md:text-8xl font-medium text-transparent text-outline-white">
-            Unmissable Princess! &nbsp;
-          </p>
-        </div>
-      </div>
+    <div className="bg-carbon text-white">
+      {data.runningText && <FooterRunningText data={data.runningText} />}
 
       <div className="py-16 px-6 font-inter">
         <div className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-1 gap-8">
           <div className="lg:col-span-2 leading-7">
-            <p>
-              Whether you're looking for chic essentials, statement outfits, or
-              casual staples, we've got something to suit every style. Browse
-              our fresh arrivals and update your wardrobe with the season's
-              hottest looks today!
-            </p>
+            <p>{data.description}</p>
 
             <div className="mt-8 w-full">
               <div className="flex items-center border border-white/40 hover:border-white transition-colors p-1 rounded-full">
@@ -99,116 +64,96 @@ export default function Footer() {
             className="hidden lg:block h-44 mx-auto bg-white/20 lg:col-start-3"
           />
 
-          <div className="hidden lg:block space-y-6 lg:col-start-4">
-            <h1 className="font-semibold text-xl">Quick links</h1>
-            <ul className="space-y-2 text-white/70">
-              {quickLinks.map((link) => (
-                <li key={link.href}>
-                  <FooterLink
-                    href={link.href}
-                    title={link.title}
-                    icon={link.icon}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+          {data.navigationGroups?.map((group, index) => (
+            <div
+              className={`hidden lg:block space-y-6 ${columnClasses[index]}`}
+            >
+              <h1 className="font-semibold text-xl">{group.title}</h1>
+              <ul className="space-y-2 text-white/70">
+                {group.navigations?.map((navigation) => (
+                  <li key={navigation.id}>
+                    <FooterLink
+                      href={navigation.url}
+                      title={navigation.title}
+                      icon={false}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
 
-          <div className="hidden lg:block space-y-6 lg:col-start-5">
-            <h1 className="font-semibold text-xl">Support</h1>
-            <ul className="space-y-2 text-white/70">
-              {supportLinks.map((link) => (
-                <li key={link.href}>
-                  <FooterLink
-                    href={link.href}
-                    title={link.title}
-                    icon={link.icon}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          <div className="hidden lg:block space-y-6 lg:col-start-6">
-            <h1 className="font-semibold text-xl">Follow us on</h1>
-            <ul className="space-y-2 text-white/70">
-              {socialLinks.map((link) => (
-                <li key={link.href}>
-                  <FooterLink
-                    href={link.href}
-                    title={link.title}
-                    icon={link.icon}
-                  />
-                </li>
-              ))}
-            </ul>
-          </div>
+          {data.socialMedia && (
+            <div
+              className={`hidden lg:block space-y-6 lg:col-start-6 ${columnClasses[data.navigationGroups?.length || 0]}`}
+            >
+              <h1 className="font-semibold text-xl">Follow us on</h1>
+              <ul className="space-y-2 text-white/70">
+                {data.socialMedia.map((socialMedia) => (
+                  <li key={socialMedia.id}>
+                    <FooterLink
+                      href={socialMedia.url}
+                      title={socialMedia.media}
+                      icon
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
           <div className="lg:hidden lg:col-span-4">
             <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="quick-links" className="border-white/20">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
-                  Quick links
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="space-y-2 text-white/70 pt-2">
-                    {quickLinks.map((link) => (
-                      <li key={link.href}>
-                        <FooterLink
-                          href={link.href}
-                          title={link.title}
-                          icon={link.icon}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="support" className="border-white/20">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
-                  Support
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="space-y-2 text-white/70 pt-2">
-                    {supportLinks.map((link) => (
-                      <li key={link.href}>
-                        <FooterLink
-                          href={link.href}
-                          title={link.title}
-                          icon={link.icon}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="social" className="border-white/20">
-                <AccordionTrigger className="text-xl font-semibold hover:no-underline">
-                  Follow us on
-                </AccordionTrigger>
-                <AccordionContent>
-                  <ul className="space-y-2 text-white/70 pt-2">
-                    {socialLinks.map((link) => (
-                      <li key={link.href}>
-                        <FooterLink
-                          href={link.href}
-                          title={link.title}
-                          icon={link.icon}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                </AccordionContent>
-              </AccordionItem>
+              {data.navigationGroups?.map((group) => (
+                <AccordionItem
+                  key={group.id}
+                  value={group.title}
+                  className="border-white/20"
+                >
+                  <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+                    {group.title}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="space-y-2 text-white/70 pt-2">
+                      {group.navigations?.map((navigation) => (
+                        <li key={navigation.id}>
+                          <FooterLink
+                            href={navigation.url}
+                            title={navigation.title}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+              {data.socialMedia && (
+                <AccordionItem value="social" className="border-white/20">
+                  <AccordionTrigger className="text-xl font-semibold hover:no-underline">
+                    Follow us on
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <ul className="space-y-2 text-white/70 pt-2">
+                      {data.socialMedia.map((socialMedia) => (
+                        <li key={socialMedia.id}>
+                          <FooterLink
+                            href={socialMedia.url}
+                            title={socialMedia.media}
+                            icon
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </AccordionContent>
+                </AccordionItem>
+              )}
             </Accordion>
           </div>
         </div>
       </div>
 
       <div className="text-center py-4 bg-blackfull text-white text-sm">
-        © 2025 Meichu. Powered by Pixel
+        © {new Date().getFullYear()} Meichu. Powered by Pixel
       </div>
     </div>
   );

@@ -6,91 +6,29 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
+
 import type { CollectionSection } from "@/types/strapi/components/home-page/collection-section";
-
-gsap.registerPlugin(useGSAP, ScrollTrigger, SplitText);
-
-interface CategoryProps {
-  id: string;
-  image: string;
-  title: string;
-  mainTitle: string;
-  description1: string;
-  description2: string;
-  buttonText: string;
-  mainImage: string;
-  gridImages: string[];
-}
-
-const categories: CategoryProps[] = [
-  {
-    id: "1",
-    image: "/assets/image/3.svg",
-    title: "Winter Warmth",
-    mainTitle: "WRAP YOURSELF IN WINTER WARMTH",
-    description1:
-      "Stay warm and stylish this winter! Explore cozy layers, trendy outerwear, and must-have essentials for the chilly season. From snuggly knits to bold boots, find pieces that bring the heat to your winter wardrobe. Wrap yourself in comfort and confidence-because cold weather deserves hot looks.",
-    description2:
-      "From plush textures to elegant finishes, every detail is chosen to enhance your winter experience. Embrace the season with confidence and comfort-because staying warm should always feel this good.",
-    buttonText: "Wrap Yourself in Winter Warmth",
-    mainImage: "/assets/image/my.png",
-    gridImages: [
-      "/assets/image/1.webp",
-      "/assets/image/1.webp",
-      "/assets/image/1.webp",
-    ],
-  },
-  {
-    id: "2",
-    image: "/assets/image/4.svg",
-    title: "Stylish Layers",
-    mainTitle: "STYLISH LAYERS FOR THE PERFECT LOOK",
-    description1:
-      "Our curated collection for the perfect look features sleek jackets, smart knits, and versatile outerwear designed to keep you warm while making a statement. Top it off with timeless accessories that turn everyday moments into style milestones.",
-    description2:
-      "Designed to complement each other seamlessly, these layers offer endless outfit possibilities while keeping you comfortable in changing temperatures. Create depth, add dimension, and showcase your personal flair with every layer you wear.",
-    buttonText: "Stylish Layers for the perfect look",
-    mainImage: "/assets/image/1.webp",
-    gridImages: [
-      "/assets/image/my.png",
-      "/assets/image/my.png",
-      "/assets/image/my.png",
-    ],
-  },
-  {
-    id: "3",
-    image: "/assets/image/2.svg",
-    title: "Bold Basics",
-    mainTitle: "STRONG STYLE FOR STRONG MOVES",
-    description1:
-      "From sharp tailoring to bold essentials, each piece is designed to empower your every move-whether you're closing deals, breaking boundaries, or making your mark. Dress like you mean it, because power looks better when it's personal.",
-    description2:
-      "With a fit that feels like a second skin and a look that commands attention, you'll stay focused, fierce, and ready to take on any challenge. Because when you look strong, you move even stronger.",
-    buttonText: "Strong Style for Strong Moves",
-    mainImage: "/assets/image/1.webp",
-    gridImages: [
-      "/assets/image/my.png",
-      "/assets/image/my.png",
-      "/assets/image/my.png",
-    ],
-  },
-];
 
 export default function CollectionSection({
   data,
 }: {
   data: CollectionSection;
 }) {
-  const styleRef = useRef(null);
-  const [activeCategory, setActiveCategory] = useState("2");
-
-  const activeCategoryData =
-    categories.find((cat) => cat.id === activeCategory) || categories[1];
+  const styleRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
+  const [activeCollectionId, setActiveCollectionId] = useState<number>(
+    data.collections?.[1]?.id || data.collections[0].id
+  );
+  const activeCollection = useMemo(
+    () => data.collections?.find((col) => col.id === activeCollectionId),
+    [activeCollectionId]
+  );
 
   useGSAP(
     () => {
-      if (window.innerWidth <= 768) return;
+      if (isMobile) return;
 
       gsap.set(".multi-image-container", { opacity: 0, scale: 0.8 });
 
@@ -294,13 +232,13 @@ export default function CollectionSection({
 
             <div className="category-style relative  z-40 w-full flex justify-center mb-16">
               <div className="max-w-6xl w-full flex justify-center items-center gap-6">
-                {categories.map((category) => {
-                  const isActive = activeCategory === category.id;
+                {data.collections?.map((collection) => {
+                  const isActive = activeCollectionId === collection.id;
 
                   return (
                     <div
-                      key={category.id}
-                      onClick={() => setActiveCategory(category.id)}
+                      key={collection.id}
+                      onClick={() => setActiveCollectionId(collection.id)}
                       className={`rounded-full h-20 flex items-center cursor-pointer transition-all duration-300
                       ${
                         isActive
@@ -310,8 +248,8 @@ export default function CollectionSection({
                     `}
                     >
                       <img
-                        src={category.image}
-                        alt={category.title}
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.category.thumbnail?.url}`}
+                        alt={collection.category?.name}
                         className={`object-contain transition-all duration-300
                         ${
                           isActive
@@ -323,7 +261,7 @@ export default function CollectionSection({
 
                       {isActive && (
                         <h1 className="text-[26px] font-arial font-normal flex-1 text-center">
-                          {category.title}
+                          {collection.category?.name}
                         </h1>
                       )}
                     </div>
@@ -336,15 +274,11 @@ export default function CollectionSection({
               <div className="max-w-6xl w-full grid grid-cols-2 gap-4 justify-center items-center px-12">
                 <div className="title-description-style grid grid-cols-1 gap-6">
                   <h1 className="split-title-style text-4xl md:text-3xl lg:text-5xl font-bold text-white leading-tight font-rubik max-w-[480px]">
-                    {activeCategoryData.mainTitle}
+                    {activeCollection?.category.name}
                   </h1>
 
                   <p className="text-xs lg:text-sm leading-relaxed opacity-80 font-inter">
-                    {activeCategoryData.description1}
-                  </p>
-
-                  <p className="text-xs lg:text-sm leading-relaxed opacity-80 font-inter">
-                    {activeCategoryData.description2}
+                    {activeCollection?.section.description}
                   </p>
                 </div>
 
@@ -352,7 +286,7 @@ export default function CollectionSection({
                   <div className="button-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] z-30">
                     <div className=" bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-inter">
                       <span className="text-btn flex items-center flex-1 font-inter text-sm md:text-base lg:text-lg text-gray-900 truncate">
-                        {activeCategoryData.buttonText}
+                        {activeCollection?.ctaText}
                       </span>
 
                       <Button className=" w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
@@ -364,8 +298,8 @@ export default function CollectionSection({
                   <div className="single-image-container w-full z-10">
                     <div className="relative w-full h-[500px]">
                       <img
-                        src={activeCategoryData.mainImage}
-                        alt="model"
+                        src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${activeCollection?.category.thumbnail?.url}`}
+                        alt={activeCollection?.category.name}
                         className="w-full h-[500px] object-cover rounded-3xl"
                       />
                     </div>
@@ -373,31 +307,34 @@ export default function CollectionSection({
 
                   <div className="multi-image-container absolute inset-0 w-full">
                     <div className="px-4 grid grid-cols-2 gap-5 w-full">
-                      <div className="image-item-1 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
-                        <img
-                          src={activeCategoryData.gridImages[0]}
-                          alt="image-1"
-                          className="w-full h-48 object-cover"
-                        />
-                      </div>
-
-                      <div className="image-item-2 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
-                        <img
-                          src={activeCategoryData.gridImages[1]}
-                          alt="image-2"
-                          className="w-full h-48 object-cover"
-                        />
-                      </div>
+                      {activeCollection?.products
+                        .slice(0, 2)
+                        .map((product, index) => {
+                          return (
+                            <div
+                              key={product.id}
+                              className={`image-item-${index + 1} w-full h-48 overflow-hidden rounded-2xl bg-gray-200`}
+                            >
+                              <img
+                                src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product?.images?.[0]?.url}`}
+                                alt={product?.name}
+                                className="w-full h-48 object-cover"
+                              />
+                            </div>
+                          );
+                        })}
                     </div>
 
                     <div className="px-4 mt-28">
-                      <div className="image-item-3 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
-                        <img
-                          src={activeCategoryData.gridImages[2]}
-                          alt="image-3"
-                          className="w-full h-48 object-cover"
-                        />
-                      </div>
+                      {activeCollection?.products?.[2] ? (
+                        <div className="image-item-3 w-full h-48 overflow-hidden rounded-2xl bg-gray-200">
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${activeCollection?.products?.[2]?.images?.[0]?.url}`}
+                            alt="image-3"
+                            className="w-full h-48 object-cover"
+                          />
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 </div>
@@ -414,12 +351,10 @@ export default function CollectionSection({
             <div className="max-w-6xl w-full">
               <div>
                 <h1 className="text-3xl font-medium text-gray-900 leading-tight font-rubik text-center">
-                  STYLE CRAFTED TO PERFECTION
+                  {data.section.title}
                 </h1>
                 <p className="mt-4 text-xs leading-relaxed text-gray-600 font-inter text-center">
-                  Discover fashion that fits every mood! Explore our diverse
-                  collections, from casual essentials to statement trends. Find
-                  the perfect style for every occasion
+                  {data.section.description}
                 </p>
               </div>
             </div>
@@ -427,13 +362,13 @@ export default function CollectionSection({
 
           <div className="relative w-full flex justify-center mb-8">
             <div className="max-w-6xl w-full flex justify-center items-center gap-3">
-              {categories.map((category) => {
-                const isActive = activeCategory === category.id;
+              {data.collections?.map((collection) => {
+                const isActive = activeCollectionId === collection.id;
 
                 return (
                   <div
-                    key={category.id}
-                    onClick={() => setActiveCategory(category.id)}
+                    key={collection.id}
+                    onClick={() => setActiveCollectionId(collection.id)}
                     className={`rounded-full h-16 flex items-center cursor-pointer transition-all duration-300
                     ${
                       isActive
@@ -443,8 +378,8 @@ export default function CollectionSection({
                   `}
                   >
                     <img
-                      src={category.image}
-                      alt={category.title}
+                      src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.category.thumbnail?.url}`}
+                      alt={collection.category?.name}
                       className={`object-contain transition-all duration-300
                       ${isActive ? "w-12 h-12 absolute" : "w-12 h-12"}
                     `}
@@ -452,7 +387,7 @@ export default function CollectionSection({
 
                     {isActive && (
                       <h1 className="text-lg font-arial font-normal flex-1 text-center pl-10">
-                        {category.title}
+                        {collection.category?.name}
                       </h1>
                     )}
                   </div>
@@ -463,47 +398,44 @@ export default function CollectionSection({
 
           <div className="w-full my-8">
             <h1 className="text-2xl font-medium text-gray-900 leading-tight font-rubik">
-              {activeCategoryData.mainTitle}
+              {activeCollection?.section.title}
             </h1>
             <p className="mt-4 text-xs leading-relaxed text-gray-800 font-inter">
-              {activeCategoryData.description1}
-            </p>
-            <p className="mt-4 text-xs leading-relaxed text-gray-800 font-inter">
-              {activeCategoryData.description2}
+              {activeCollection?.section.description}
             </p>
           </div>
 
           <div className="w-full mb-6">
             <div className="relative w-full h-64">
               <img
-                src={activeCategoryData.mainImage}
-                alt="model"
+                src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${activeCollection?.category.thumbnail?.url}`}
+                alt={activeCollection?.category.name}
                 className="w-full h-64 object-cover rounded-3xl"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mb-4">
-            <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
-              <img
-                src={activeCategoryData.gridImages[0]}
-                alt="image-1"
-                className="w-full h-40 object-cover"
-              />
-            </div>
-            <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
-              <img
-                src={activeCategoryData.gridImages[1]}
-                alt="image-2"
-                className="w-full h-40 object-cover"
-              />
-            </div>
+            {activeCollection?.products.slice(0, 2).map((product) => {
+              return (
+                <div
+                  key={product.id}
+                  className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200"
+                >
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product?.images?.[0]?.url}`}
+                    alt={product?.name}
+                    className="w-full h-40 object-cover"
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <div className="w-full mb-4">
             <div className="button bg-white text-black pl-4 pr-2 py-3 rounded-full flex items-center gap-3 w-full font-inter">
               <span className="flex items-center flex-1 font-inter text-sm text-black truncate">
-                {activeCategoryData.buttonText}
+                {activeCollection?.ctaText}
               </span>
               <Button className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
                 <MdOutlineArrowOutward className="w-5 h-5" />
@@ -512,13 +444,15 @@ export default function CollectionSection({
           </div>
 
           <div className="w-full">
-            <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
-              <img
-                src={activeCategoryData.gridImages[2]}
-                alt="image-3"
-                className="w-full h-40 object-cover"
-              />
-            </div>
+            {activeCollection?.products?.[2] ? (
+              <div className="w-full h-40 overflow-hidden rounded-2xl bg-gray-200">
+                <img
+                  src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${activeCollection?.products?.[2]?.images?.[0]?.url}`}
+                  alt={activeCollection?.products?.[2]?.name}
+                  className="w-full h-40 object-cover"
+                />
+              </div>
+            ) : null}
           </div>
         </div>
       </div>

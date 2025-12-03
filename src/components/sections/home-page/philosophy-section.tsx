@@ -5,59 +5,81 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { cn } from "@/lib/utils";
 import gsap from "gsap";
 import Image from "@/components/global/image";
 
 import type { PhilosophySection } from "@/types/strapi/components/home-page/philosophy-section";
+import type { Category } from "@/types/strapi/models/category";
 
-interface CardProps {
-  id: number;
-  sizeClass: string;
-  image: string;
-  title: string;
+const sizeClassTemplate = [
+  "size-36 md: 20",
+  "size-28 md: 16",
+  "size-24 md: 12",
+];
+
+const cardClassPosition = {
+  left: "-mr-4 md:mr-0",
+  right: "-ml-4 md:ml-0",
+};
+
+function Card({
+  category,
+  position,
+  className,
+  style,
+}: {
+  category: Category;
+  position: "left" | "right";
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger
+        asChild
+        className={`${position}-card ${cardClassPosition[position]} md:absolute left-1/2`}
+      >
+        <Image
+          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${category.thumbnail?.url}`}
+          alt={category.name}
+          className={cn(
+            "bg-white object-cover rounded-full border-white border-6 shadow-lg",
+            className
+          )}
+          style={style}
+        />
+      </TooltipTrigger>
+      <TooltipContent className="font-rubik text-white">
+        {category.name}
+      </TooltipContent>
+    </Tooltip>
+  );
 }
-
-const leftCards: CardProps[] = [
-  {
-    id: 1,
-    sizeClass: "size-12 md:size-28",
-    image: "/assets/image/my.png",
-    title: "Elektronik",
-  },
-  {
-    id: 2,
-    sizeClass: "size-20 md:size-36",
-    image: "/assets/image/my.png",
-    title: "Smartwatch",
-  },
-];
-const rightCards: CardProps[] = [
-  {
-    id: 1,
-    sizeClass: "size-20 md:size-36",
-    image: "/assets/image/my.png",
-    title: "Kebutuhan Rumah Tangga",
-  },
-  {
-    id: 2,
-    sizeClass: "size-12 md:size-28",
-    image: "/assets/image/my.png",
-    title: "Tiket Pesawat",
-  },
-];
 
 export default function PhilosophySection({
   data,
 }: {
   data: PhilosophySection;
 }) {
-  "use no memo";
   const sectionRef = useRef<HTMLDivElement>(null);
   const circleBackgroundRef = useRef<HTMLDivElement>(null);
   const svgTextRef = useRef<SVGSVGElement>(null);
+  const middle = useMemo(
+    () => Math.floor((data.categories?.length || 0) / 2),
+    [data.categories]
+  );
+  const leftCards = useMemo(
+    () => data.categories?.slice(0, middle) || [],
+    [data.categories, middle]
+  );
+  const rightCards = useMemo(
+    () => data.categories?.slice(middle) || [],
+    [data.categories, middle]
+  );
 
   useGSAP(() => {
     const sectionSelector = gsap.utils.selector(sectionRef.current!);
@@ -154,21 +176,16 @@ export default function PhilosophySection({
       </h3>
 
       <div className="flex items-center justify-center md:absolute md:bottom-5 md:left-0 md:w-full">
-        {leftCards.map((card, index) => (
-          <Tooltip key={card.id}>
-            <TooltipTrigger
-              asChild
-              className="left-card -mr-4 md:mr-0 md:absolute left-1/2"
-            >
-              <Image
-                src={card.image}
-                className={`object-cover ${card.sizeClass} rounded-full border-white border-6 shadow-md z-${index * 10}`}
-              />
-            </TooltipTrigger>
-            <TooltipContent className="font-rubik text-white">
-              {card.title}
-            </TooltipContent>
-          </Tooltip>
+        {leftCards.slice(0, 3).map((card, index) => (
+          <Card
+            key={card.id}
+            category={card}
+            position="left"
+            className={sizeClassTemplate[leftCards.length - (index + 1)]}
+            style={{
+              zIndex: index * 10,
+            }}
+          />
         ))}
         <div className="size-28 md:size-44 flex items-center justify-center relative rounded-full">
           <svg
@@ -217,21 +234,16 @@ export default function PhilosophySection({
             className="hidden md:block absolute size-full bg-[#C8F51D] rounded-full scale-110 will-change-transform z-900"
           ></div>
         </div>
-        {rightCards.map((card, index) => (
-          <Tooltip key={card.id}>
-            <TooltipTrigger
-              asChild
-              className="right-card -ml-4 md:ml-0 md:absolute md:left-1/2"
-            >
-              <Image
-                src={card.image}
-                className={`object-cover ${card.sizeClass} rounded-full border-white border-6 shadow-md z-${(rightCards.length - index) * 10}`}
-              />
-            </TooltipTrigger>
-            <TooltipContent className="font-rubik text-white">
-              {card.title}
-            </TooltipContent>
-          </Tooltip>
+        {rightCards.slice(0, 3).map((card, index) => (
+          <Card
+            key={card.id}
+            category={card}
+            position="right"
+            className={sizeClassTemplate[index]}
+            style={{
+              zIndex: (rightCards.length - index) * 10,
+            }}
+          />
         ))}
       </div>
     </section>

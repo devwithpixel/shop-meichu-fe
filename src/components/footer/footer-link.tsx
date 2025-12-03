@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import Link from "next/link";
 import { FiArrowUpRight } from "react-icons/fi";
+import Link from "next/link";
 
 interface FooterLinkProps {
   href: string;

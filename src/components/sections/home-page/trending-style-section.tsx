@@ -338,7 +338,7 @@ export default function TrendingStyleSection({
                           "card-main flex items-center gap-5 rounded-3xl p-2"
                         }
                         style={{
-                          backgroundColor: bgColors[index],
+                          backgroundColor: bgCardColor[index],
                         }}
                       >
                         <img

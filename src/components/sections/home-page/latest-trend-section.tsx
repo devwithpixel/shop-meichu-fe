@@ -5,9 +5,9 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { gsap } from "gsap";
+import Image from "@/components/global/image";
 
 import type { LatestTrendSection } from "@/types/strapi/components/home-page/latest-trend-section";
-import Image from "../global/image";
 
 export default function LatestTrendSection({
   data,
