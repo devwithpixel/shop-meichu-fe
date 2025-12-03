@@ -12,7 +12,7 @@ const headerData = {
   desc: "Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal.",
 } as const;
 
-export default function CollectionsPage() {
+export default function AllCollectionsPage() {
   return (
     <ScrollSmootherWrapper>
       <div className="bg-gray-100">
