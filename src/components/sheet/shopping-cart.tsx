@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Sheet,
   SheetContent,
@@ -6,54 +8,52 @@ import {
   SheetHeader,
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { FiShoppingBag } from "react-icons/fi";
-import { INITIAL_CART_ITEMS, RECOMMENDED_PRODUCTS } from "@/lib/data/cart";
-import { CartItem as CartItemType } from "@/types/cart";
-import CartItem from "./cart-item";
-import RecommendedProducts from "./recommended-products";
-import CartSummary from "./cart-summary";
 import { IoClose } from "react-icons/io5";
+import { useCart } from "@/context/cart-provider";
+import useSWR from "swr";
 
-export default function ShoppingBag() {
-  const [isOpenCart, setIsOpenCart] = useState(false);
+import type { StrapiResponse } from "@/types/strapi/response";
+import type { Product } from "@/types/strapi/models/product";
+
+import CartItem from "./shopping-cart/cart-item";
+import CartSummary from "./shopping-cart/cart-summary";
+import RecommendedProducts from "./shopping-cart/recommended-products";
+
+const fetcher = (url: string) =>
+  fetch(url).then((r) => r.json() as Promise<StrapiResponse<Product[]>>);
+
+export default function ShoppingCart() {
   const isMobile = useIsMobile();
-
-  const [cartItems, setCartItems] =
-    useState<CartItemType[]>(INITIAL_CART_ITEMS);
+  const { data: response } = useSWR(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/recommended-product`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+  const { isOpen, setIsOpen, items, updateQuantity, removeItem } = useCart();
   const [specialInstructions, setSpecialInstructions] = useState("");
 
-  const subtotal = cartItems.reduce(
+  const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
-  const grandTotal = subtotal;
 
-  const updateQuantity = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    setCartItems((items) =>
-      items.map((item) =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-
-  const removeItem = (id: number) => {
-    setCartItems((items) => items.filter((item) => item.id !== id));
-  };
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     e.stopPropagation();
-  };
+  }, []);
 
   return (
-    <Sheet open={isOpenCart} onOpenChange={setIsOpenCart}>
+    <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
         <button className="text-white border-none hover:bg-gray-900 p-2 rounded-full flex items-center justify-center relative">
           <FiShoppingBag className="h-5 w-5" />
-          {cartItems.length > 0 && (
+          {items.length > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-              {cartItems.length}
+              {items.length}
             </span>
           )}
         </button>
@@ -76,11 +76,11 @@ export default function ShoppingBag() {
           <SheetHeader className="sticky top-0 px-6 py-5 border-b z-20 shrink-0">
             <div className="flex items-center justify-between">
               <SheetTitle className="text-2xl font-bold font-rubik ">
-                Shopping bag ({cartItems.length})
+                Shopping bag ({items.length})
               </SheetTitle>
               <div
                 className="group cursor-pointer p-1 transition-all duration-200 rounded-none hover:bg-[#f2f2f2] hover:rounded-full"
-                onClick={() => setIsOpenCart(false)}
+                onClick={() => setIsOpen(false)}
               >
                 <IoClose className="w-5 h-5 transition-all duration-200 group-hover:rotate-180" />
               </div>
@@ -94,7 +94,7 @@ export default function ShoppingBag() {
             onTouchMove={(e) => e.stopPropagation()}
           >
             <div className="py-6">
-              {cartItems.length === 0 ? (
+              {items.length === 0 ? (
                 <div className="space-y-8 min-h-125 flex items-center justify-center">
                   <div className="flex flex-col items-center justify-center text-center">
                     <FiShoppingBag className="h-16 w-16 text-gray-300 mb-4" />
@@ -109,7 +109,7 @@ export default function ShoppingBag() {
               ) : (
                 <>
                   <div className="px-6">
-                    {cartItems.map((item) => (
+                    {items.map((item) => (
                       <CartItem
                         key={item.id}
                         item={item}
@@ -119,16 +119,18 @@ export default function ShoppingBag() {
                     ))}
                   </div>
 
-                  <RecommendedProducts products={RECOMMENDED_PRODUCTS} />
+                  {response && (
+                    <RecommendedProducts products={response.data || []} />
+                  )}
                 </>
               )}
             </div>
           </div>
 
-          {cartItems.length > 0 && (
+          {items.length > 0 && (
             <CartSummary
               subtotal={subtotal}
-              grandTotal={grandTotal}
+              grandTotal={subtotal}
               specialInstructions={specialInstructions}
               onSpecialInstructionsChange={setSpecialInstructions}
             />

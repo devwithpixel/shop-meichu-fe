@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import { RecommendedProduct } from "@/types/cart";
+import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 
-interface RecommendedProductsProps {
-  products: RecommendedProduct[];
-}
+import type { Product } from "@/types/strapi/models/product";
 
 export default function RecommendedProducts({
   products,
-}: RecommendedProductsProps) {
+}: {
+  products: Product[];
+}) {
   const scrollContainerRef = useRef<HTMLDivElement | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);
@@ -130,10 +130,10 @@ export default function RecommendedProducts({
         >
           {products.map((product) => (
             <div key={product.id} className="min-w-[140px] shrink-0 group">
-              <Link href={product.href}>
+              <Link href={`/products/${product.slug}`}>
                 <div className="relative overflow-hidden rounded-3xl mb-2">
                   <img
-                    src={product.image}
+                    src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url}`}
                     alt={product.name}
                     className="w-full h-40 object-cover group-hover:scale-105 transition-transform duration-300"
                   />
@@ -143,7 +143,7 @@ export default function RecommendedProducts({
                     {product.name}
                   </p>
                   <p className="text-xs text-gray-600">
-                    ${product.price.toLocaleString()}
+                    {formatCurrency(product.price)}
                   </p>
                 </div>
               </Link>

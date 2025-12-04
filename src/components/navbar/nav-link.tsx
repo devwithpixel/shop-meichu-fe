@@ -85,9 +85,9 @@ export default function NavLink({ title, url, subNavigation }: Navigation) {
         ) : (
           <div className="p-6">
             <div className="flex flex-col gap-1">
-              {subNavigation.items?.map((navigationItem) => (
+              {subNavigation.items?.map((navigationItem, index) => (
                 <Link
-                  key={navigationItem.title}
+                  key={index}
                   href={navigationItem.url}
                   className="group font-rubik text-base font-medium text-black hover:text-white hover:bg-black transition-colors px-4 py-2 rounded-lg"
                 >

@@ -1,13 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { FaRegUserCircle } from "react-icons/fa";
 import SearchLink from "./search-navbar/search-link";
-import ShoppingBag from "./cart-navbar/shopping-bag";
+import ShoppingCart from "@/components/sheet/shopping-cart";
+import { FaRegUserCircle } from "react-icons/fa";
 
-export default function NavActions() {
+export default function NavbarActions() {
   return (
-    <div className="flex items-center">
+    <>
       <SearchLink />
 
       <Link
@@ -17,7 +17,7 @@ export default function NavActions() {
         <FaRegUserCircle className="h-5 w-5" />
       </Link>
 
-      <ShoppingBag />
-    </div>
+      <ShoppingCart />
+    </>
   );
 }

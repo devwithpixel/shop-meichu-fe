@@ -1,16 +1,8 @@
-export interface CartItem {
-    id: number;
-    name: string;
-    href: string;
-    price: number;
-    image: string;
-    quantity: number;
-}
+import type { Product } from "@/types/strapi/models/product";
 
-export interface RecommendedProduct {
-    id: number;
-    name: string;
-    href: string;
-    price: number;
-    image: string;
-}
+export type CartItem = Pick<
+  Product,
+  "id" | "slug" | "name" | "price" | "stock" | "images"
+> & {
+  quantity: number;
+};

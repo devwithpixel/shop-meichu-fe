@@ -28,7 +28,7 @@ export default async function ProductDetailPage({
         relatedProducts={relatedProducts}
         productDesc={productDesc}
       />
-      <Footer/>
+      <Footer />
     </>
   );
 }

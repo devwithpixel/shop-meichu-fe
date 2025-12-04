@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import MobileMenu from "./mobile-menu";
-import NavActions from "./navbar-actions";
+import NavbarActions from "./navbar-actions";
 import NavLink from "./nav-link";
 import BottomNav from "./bottom-navbar";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ import {
   catalogCategories,
   bottomNavItems,
 } from "@/lib/data/navbar";
+import { usePathname } from "next/navigation";
 
 import type { Navbar } from "@/types/strapi/components/shared/navbar";
 import type { Category } from "@/types/strapi/models/category";
@@ -24,22 +25,27 @@ export default function Navbar({
   data: Navbar;
   categories: Category[];
 }) {
+  const pathname = usePathname();
+  const isCatalogAdded = useRef(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigations: Navigation[] = useMemo(() => {
     const navs = data.navigations as Navigation[];
-    navs.splice(1, 0, {
-      title: "Catalog",
-      subNavigation: {
-        type: "single",
-        items: categories.map((category) => ({
-          title: category.name,
-          url: `/catalog/${category.slug}`,
-        })),
-      },
-    });
+    if (!isCatalogAdded.current) {
+      navs.splice(1, 0, {
+        title: "Catalog",
+        subNavigation: {
+          type: "single",
+          items: categories.map((category) => ({
+            title: category.name,
+            url: `/collections/${category.slug}`,
+          })),
+        },
+      });
+      isCatalogAdded.current = true;
+    }
     return navs;
-  }, [data.navigations]);
+  }, []);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -66,9 +72,11 @@ export default function Navbar({
         className={cn(
           "fixed top-0 left-0 right-0 z-50 font-inter transition-all duration-300 text-white select-none",
           isVisible ? "translate-y-0" : "-translate-y-full",
-          isScrolled
-            ? "bg-black border-b border-[#222121]"
-            : "bg-transparent border-b border-[#222121]/20"
+          pathname === "/"
+            ? isScrolled
+              ? "bg-black border-b border-[#222121]"
+              : "bg-transparent border-b border-[#222121]/20"
+            : "bg-black border-b border-[#222121]"
         )}
       >
         <div className="mx-auto px-4 sm:px-6 lg:px-6 lg:py-1">
@@ -87,12 +95,14 @@ export default function Navbar({
             </div>
 
             <div className="hidden lg:flex items-center px-6 flex-1 gap-1">
-              {navigations.map((navigation) => (
-                <NavLink key={navigation.title} {...navigation} />
+              {navigations.map((navigation, index) => (
+                <NavLink key={index} {...navigation} />
               ))}
             </div>
 
-            <NavActions />
+            <div className="flex items-center">
+              <NavbarActions />
+            </div>
           </div>
         </div>
       </nav>
