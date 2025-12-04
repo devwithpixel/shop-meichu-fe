@@ -1,16 +1,24 @@
-"use client";
-
 import { FaMinus, FaPlus } from "react-icons/fa6";
 
-interface ProductQuantitySelectorProps {
+interface QuantitySelectorProps {
   quantity: number;
   onQuantityChange: (quantity: number) => void;
 }
 
-export default function ProductQuantitySelector({
+export default function QuantitySelector({
   quantity,
   onQuantityChange,
-}: ProductQuantitySelectorProps) {
+}: QuantitySelectorProps) {
+  const handleDecrease = () => {
+    if (quantity > 1) {
+      onQuantityChange(quantity - 1);
+    }
+  };
+
+  const handleIncrease = () => {
+    onQuantityChange(quantity + 1);
+  };
+
   return (
     <div className="my-5">
       <p className="font-rubik font-bold text-xs mb-2">Quantity</p>
@@ -23,7 +31,7 @@ export default function ProductQuantitySelector({
               ? "text-gray-400 cursor-not-allowed"
               : "text-black hover:text-gray-600"
           }`}
-          onClick={() => quantity > 1 && onQuantityChange(quantity - 1)}
+          onClick={handleDecrease}
         />
 
         <p className="font-medium">{quantity}</p>
@@ -31,7 +39,7 @@ export default function ProductQuantitySelector({
         <FaPlus
           size={14}
           className="cursor-pointer hover:text-gray-600"
-          onClick={() => onQuantityChange(quantity + 1)}
+          onClick={handleIncrease}
         />
       </div>
     </div>

@@ -1,8 +1,15 @@
-import { notFound } from "next/navigation";
-import ProductDetailSection from "@/components/sections/detail-product/product-detail-section";
-import { products } from "@/lib/data/product";
-import { productDesc } from "@/lib/data/descProduct";
 import Footer from "@/components/footer/footer";
+import ProductDetailSection from "@/components/sections/detail-product/product-detail-section";
+
+import type { StrapiResponse } from "@/types/strapi/response";
+import type { Product } from "@/types/strapi/models/product";
+
+async function getProductData(slug: string): Promise<StrapiResponse<Product>> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products/${slug}`
+  );
+  return await response.json();
+}
 
 export default async function ProductDetailPage({
   params,
@@ -11,24 +18,20 @@ export default async function ProductDetailPage({
 }) {
   const { slug } = await params;
 
-  const productId = parseInt(slug);
+  const productData = await getProductData(slug);
 
-  const product = products.find((p) => p.id === productId);
-
-  if (!product) {
-    notFound();
+  if (!productData.data) {
+    return <div>Product not found.</div>;
   }
-
-  const relatedProducts = products.filter((p) => p.id !== product.id);
 
   return (
     <>
       <ProductDetailSection
-        product={product}
-        relatedProducts={relatedProducts}
-        productDesc={productDesc}
+        product={productData.data}
+        // relatedProducts={[]}
+        // productDesc={[]}
       />
-      <Footer/>
+      <Footer />
     </>
   );
 }

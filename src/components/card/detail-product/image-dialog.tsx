@@ -1,9 +1,6 @@
-"use client";
-
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import {
-  IoIosArrowBack,
-  IoIosArrowForward,
   IoMdArrowBack,
   IoMdArrowDown,
   IoMdArrowForward,
@@ -16,38 +13,38 @@ import { IoClose } from "react-icons/io5";
 interface ImageDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  dialogImage: string;
-  dialogImageIndex: number;
+  imageSrc: string;
+  imageIndex: number;
+  totalImages: number;
   slideDirection: "left" | "right" | null;
-  menuOpen: boolean;
-  setMenuOpen: (open: boolean) => void;
   zoom: number;
   position: { x: number; y: number };
-  isZoomed: boolean;
+  menuOpen: boolean;
   onPrevImage: () => void;
   onNextImage: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onMove: (direction: "up" | "down" | "left" | "right") => void;
+  onMenuToggle: () => void;
 }
 
 export default function ImageDialog({
   open,
   onOpenChange,
-  dialogImage,
-  dialogImageIndex,
+  imageSrc,
   slideDirection,
-  menuOpen,
-  setMenuOpen,
   zoom,
   position,
-  isZoomed,
+  menuOpen,
   onPrevImage,
   onNextImage,
   onZoomIn,
   onZoomOut,
   onMove,
+  onMenuToggle,
 }: ImageDialogProps) {
+  const isZoomed = zoom > 1;
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 h-screen rounded-none max-w-screen! w-screen! border-0 overflow-hidden">
@@ -155,7 +152,7 @@ export default function ImageDialog({
             </div>
 
             <button
-              onClick={() => setMenuOpen(!menuOpen)}
+              onClick={onMenuToggle}
               className="p-4 rounded-full bg-black hover:bg-gray-800 transition-colors"
             >
               {menuOpen ? <IoClose size={18} /> : <RxHamburgerMenu size={18} />}
@@ -170,8 +167,7 @@ export default function ImageDialog({
           >
             <div className="w-full h-3/5 md:w-screen md:h-screen lg:w-[38%] lg:h-full relative">
               <img
-                key={dialogImageIndex}
-                src={dialogImage}
+                src={imageSrc}
                 className={`absolute inset-0 w-full h-full object-cover bg-gray-300 transition-transform duration-500 ease-in-out ${
                   slideDirection === "left"
                     ? "-translate-x-[calc(100%+50vw)]"

@@ -1,31 +1,25 @@
-import { useRef, useState, RefObject } from "react";
+import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-interface ProductNavigationReturn {
-  activeSection: number;
-  navRef: RefObject<HTMLElement | null>;
-  indicatorRef: RefObject<HTMLDivElement | null>;
-  buttonsRef: RefObject<(HTMLButtonElement | null)[]>;
-  sectionRefs: RefObject<(HTMLElement | null)[]>;
-  scrollToSection: (index: number) => void;
-}
-
-export const useProductNavigation = (
-  sectionsCount: number
-): ProductNavigationReturn => {
+export function useProductNavigation(sectionsLength: number) {
   const [activeSection, setActiveSection] = useState(0);
 
-  const navRef = useRef<HTMLElement | null>(null);
-  const indicatorRef = useRef<HTMLDivElement | null>(null);
+  const navRef = useRef<HTMLElement>(null);
+  const indicatorRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
-
   const sectionRefs = useRef<(HTMLElement | null)[]>([]);
 
   useGSAP(() => {
+    // Ensure navbar is visible on mount
+    if (navRef.current) {
+      navRef.current.style.visibility = "visible";
+      navRef.current.style.opacity = "1";
+    }
+
     const updateIndicator = () => {
       const btn = buttonsRef.current[activeSection];
       if (!btn || !indicatorRef.current) return;
@@ -38,7 +32,8 @@ export const useProductNavigation = (
       });
     };
 
-    updateIndicator();
+    // Small delay to ensure buttons are rendered
+    setTimeout(updateIndicator, 100);
 
     sectionRefs.current.forEach((el, i) => {
       if (!el) return;
@@ -98,7 +93,7 @@ export const useProductNavigation = (
     }
 
     return () => ScrollTrigger.getAll().forEach((t) => t.kill());
-  }, [activeSection]);
+  }, [activeSection, sectionsLength]);
 
   const scrollToSection = (index: number) => {
     sectionRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
@@ -112,4 +107,4 @@ export const useProductNavigation = (
     sectionRefs,
     scrollToSection,
   };
-};
+}

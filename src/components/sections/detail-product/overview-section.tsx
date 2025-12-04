@@ -1,66 +1,236 @@
 "use client";
 
-import { useState } from "react";
-import { Product, RelatedProduct } from "@/types/detail-product/product";
-import { useImageDialog } from "@/hooks/use-image-dialog";
-import ProductImageGallery from "@/components/card/detail-product/product-image-gallery";
+import { useState, useRef, useMemo } from "react";
+import ProductImage from "@/components/card/detail-product/product-image";
+import ImageGallery from "@/components/card/detail-product/image-gallery";
 import ProductDetails from "@/components/card/detail-product/product-details";
 import ImageDialog from "@/components/card/detail-product/image-dialog";
-import { useScrollAnimation } from "@/hooks/use-scroll-animation";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import useSWR from "swr";
+
+import type { Product } from "@/types/strapi/models/product";
+import type { Footer } from "@/types/strapi/components/shared/footer";
+import type { StrapiResponse } from "@/types/strapi/response";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const fetcher = (url: string) =>
+  fetch(url).then((r) => r.json() as Promise<StrapiResponse<Footer>>);
 
 interface OverviewSectionProps {
   product: Product;
-  relatedProducts: RelatedProduct[];
 }
 
-export default function OverviewSection({
-  product,
-  relatedProducts,
-}: OverviewSectionProps) {
-  const [activeColorIndex, setActiveColorIndex] = useState<number>(0);
+export default function OverviewSection({ product }: OverviewSectionProps) {
+  const { data: footerResponse } = useSWR(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/global/footer`,
+    fetcher
+  );
 
-  const { sectionRef, detailRef, imageListRef } = useScrollAnimation();
+  const BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL || "";
 
-  const {
-    dialogOpen,
-    setDialogOpen,
-    dialogImage,
-    dialogImageIndex,
-    slideDirection,
-    menuOpen,
-    setMenuOpen,
-    zoom,
-    position,
-    isZoomed,
-    handleImageClick,
-    handlePrevImage,
-    handleNextImage,
-    handleZoomIn,
-    handleZoomOut,
-    handleMove,
-  } = useImageDialog(product.colors);
+  const allImages = useMemo(() => {
+    return (
+      product.images?.map((img) => ({
+        ...img,
+        fullUrl: `${BASE_URL}${img.url}`,
+      })) ?? []
+    );
+  }, [product.images, BASE_URL]);
 
-  const handleColorClick = (img: string, index: number) => {
-    setActiveColorIndex(index);
+  const [activeVariantIndex, setActiveVariantIndex] = useState<number>(0);
+  const [quantity, setQuantity] = useState(1);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogImage, setDialogImage] = useState<string>("");
+  const [dialogImageIndex, setDialogImageIndex] = useState<number>(0);
+  const [slideDirection, setSlideDirection] = useState<"left" | "right" | null>(
+    null
+  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [zoom, setZoom] = useState(1);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const detailRef = useRef<HTMLDivElement>(null);
+  const imageListRef = useRef<HTMLDivElement>(null);
+
+  const socialMedia = footerResponse?.data?.socialMedia || [];
+
+  useGSAP(
+    () => {
+      if (window.innerWidth < 768) return;
+
+      if (!sectionRef.current || !detailRef.current || !imageListRef.current)
+        return;
+
+      const section = sectionRef.current;
+      const detailContent = detailRef.current;
+      const imageList = imageListRef.current;
+
+      detailContent.scrollTop = 0;
+      imageList.scrollTop = 0;
+
+      ScrollTrigger.refresh();
+
+      const imageScroll = imageList.scrollHeight - imageList.clientHeight;
+      const detailScroll =
+        detailContent.scrollHeight - detailContent.clientHeight;
+
+      const totalScrollDistance = imageScroll + detailScroll;
+      const imagePhaseEnd = imageScroll / totalScrollDistance;
+
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top top",
+        end: `+=${totalScrollDistance}`,
+        pin: true,
+        pinSpacing: true,
+        anticipatePin: 1,
+        scrub: 4,
+        invalidateOnRefresh: true,
+
+        onUpdate: (self) => {
+          const progress = self.progress;
+
+          if (progress <= imagePhaseEnd) {
+            const imageProgress = progress / imagePhaseEnd;
+
+            gsap.to(imageList, {
+              scrollTop: imageProgress * imageScroll,
+              duration: 0.5,
+              ease: "none",
+            });
+            detailContent.scrollTop = 0;
+          } else {
+            const detailProgress =
+              (progress - imagePhaseEnd) / (1 - imagePhaseEnd);
+
+            gsap.to(detailContent, {
+              scrollTop: detailProgress * detailScroll,
+              duration: 0.5,
+              ease: "none",
+            });
+
+            imageList.scrollTop = imageScroll;
+          }
+        },
+        onEnter: () => {
+          detailContent.style.overflow = "hidden";
+          imageList.style.overflow = "hidden";
+        },
+
+        onEnterBack: () => {
+          detailContent.style.overflow = "hidden";
+          imageList.style.overflow = "hidden";
+        },
+      });
+    },
+    { dependencies: [], scope: sectionRef }
+  );
+
+  const handleImageClick = (img: string, index: number) => {
+    setDialogImage(img);
+    setDialogImageIndex(index);
+    setDialogOpen(true);
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+  };
+
+  const handlePrevImage = () => {
+    if (slideDirection || allImages.length === 0) return;
+    setSlideDirection("left");
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+
+    setTimeout(() => {
+      const prevIndex =
+        dialogImageIndex === 0 ? allImages.length - 1 : dialogImageIndex - 1;
+      setDialogImageIndex(prevIndex);
+      setDialogImage(allImages[prevIndex].fullUrl);
+      setSlideDirection(null);
+    }, 400);
+  };
+
+  const handleNextImage = () => {
+    if (slideDirection || allImages.length === 0) return;
+    setSlideDirection("right");
+    setZoom(1);
+    setPosition({ x: 0, y: 0 });
+
+    setTimeout(() => {
+      const nextIndex =
+        dialogImageIndex === allImages.length - 1 ? 0 : dialogImageIndex + 1;
+      setDialogImageIndex(nextIndex);
+      setDialogImage(allImages[nextIndex].fullUrl);
+      setSlideDirection(null);
+    }, 400);
+  };
+
+  const handleZoomIn = () => {
+    setZoom((prev) => Math.min(prev + 0.5, 3));
+  };
+
+  const handleZoomOut = () => {
+    setZoom((prev) => {
+      const newZoom = Math.max(prev - 0.5, 1);
+      if (newZoom === 1) {
+        setPosition({ x: 0, y: 0 });
+      }
+      return newZoom;
+    });
+  };
+
+  const handleMove = (direction: "up" | "down" | "left" | "right") => {
+    if (zoom <= 1) return;
+
+    const moveAmount = 100;
+    setPosition((prev) => {
+      switch (direction) {
+        case "up":
+          return { ...prev, y: prev.y + moveAmount };
+        case "down":
+          return { ...prev, y: prev.y - moveAmount };
+        case "left":
+          return { ...prev, x: prev.x + moveAmount };
+        case "right":
+          return { ...prev, x: prev.x - moveAmount };
+        default:
+          return prev;
+      }
+    });
   };
 
   return (
     <>
       <div ref={sectionRef} className="bg-white">
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] lg:grid-cols-3 gap-1">
-          <ProductImageGallery
-            colors={product.colors}
-            activeColorIndex={activeColorIndex}
-            imageListRef={imageListRef}
+          <ProductImage
+            images={allImages}
+            activeIndex={activeVariantIndex}
+            productName={product.name}
             onImageClick={handleImageClick}
           />
 
+          <ImageGallery
+            ref={imageListRef}
+            images={allImages}
+            activeIndex={activeVariantIndex}
+            productName={product.name}
+            onImageClick={handleImageClick}
+            onThumbnailClick={setActiveVariantIndex}
+          />
+
           <ProductDetails
+            ref={detailRef}
             product={product}
-            relatedProducts={relatedProducts}
-            detailRef={detailRef}
-            activeColorIndex={activeColorIndex}
-            onColorClick={handleColorClick}
+            allImages={allImages}
+            activeVariantIndex={activeVariantIndex}
+            quantity={quantity}
+            socialMedia={socialMedia}
+            onVariantChange={setActiveVariantIndex}
+            onQuantityChange={setQuantity}
           />
         </div>
       </div>
@@ -68,19 +238,19 @@ export default function OverviewSection({
       <ImageDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        dialogImage={dialogImage}
-        dialogImageIndex={dialogImageIndex}
+        imageSrc={dialogImage}
+        imageIndex={dialogImageIndex}
+        totalImages={allImages.length}
         slideDirection={slideDirection}
-        menuOpen={menuOpen}
-        setMenuOpen={setMenuOpen}
         zoom={zoom}
         position={position}
-        isZoomed={isZoomed}
+        menuOpen={menuOpen}
         onPrevImage={handlePrevImage}
         onNextImage={handleNextImage}
         onZoomIn={handleZoomIn}
         onZoomOut={handleZoomOut}
         onMove={handleMove}
+        onMenuToggle={() => setMenuOpen(!menuOpen)}
       />
     </>
   );
