@@ -9,6 +9,7 @@ import {
 import { FaSearchMinus, FaSearchPlus } from "react-icons/fa";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { IoClose } from "react-icons/io5";
+import { useState, useEffect } from "react";
 
 interface ImageDialogProps {
   open: boolean;
@@ -32,6 +33,7 @@ export default function ImageDialog({
   open,
   onOpenChange,
   imageSrc,
+  imageIndex,
   slideDirection,
   zoom,
   position,
@@ -44,6 +46,26 @@ export default function ImageDialog({
   onMenuToggle,
 }: ImageDialogProps) {
   const isZoomed = zoom > 1;
+  const [displayedImage, setDisplayedImage] = useState(imageSrc);
+  const [prevImage, setPrevImage] = useState(imageSrc);
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    if (slideDirection && imageSrc !== displayedImage) {
+      setPrevImage(displayedImage);
+      setIsAnimating(true);
+
+      const timer = setTimeout(() => {
+        setDisplayedImage(imageSrc);
+        setIsAnimating(false);
+      }, 500);
+
+      return () => clearTimeout(timer);
+    } else if (!slideDirection && imageSrc !== displayedImage) {
+      setDisplayedImage(imageSrc);
+      setPrevImage(imageSrc);
+    }
+  }, [imageSrc, slideDirection, displayedImage]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -166,15 +188,34 @@ export default function ImageDialog({
             }}
           >
             <div className="w-full h-3/5 md:w-screen md:h-screen lg:w-[38%] lg:h-full relative">
+              {isAnimating && (
+                <img
+                  key={`prev-${prevImage}`}
+                  src={prevImage}
+                  className="absolute inset-0 w-full h-full object-cover bg-gray-300 transition-transform duration-500 ease-in-out"
+                  style={{
+                    transform:
+                      slideDirection === "left"
+                        ? "translateX(-150vw)"
+                        : "translateX(150vw)",
+                  }}
+                  alt="Previous image"
+                />
+              )}
+
               <img
+                key={`current-${imageIndex}`}
                 src={imageSrc}
-                className={`absolute inset-0 w-full h-full object-cover bg-gray-300 transition-transform duration-500 ease-in-out ${
-                  slideDirection === "left"
-                    ? "-translate-x-[calc(100%+50vw)]"
-                    : slideDirection === "right"
-                      ? "translate-x-[calc(100%+50vw)]"
-                      : "translate-x-0"
-                }`}
+                className="absolute inset-0 w-full h-full object-cover bg-gray-300 transition-transform duration-500 ease-in-out"
+                style={{
+                  transform: isAnimating
+                    ? "translateX(0)"
+                    : slideDirection === "left"
+                      ? "translateX(150vw)"
+                      : slideDirection === "right"
+                        ? "translateX(-150vw)"
+                        : "translateX(0)",
+                }}
                 alt="Full size preview"
               />
             </div>

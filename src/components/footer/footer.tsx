@@ -16,13 +16,18 @@ import useSWR from "swr";
 
 import type { Footer } from "@/types/strapi/components/shared/footer";
 import type { StrapiResponse } from "@/types/strapi/response";
+import { useMemo } from "react";
 
 const fetcher = (url: string) =>
   fetch(url).then((r) => r.json() as Promise<StrapiResponse<Footer>>);
 
 const columnClasses = ["lg:col-start-4", "lg:col-start-5", "lg:col-start-6"];
 
-export default function Footer() {
+interface FooterProps {
+  backgroundColor?: string;
+}
+
+export default function Footer({ backgroundColor }: FooterProps) {
   const {
     data: response,
     error,
@@ -33,9 +38,17 @@ export default function Footer() {
   );
 
   const data = response?.data;
+  const color = backgroundColor || "#1C1C1C";
+
+  const bgStyle = useMemo(
+    () => ({
+      backgroundColor: color,
+    }),
+    [color]
+  );
 
   return (
-    <div className="bg-carbon text-white">
+    <div style={bgStyle} className="text-white">
       <div className="py-16 px-6 font-inter">
         {isLoading && <Skeleton className="h-64" />}
         {error && (
@@ -43,7 +56,12 @@ export default function Footer() {
         )}
         {data && (
           <>
-            {data.runningText && <FooterRunningText data={data.runningText} />}
+            {data.runningText && (
+              <FooterRunningText
+                fadeColor={backgroundColor}
+                data={data.runningText}
+              />
+            )}
             <div className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-1 gap-8">
               <div className="lg:col-span-2 leading-7">
                 <p>{data.description}</p>
@@ -157,7 +175,7 @@ export default function Footer() {
         )}
       </div>
 
-      <div className="text-center py-4 bg-blackfull text-white text-sm">
+      <div style={bgStyle} className="text-center py-4 text-white text-sm">
         © {new Date().getFullYear()} Meichu. Powered by Pixel
       </div>
     </div>

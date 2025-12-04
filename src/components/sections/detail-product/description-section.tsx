@@ -25,8 +25,8 @@ export default function DescriptionSection({
   return (
     <div className="min-h-fit lg:min-h-screen bg-black text-white flex flex-col md:flex-row items-start gap-14 md:gap-6 lg:gap-14 px-4 md:px-6">
       <div className="w-full md:w-1/2 lg:w-1/2 font-rubik flex flex-col items-start mt-10 md:mt-40 lg:mt-45">
-        {/* <Accordion type="single" collapsible className="w-full">
-          {desc.map((item) => (
+        <Accordion type="single" collapsible className="w-full">
+          {desc?.map((item) => (
             <AccordionItem
               key={item.id}
               value={`item-${item.id}`}
@@ -41,7 +41,7 @@ export default function DescriptionSection({
               </AccordionContent>
             </AccordionItem>
           ))}
-        </Accordion> */}
+        </Accordion>
       </div>
 
       <div className="w-fit rounded-3xl bg-gray-300 -mt-10 md:mt-30">

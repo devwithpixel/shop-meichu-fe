@@ -1,13 +1,22 @@
 "use client";
 
 import { useGSAP } from "@gsap/react";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import gsap from "gsap";
 
 import type { RunningText } from "@/types/strapi/components/shared/running-text";
 
-export default function FooterRunningText({ data }: { data: RunningText }) {
+interface FooterRunningTextProps {
+  data: RunningText;
+  fadeColor?: string;
+}
+
+export default function FooterRunningText({
+  data,
+  fadeColor,
+}: FooterRunningTextProps) {
   const footerRunningTextRef = useRef<HTMLDivElement>(null);
+  const color = fadeColor || "#1C1C1C";
 
   useGSAP(() => {
     gsap.to(footerRunningTextRef.current, {
@@ -18,10 +27,30 @@ export default function FooterRunningText({ data }: { data: RunningText }) {
     });
   });
 
+  const leftFade = useMemo(
+    () => ({
+      background: `linear-gradient(to right, ${fadeColor} ?? bg-carbon, transparent)`,
+    }),
+    [color]
+  );
+
+  const rightFade = useMemo(
+    () => ({
+      background: `linear-gradient(to left, ${fadeColor}, transparent)`,
+    }),
+    [color]
+  );
+
   return (
     <div className="relative w-full overflow-hidden mb-16">
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-carbon to-transparent z-20" />
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-carbon to-transparent z-20" />
+      <div
+        className="pointer-events-none absolute left-0 top-0 h-full w-24 z-20"
+        style={leftFade}
+      />
+      <div
+        className="pointer-events-none absolute right-0 top-0 h-full w-24 z-20"
+        style={rightFade}
+      />
 
       <div
         ref={footerRunningTextRef}

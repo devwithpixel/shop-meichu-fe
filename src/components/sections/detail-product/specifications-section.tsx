@@ -32,8 +32,6 @@ export default function SpecificationsSection({
           start: "top top",
           end: "+=1500",
           pin: true,
-          pinSpacing: true,
-          anticipatePin: 1,
           scrub: 1,
         },
       })

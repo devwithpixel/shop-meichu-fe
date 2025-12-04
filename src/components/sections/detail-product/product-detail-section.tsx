@@ -4,8 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { ReactNode, useRef, useState } from "react";
-import * as React from "react";
-import ReactDOM from "react-dom";
 
 import OverviewSection from "./overview-section";
 import DescriptionSection from "./description-section";
@@ -30,8 +28,8 @@ export default function ProductDetailSection({
   product,
   relatedProducts = [],
 }: ProductDetailSectionProps) {
+  console.log(product);
   const [active, setActive] = useState(0);
-  const [navbarVisible, setNavbarVisible] = useState(true);
 
   const navRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
@@ -57,10 +55,6 @@ export default function ProductDetailSection({
     },
   ];
 
-  React.useEffect(() => {
-    console.log("Navbar ref:", navRef.current);
-  }, []);
-
   useGSAP(() => {
     const updateIndicator = () => {
       const btn = buttonsRef.current[active];
@@ -83,43 +77,51 @@ export default function ProductDetailSection({
         trigger: el,
         start: i === 0 ? "top top" : "top 60%",
         end: "bottom 40%",
-        onEnter: () => setActive(i),
-        onEnterBack: () => setActive(i),
+        onEnter: () => {
+          setActive(i);
+        },
+        onEnterBack: () => {
+          setActive(i);
+        },
+        onLeave: () => {
+          if (i < sectionRefs.current.length - 1) {
+            setActive(i + 1);
+          }
+        },
+        onLeaveBack: () => {
+          if (i > 0) {
+            setActive(i - 1);
+          }
+        },
       });
     });
 
-    const descriptionSection = sectionRefs.current[1];
+    const first = sectionRefs.current[0];
+    if (first && navRef.current) {
+      ScrollTrigger.create({
+        trigger: first,
+        start: "bottom bottom",
+        end: "bottom top",
+        scrub: 0.6,
+        onUpdate: (self) => {
+          gsap.set(navRef.current, {
+            bottom: `${
+              2 + (self.progress * (window.innerHeight - 64)) / 16
+            }rem`,
+          });
+        },
+        onLeave: () => {
+          navRef.current!.style.top = "2rem";
+          navRef.current!.style.bottom = "auto";
+        },
+        onEnterBack: () => {
+          navRef.current!.style.bottom = "2rem";
+          navRef.current!.style.top = "auto";
+        },
+      });
+    }
 
-    if (!descriptionSection || !navRef.current) return;
-
-    const nav = navRef.current;
-
-    gsap.set(nav, { bottom: "2rem", top: "auto" });
-
-    ScrollTrigger.create({
-      trigger: descriptionSection,
-      start: "top bottom-=100",
-      end: "top top",
-      scrub: 0.5,
-      onUpdate: (self) => {
-        const progress = self.progress;
-        const fromBottom = 2;
-        const toTop = 2;
-        const viewportHeight = window.innerHeight / 16;
-
-        const currentBottom =
-          fromBottom + progress * (viewportHeight - fromBottom - toTop);
-
-        if (progress < 1) {
-          gsap.set(nav, { bottom: `${currentBottom}rem`, top: "auto" });
-        } else {
-          gsap.set(nav, { top: `${toTop}rem`, bottom: "auto" });
-        }
-      },
-      onLeaveBack: () => {
-        gsap.set(nav, { bottom: "2rem", top: "auto" });
-      },
-    });
+    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
   }, [active]);
 
   const scrollTo = (i: number) => {
@@ -150,37 +152,33 @@ export default function ProductDetailSection({
         </div>
       </div> */}
 
-      {/* Navbar dengan Portal */}
-      {typeof document !== "undefined" &&
-        ReactDOM.createPortal(
-          <nav
-            ref={navRef}
-            className="fixed left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 backdrop-blur-md bg-white/60 rounded-full shadow-lg px-1 py-1 z-10"
-          >
-            <div className="relative flex gap-1">
-              <div
-                ref={indicatorRef}
-                className="absolute h-full bg-black rounded-full"
-              />
+      {/* Navbar tetap di dalam ProductDetailSection */}
+      <nav
+        ref={navRef}
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 backdrop-blur-md bg-white/60 rounded-full shadow-lg px-1 py-1 z-50"
+      >
+        <div className="relative flex gap-1">
+          <div
+            ref={indicatorRef}
+            className="absolute h-full bg-black rounded-full"
+          />
 
-              {sections.map((s, i) => (
-                <button
-                  key={i}
-                  ref={(el) => {
-                    buttonsRef.current[i] = el;
-                  }}
-                  onClick={() => scrollTo(i)}
-                  className={`relative z-10 px-5 lg:px-6 py-2.5 text-xs font-semibold rounded-full transition-colors ${
-                    active === i ? "text-white" : "text-gray-800"
-                  }`}
-                >
-                  {s.label}
-                </button>
-              ))}
-            </div>
-          </nav>,
-          document.body
-        )}
+          {sections.map((s, i) => (
+            <button
+              key={i}
+              ref={(el) => {
+                buttonsRef.current[i] = el;
+              }}
+              onClick={() => scrollTo(i)}
+              className={`relative z-10 px-5 lg:px-6 py-2.5 text-xs font-semibold rounded-full transition-colors ${
+                active === i ? "text-white" : "text-gray-800"
+              }`}
+            >
+              {s.label}
+            </button>
+          ))}
+        </div>
+      </nav>
     </>
   );
 }

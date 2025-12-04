@@ -86,8 +86,6 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
         start: "top top",
         end: `+=${totalScrollDistance}`,
         pin: true,
-        pinSpacing: true,
-        anticipatePin: 1,
         scrub: 4,
         invalidateOnRefresh: true,
 
@@ -140,7 +138,7 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
 
   const handlePrevImage = () => {
     if (slideDirection || allImages.length === 0) return;
-    setSlideDirection("left");
+    setSlideDirection("right");
     setZoom(1);
     setPosition({ x: 0, y: 0 });
 
@@ -155,7 +153,7 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
 
   const handleNextImage = () => {
     if (slideDirection || allImages.length === 0) return;
-    setSlideDirection("right");
+    setSlideDirection("left");
     setZoom(1);
     setPosition({ x: 0, y: 0 });
 
