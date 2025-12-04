@@ -3,78 +3,84 @@
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ReactNode, useRef, useState } from "react";
-
+import {
+  createRef,
+  useRef,
+  useMemo,
+  useState,
+  useCallback,
+  useEffect,
+} from "react";
+import Footer from "@/components/footer/footer";
 import OverviewSection from "./overview-section";
 import DescriptionSection from "./description-section";
 import SpecificationsSection from "./specifications-section";
+import ScrollSmootherWrapper from "@/components/ScrollSmootherWrapper";
 import ProductCard from "@/components/card/product-card";
 
 import type { Product } from "@/types/strapi/models/product";
-
-gsap.registerPlugin(ScrollTrigger);
-
-interface ProductSection {
-  label: string;
-  component: ReactNode;
-}
 
 interface ProductDetailSectionProps {
   product: Product;
   relatedProducts?: Product[];
 }
 
+interface SectionInfo {
+  label: string;
+  ref: React.RefObject<HTMLDivElement | null>;
+}
+
+interface SectionRefType {
+  overview: SectionInfo;
+  description: SectionInfo;
+  specification: SectionInfo;
+}
+
 export default function ProductDetailSection({
   product,
-  relatedProducts = [],
+  relatedProducts,
 }: ProductDetailSectionProps) {
-  console.log(product);
   const [active, setActive] = useState(0);
-
   const navRef = useRef<HTMLElement>(null);
   const indicatorRef = useRef<HTMLDivElement>(null);
   const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
-  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const sections = useMemo<SectionRefType>(
+    () => ({
+      overview: {
+        label: "OVERVIEW",
+        ref: createRef<HTMLDivElement | null>(),
+      },
+      description: {
+        label: "DESCRIPTION",
+        ref: createRef<HTMLDivElement | null>(),
+      },
+      specification: {
+        label: "SPECIFICATIONS",
+        ref: createRef<HTMLDivElement | null>(),
+      },
+    }),
+    []
+  );
 
-  const sections: ProductSection[] = [
-    {
-      label: "OVERVIEW",
-      component: <OverviewSection product={product} />,
-    },
-    {
-      label: "DESCRIPTION",
-      component: (
-        <DescriptionSection
-          image={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url || ""}`}
-        />
-      ),
-    },
-    {
-      label: "SPECIFICATIONS",
-      component: <SpecificationsSection product={product} />,
-    },
-  ];
+  const { contextSafe } = useGSAP(() => {
+    if (
+      !sections.overview.ref.current ||
+      !sections.description.ref.current ||
+      !sections.specification.ref.current ||
+      !navRef.current
+    )
+      return;
 
-  useGSAP(() => {
-    const updateIndicator = () => {
-      const btn = buttonsRef.current[active];
-      if (!btn || !indicatorRef.current) return;
+    gsap.set(navRef.current, {
+      bottom: "2rem",
+      top: "auto",
+    });
 
-      gsap.to(indicatorRef.current, {
-        x: btn.offsetLeft,
-        width: btn.offsetWidth,
-        duration: 0.5,
-        ease: "sine.out",
-      });
-    };
-
-    updateIndicator();
-
-    sectionRefs.current.forEach((el, i) => {
-      if (!el) return;
+    (Object.values(sections) as SectionInfo[]).forEach((el, i) => {
+      if (!el.ref.current) return;
 
       ScrollTrigger.create({
-        trigger: el,
+        trigger: el.ref.current,
         start: i === 0 ? "top top" : "top 60%",
         end: "bottom 40%",
         onEnter: () => {
@@ -83,98 +89,122 @@ export default function ProductDetailSection({
         onEnterBack: () => {
           setActive(i);
         },
-        onLeave: () => {
-          if (i < sectionRefs.current.length - 1) {
-            setActive(i + 1);
-          }
-        },
-        onLeaveBack: () => {
-          if (i > 0) {
-            setActive(i - 1);
-          }
-        },
       });
     });
 
-    const first = sectionRefs.current[0];
-    if (first && navRef.current) {
-      ScrollTrigger.create({
-        trigger: first,
-        start: "bottom bottom",
-        end: "bottom top",
-        scrub: 0.6,
-        onUpdate: (self) => {
+    ScrollTrigger.create({
+      trigger: sections.description.ref.current,
+      start: "top bottom-=100",
+      end: "top top",
+      scrub: 0.5,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const fromBottom = 2;
+        const toTop = 2;
+        const viewportHeight = window.innerHeight / 16;
+
+        const currentBottom =
+          fromBottom + progress * (viewportHeight - fromBottom - toTop);
+
+        if (progress < 1) {
           gsap.set(navRef.current, {
-            bottom: `${
-              2 + (self.progress * (window.innerHeight - 64)) / 16
-            }rem`,
+            bottom: `${currentBottom}rem`,
+            top: "auto",
           });
-        },
-        onLeave: () => {
-          navRef.current!.style.top = "2rem";
-          navRef.current!.style.bottom = "auto";
-        },
-        onEnterBack: () => {
-          navRef.current!.style.bottom = "2rem";
-          navRef.current!.style.top = "auto";
-        },
+        } else {
+          gsap.set(navRef.current, {
+            top: `${toTop}rem`,
+            bottom: "auto",
+          });
+        }
+      },
+      onLeaveBack: () => {
+        gsap.set(navRef.current, {
+          bottom: "2rem",
+          top: "auto",
+        });
+      },
+    });
+  }, []);
+
+  const updateIndicator = contextSafe(() => {
+    const btn = buttonsRef.current[active];
+    if (!btn || !indicatorRef.current) return;
+
+    gsap.to(indicatorRef.current, {
+      x: btn.offsetLeft,
+      width: btn.offsetWidth,
+      duration: 0.5,
+      ease: "sine.out",
+    });
+  });
+
+  const navigationScrollTo = useCallback(
+    (ref: React.RefObject<HTMLDivElement | null>) => {
+      if (!ref.current) return;
+
+      const offsetTop =
+        ref.current.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: offsetTop,
+        behavior: "smooth",
       });
-    }
+    },
+    []
+  );
 
-    return () => ScrollTrigger.getAll().forEach((t) => t.kill());
+  useEffect(() => {
+    updateIndicator();
   }, [active]);
-
-  const scrollTo = (i: number) => {
-    sectionRefs.current[i]?.scrollIntoView({ behavior: "smooth" });
-  };
 
   return (
     <>
-      {sections.map((s, i) => (
-        <section
-          key={i}
-          ref={(el) => {
-            sectionRefs.current[i] = el;
-          }}
-        >
-          {s.component}
-        </section>
-      ))}
+      <ScrollSmootherWrapper>
+        <OverviewSection ref={sections.overview.ref} product={product} />
+        <DescriptionSection
+          ref={sections.description.ref}
+          image={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url || ""}`}
+        />
+        <SpecificationsSection
+          ref={sections.specification.ref}
+          product={product}
+        />
 
-      {/* <div className="bg-white px-6 py-20">
-        <h1 className="font-rubik text-5xl font-semibold mb-12">
-          More to Explore
-        </h1>
-        <div className="flex items-center justify-start gap-3 overflow-x-scroll scrollbar-hide overflow-y-hidden">
-          {relatedProducts.map((item) => (
-            <TrendingProduct key={item.id} product={item} />
-          ))}
+        <div className="bg-white px-6 py-20">
+          <h1 className="font-rubik text-5xl font-semibold mb-12">
+            More to Explore
+          </h1>
+          <div className="flex items-center justify-start gap-3 overflow-x-scroll scrollbar-hide overflow-y-hidden">
+            {relatedProducts?.map((item) => (
+              <ProductCard key={item.id} product={item} />
+            ))}
+          </div>
         </div>
-      </div> */}
+        <Footer />
+      </ScrollSmootherWrapper>
 
-      {/* Navbar tetap di dalam ProductDetailSection */}
       <nav
         ref={navRef}
-        className="fixed bottom-8 left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 backdrop-blur-md bg-white/60 rounded-full shadow-lg px-1 py-1 z-50"
+        className="fixed h-fit left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 backdrop-blur-md bg-white/60 rounded-full shadow-lg px-1 py-1 z-100"
       >
         <div className="relative flex gap-1">
           <div
             ref={indicatorRef}
             className="absolute h-full bg-black rounded-full"
           />
-
-          {sections.map((s, i) => (
+          {(Object.values(sections) as SectionInfo[]).map((value, i) => (
             <button
-              key={i}
+              key={value.label}
               ref={(el) => {
                 buttonsRef.current[i] = el;
               }}
-              onClick={() => scrollTo(i)}
+              onClick={() => navigationScrollTo(value.ref)}
               className={`relative z-10 px-5 lg:px-6 py-2.5 text-xs font-semibold rounded-full transition-colors ${
                 active === i ? "text-white" : "text-gray-800"
               }`}
             >
-              {s.label}
+              {value.label}
             </button>
           ))}
         </div>

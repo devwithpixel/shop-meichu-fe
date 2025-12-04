@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import { Separator } from "@/components/ui/separator";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,12 +10,12 @@ gsap.registerPlugin(ScrollTrigger);
 import type { Product } from "@/types/strapi/models/product";
 
 export default function SpecificationsSection({
+  ref,
   product,
 }: {
+  ref: React.RefObject<HTMLDivElement | null>;
   product: Product;
 }) {
-  const sectionRef = useRef(null);
-
   useGSAP(() => {
     if (window.innerWidth < 768) return;
 
@@ -28,7 +27,7 @@ export default function SpecificationsSection({
     return gsap
       .timeline({
         scrollTrigger: {
-          trigger: sectionRef.current,
+          trigger: ref.current,
           start: "top top",
           end: "+=1500",
           pin: true,
@@ -44,7 +43,7 @@ export default function SpecificationsSection({
 
   return (
     <div
-      ref={sectionRef}
+      ref={ref}
       className="bg-black text-white min-h-screen flex flex-col items-center justify-center space-y-12 relative px-4"
     >
       <h1 className="font-rubik text-4xl md:text-5xl lg:text-7xl font-bold text-center z-10">
@@ -62,7 +61,7 @@ export default function SpecificationsSection({
           </p> */}
 
           <img
-            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0].url}`}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url}`}
             className="feature-1-img w-30 h-30 md:w-33 md:h-33 lg:w-40 lg:h-40 object-cover bg-gray-400 rounded-lg border border-black"
             alt=""
           />
@@ -80,7 +79,7 @@ export default function SpecificationsSection({
 
         <div className="feature-2 max-w-full md:max-w-70">
           <img
-            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[2].url}`}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[2]?.url}`}
             className="feature-1-img w-30 h-30 md:w-33 md:h-33 lg:w-40 lg:h-40 object-cover bg-gray-400 rounded-lg border border-black"
             alt=""
           />
@@ -89,7 +88,7 @@ export default function SpecificationsSection({
 
       <div className="z-10">
         <img
-          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[1].url}`}
+          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[1]?.url}`}
           className="bg-gray-400 w-124 h-124 md:w-76 md:h-76 lg:w-124 lg:h-124 object-cover rounded-3xl"
           alt=""
         />

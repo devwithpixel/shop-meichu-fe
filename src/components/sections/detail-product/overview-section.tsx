@@ -20,10 +20,14 @@ const fetcher = (url: string) =>
   fetch(url).then((r) => r.json() as Promise<StrapiResponse<Footer>>);
 
 interface OverviewSectionProps {
+  ref: React.RefObject<HTMLDivElement | null>;
   product: Product;
 }
 
-export default function OverviewSection({ product }: OverviewSectionProps) {
+export default function OverviewSection({
+  ref,
+  product,
+}: OverviewSectionProps) {
   const { data: footerResponse } = useSWR(
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/global/footer`,
     fetcher
@@ -52,7 +56,6 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
   const [zoom, setZoom] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-  const sectionRef = useRef<HTMLDivElement>(null);
   const detailRef = useRef<HTMLDivElement>(null);
   const imageListRef = useRef<HTMLDivElement>(null);
 
@@ -62,10 +65,9 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
     () => {
       if (window.innerWidth < 768) return;
 
-      if (!sectionRef.current || !detailRef.current || !imageListRef.current)
-        return;
+      if (!ref.current || !detailRef.current || !imageListRef.current) return;
 
-      const section = sectionRef.current;
+      const section = ref.current;
       const detailContent = detailRef.current;
       const imageList = imageListRef.current;
 
@@ -125,7 +127,7 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
         },
       });
     },
-    { dependencies: [], scope: sectionRef }
+    { dependencies: [], scope: ref }
   );
 
   const handleImageClick = (img: string, index: number) => {
@@ -202,7 +204,7 @@ export default function OverviewSection({ product }: OverviewSectionProps) {
 
   return (
     <>
-      <div ref={sectionRef} className="bg-white">
+      <div ref={ref} className="bg-white">
         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] lg:grid-cols-3 gap-1">
           <ProductImage
             images={allImages}

@@ -1,20 +1,32 @@
-import { CheckoutItemProduct } from "@/types/checkout";
+"use client";
+
 import { Package } from "lucide-react";
+import { useCart } from "@/context/cart-provider";
+import { useMemo } from "react";
 import CheckoutItemCard from "./checkout-item-card";
 
-export default function OrderSummary({ items }: { items: CheckoutItemProduct[] }) {
-  const subtotal = items.reduce(
-    (sum, item) => sum + item.price * item.count,
-    0
+export default function OrderSummary() {
+  const { items } = useCart();
+
+  const subtotal = useMemo(
+    () => items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+    [items]
   );
-  const totalItems = items.reduce((sum, item) => sum + item.count, 0);
+
+  const totalItems = useMemo(
+    () => items.reduce((sum, item) => sum + item.quantity, 0),
+    [items]
+  );
+
   const total = subtotal;
 
   return (
     <div className="bg-white border border-gray-200 rounded-2xl p-6 space-y-4 sticky top-24 font-inter">
       <div className="flex items-center gap-2 mb-4">
         <Package className="w-6 h-6 text-gray-700" />
-        <h3 className="font-semibold text-lg text-gray-900 font-rubik">Order Summary</h3>
+        <h3 className="font-semibold text-lg text-gray-900 font-rubik">
+          Order Summary
+        </h3>
       </div>
 
       <div className="space-y-1 max-h-96 h-96 overflow-y-auto">
