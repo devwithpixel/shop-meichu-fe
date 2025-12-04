@@ -3,6 +3,7 @@ import type { CTAButton } from "@/types/strapi/components/shared/cta-button";
 import type { BenefitItem } from "@/types/strapi/components/home-page-item/benefit-item";
 
 export interface BenefitSection {
+  background: any;
   id: number;
   section: BaseSection;
   ctaButton: CTAButton;

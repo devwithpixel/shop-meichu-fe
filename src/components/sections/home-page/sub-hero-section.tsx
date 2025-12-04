@@ -46,7 +46,7 @@ export default function SubHeroSection({
   return (
     <section
       ref={ref}
-      className="relative z-20 min-h-[150vh] w-full flex flex-col items-center justify-center text-center"
+      className="relative z-20 min-h-[150vh] w-full flex flex-col items-center justify-center text-center font-albert-sans"
       style={{
         background: `linear-gradient(
             to bottom,
@@ -74,7 +74,7 @@ export default function SubHeroSection({
               src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${item.icon?.url}`}
               className="size-8 rounded-full object-cover"
             />
-            <span className="text-black text-lg font-medium">
+            <span className="text-black text-lg font-bold">
               {item.category?.name}
             </span>
           </Button>

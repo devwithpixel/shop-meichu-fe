@@ -84,7 +84,7 @@ export default function TrendingProductSection({
       ref={sectionTrending}
       className="trending-wrapper bg-white lg:relative lg:flex lg:items-center lg:justify-center min-h-96 lg:min-h-86 overflow-x-hidden"
     >
-      <div className="lg:absolute font-semibold text-center text-[3rem] md:text-[4rem] lg:text-[7rem] block md:flex items-center justify-center mt-12 lg:-mt-12">
+      <div className="lg:absolute font-semibold text-center text-[3rem] md:text-[4rem] lg:text-[7rem] block md:flex items-center justify-center mt-12 lg:-mt-12 font-jogging">
         <h1 className="trending leading-10 md:pe-6">TRENDING</h1>
         <h1 className="products">PRODUCTS</h1>
       </div>

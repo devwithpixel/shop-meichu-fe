@@ -41,10 +41,10 @@ export default function CategoryImageCard({
     return (
       <div className="absolute inset-0 bg-linear-to-t from-black/60 via-transparent to-transparent">
         <div className="absolute bottom-6 left-6 right-6">
-          <h3 className="text-xl md:text-2xl font-semibold font-rubik text-white mb-2">
+          <h3 className="text-xl md:text-2xl font-semibold font-albert-sans text-white mb-2">
             {data.title || "Untitled"}
           </h3>
-          <p className="text-xs md:text-sm text-white/90 font-inter mb-3">
+          <p className="text-xs md:text-sm text-white/90 font-albert-sans mb-3">
             {data.description || ""}
           </p>
         </div>
@@ -56,10 +56,10 @@ export default function CategoryImageCard({
 
   return (
     <div
-      className={`rounded-3xl md:rounded-4xl overflow-hidden relative h-full ${className}`}
+      className={`relative w-full h-52 md:h-[560px] lg:h-[460px] rounded-3xl lg::rounded-4xl overflow-hidden ${className}`}
     >
       {isAnimating && nextItem && (
-        <div className={exitAnimationClassName}>
+        <div className={`absolute inset-0 ${exitAnimationClassName}`}>
           <img
             src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${currentImageUrl}`}
             alt={
@@ -67,17 +67,21 @@ export default function CategoryImageCard({
               item.title ||
               "Category image"
             }
-            className="object-cover w-full h-full"
+            className="w-full h-full object-cover"
           />
           <CardOverlay data={item} />
         </div>
       )}
 
       <div
-        className={`w-full h-full ${isAnimating && nextItem ? slideAnimationClassName : ""}`}
+        className={`absolute inset-0 ${
+          isAnimating && nextItem ? slideAnimationClassName : ""
+        }`}
       >
         <img
-          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${isAnimating && nextItem ? nextImageUrl : currentImageUrl}`}
+          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${
+            isAnimating && nextItem ? nextImageUrl : currentImageUrl
+          }`}
           alt={
             isAnimating && nextItem
               ? nextItem.category?.thumbnail?.alternativeText ||
@@ -87,10 +91,11 @@ export default function CategoryImageCard({
                 item.title ||
                 "Category image"
           }
-          className="object-cover w-full h-full"
+          className="w-full h-full object-cover"
         />
         <CardOverlay data={isAnimating && nextItem ? nextItem : item} />
       </div>
     </div>
   );
+
 }

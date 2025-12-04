@@ -131,10 +131,10 @@ export default function SearchLink() {
                   onSearchClick={handleRecentSearchClick}
                 />
 
-                <ProductResults
+                {/* <ProductResults
                   products={filteredProducts}
                   searchQuery={searchQuery}
-                />
+                /> */}
               </div>
             </div>
           </div>

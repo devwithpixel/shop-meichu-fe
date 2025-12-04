@@ -69,7 +69,7 @@ export default function FeaturedCategorySection({
   return (
     <section className="w-full bg-black text-white py-10 px-4 relative overflow-hidden">
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-4/5 md:w-1/2 h-[300px] md:h-96 bg-lime-500/15 blur-3xl"></div>
+        <div className="w-4/5 md:w-1/2 h-[300px] md:h-96 bg-[#9756FF]/40 blur-3xl"></div>
       </div>
 
       <GalleryNavigation onPrev={handlePrev} onNext={handleNext} />

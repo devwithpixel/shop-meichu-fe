@@ -73,7 +73,7 @@ export default function ProductCard({
   return (
     <div
       className={cn(
-        `${sizeClass.width} md:w-60 ${sizeClass.wrapper} space-y-3 shrink-0`,
+        `${sizeClass.width} md:w-60 ${sizeClass.wrapper} space-y-3 shrink-0 `,
         className
       )}
     >
@@ -126,7 +126,7 @@ export default function ProductCard({
         </div>
       </div>
 
-      <div className="text-center px-1.5 space-y-1.5 font-inter transition-all duration-300 ease-out relative">
+      <div className="text-center px-1.5 space-y-1.5 transition-all duration-300 ease-out relative font-albert-sans">
         <h1 className="text-xs font-semibold">{product.name}</h1>
         <p className="text-xs">{formatCurrency(product.price)}</p>
       </div>
@@ -214,7 +214,7 @@ export default function ProductCard({
             <div className="w-full lg:w-1/2 flex-1 bg-white rounded-b-3xl lg:rounded-r-3xl lg:rounded-bl-none border border-white flex flex-col relative lg:overflow-hidden">
               <div className="flex-1 lg:max-h-full lg:overflow-y-auto scrollbar-hide py-4 px-4 lg:py-6 lg:px-8 lg:pb-6">
                 <div>
-                  <h1 className="font-semibold text-base lg:text-lg font-rubik cursor-pointer hover:text-gray-400">
+                  <h1 className="font-semibold text-base lg:text-lg font-albert-sans cursor-pointer hover:text-gray-400">
                     {product.title}
                   </h1>
                   <p className="text-sm lg:text-md text-gray-800">SDZ1056</p>
@@ -231,7 +231,7 @@ export default function ProductCard({
                 </div>
 
                 <div className="my-4 lg:my-5">
-                  <p className="font-rubik font-bold text-xs mb-2">
+                  <p className="font-albert-sans font-bold text-xs mb-2">
                     COLOR:{" "}
                     {activeColorIndex !== null
                       ? product.colors[activeColorIndex].label.toUpperCase()
@@ -261,7 +261,7 @@ export default function ProductCard({
                 </div>
 
                 <div className="my-4 lg:my-5">
-                  <p className="font-rubik font-bold text-xs mb-2">
+                  <p className="font-albert-sans font-bold text-xs mb-2">
                     SIZE: {selectedSize || product.sizes[0]}
                   </p>
                   <div className="flex gap-1.5 flex-wrap">
@@ -283,7 +283,7 @@ export default function ProductCard({
                 </div>
 
                 <div className="my-4 lg:my-5">
-                  <p className="font-rubik font-bold text-xs mb-2">Quantity</p>
+                  <p className="font-albert-sans font-bold text-xs mb-2">Quantity</p>
                   <div className="w-fit flex items-center justify-start gap-6 lg:gap-8 border border-black px-3 lg:px-4 py-2 lg:py-2.5 rounded-sm">
                     <FaMinus
                       size={14}

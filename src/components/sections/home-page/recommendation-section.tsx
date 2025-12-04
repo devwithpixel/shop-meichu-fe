@@ -45,28 +45,30 @@ export default function RecommendationSection({
   }, []);
 
   return (
-    <div
-      ref={sectionWardrobe}
-      className="bg-white p-4 md:p-6 space-y-6 overflow-x-hidden lg:overflow-x-visible"
-    >
-      <div className="text-black max-w-full md:max-w-3/4 lg:max-w-1/2 space-y-4">
-        <h1 className="font-rubik text-2xl md:text-3xl lg:text-4xl font-semibold">
-          {data.section.title}
-        </h1>
-        <p className="font-inter text-xs lg:text-sm">
-          {data.section.description}
-        </p>
-      </div>
+    <>
+      <div
+        ref={sectionWardrobe}
+        className="bg-[#D9E4E8] p-4 md:p-10 space-y-6 overflow-x-hidden lg:overflow-x-visible"
+      >
+        <div className="text-black max-w-full md:max-w-3/4 lg:max-w-1/2 space-y-4">
+          <h1 className="font-albert-sans text-2xl md:text-3xl lg:text-4xl font-bold">
+            {data.section.title}
+          </h1>
+          <p className="font-albert-sans text-xs lg:text-sm font-medium">
+            {data.section.description}
+          </p>
+        </div>
 
-      <div className="flex items-center md:justify-start lg:justify-center flex-nowrap md:flex-wrap lg:flex-nowrap gap-2 md:gap-5.5 lg:gap-4.5 mb-6 overflow-x-scroll lg:overflow-x-visible">
-        {data.products?.map((product) => (
-          <ProductCard
-            key={product.id}
-            product={product}
-            className="recommendation-card"
-          />
-        ))}
+        <div className="flex items-center md:justify-start lg:justify-center flex-nowrap md:flex-wrap lg:flex-nowrap gap-2 md:gap-5.5 lg:gap-4.5 mb-6 overflow-x-scroll lg:overflow-x-visible z-10">
+          {data.products?.map((product) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              className="recommendation-card"
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }

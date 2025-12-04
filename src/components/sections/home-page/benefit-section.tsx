@@ -52,6 +52,7 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
         onUpdate: (self) => {
           targetProgress = self.progress * 100;
         },
+        // markers: true
       },
     });
 
@@ -64,6 +65,7 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
         start: "top 90%",
         end: () => `+=${totalScroll * 1}`,
         scrub: 1,
+        // markers: true
       },
     });
   }, []);
@@ -71,20 +73,30 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
   return (
     <section
       ref={sectionRef}
-      className="w-full min-h-fit sm:min-h-screen bg-gray-100 flex flex-col items-center justify-center overflow-x-hidden sm:h-screen sm:overflow-hidden"
+      className="relative w-full min-h-fit sm:min-h-screen bg-white flex flex-col items-center justify-center overflow-x-hidden sm:h-screen sm:overflow-hidden"
     >
+      <div className="hidden md:block w-auto h-auto absolute inset-0 z-0 rounded-4xl bg-gray-100 mx-6 md:my-20 lg:my-10">
+        <Image
+          src="/assets/image/my.png"
+          alt="bg"
+          className="w-full h-full object-cover opacity-20 rounded-4xl"
+        />
+      </div>
+
       <div className="w-full flex flex-col sm:flex-row sm:items-center py-10">
         <div className="leftBox min-w-90 lg:min-w-[28%] max-w-86 sm:max-w-96 space-y-5 mb-10 sm:mb-0 mx-5 lg:ml-16 md:mr-30 lg:mr-20">
-          <h1 className="font-medium text-3xl md:text-4xl lg:text-5xl font-rubik">
+          <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold font-albert-sans">
             <span className="text-transparent text-outline-black">
-              {titleFirstWord}
+              {`${titleFirstWord}` + ""}
             </span>
             {titleRestWord}
           </h1>
-          <p className="font-rubik text-xs">{data.section.description}</p>
-          <div className="flex items-center gap-0.5 cursor-pointer group">
+          <p className="font-albert-sans text-xs font-medium">
+            {data.section.description}
+          </p>
+          <div className="flex items-center gap-0.5 cursor-pointer group w-fit">
             <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
-            <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5">
+            <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5 font-albert-sans font-medium">
               {data.ctaButton.title}
             </p>
           </div>
@@ -102,17 +114,17 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
                     <Image
                       src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${item.product?.images?.[0]?.url}`}
                       alt={item.product?.name}
-                      className="max-w-120 max-h-52 md:max-w-200 md:max-h-110 rounded-xl sm:rounded-3xl transition-transform duration-800 ease-out group-hover:scale-105 group-hover:-rotate-1"
+                      className="object-cover max-w-160 w-96 h-70 max-h-52 md:max-w-none md:max-h-none md:w-160 md:h-110 rounded-xl sm:rounded-3xl transition-transform duration-800 ease-out group-hover:scale-105 group-hover:-rotate-1"
                     />
                   </div>
                 </div>
 
-                <p className="absolute text-sm sm:text-base max-w-40 sm:max-w-56 z-10 px-1 sm:px-6 py-1 sm:py-4 bg-white w-fit border border-gray-300 rounded-md sm:rounded-2xl bottom-31 sm:bottom-36 -left-4 sm:-left-7">
+                <p className="absolute text-sm sm:text-base max-w-40 sm:max-w-56 z-10 px-1 sm:px-6 py-1 sm:py-4 bg-white w-fit border border-gray-300 rounded-md sm:rounded-2xl bottom-31 sm:bottom-36 -left-4 sm:-left-7 font-albert-sans">
                   {item.badge}
                 </p>
 
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-center gap-2 sm:gap-8 mt-5">
-                  <p className="font-rubik font-semibold text-xl sm:text-3xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-center gap-2 sm:gap-8 mt-5 font-albert-sans">
+                  <p className="font-albert-sans font-semibold text-xl sm:text-3xl">
                     {item.product?.name}
                   </p>
                   <button className="text-xs px-4 sm:px-8 py-2.5 sm:py-4 border border-gray-800 rounded-full bg-transparent hover:bg-white cursor-pointer">

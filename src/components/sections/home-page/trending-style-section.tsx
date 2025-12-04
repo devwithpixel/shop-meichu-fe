@@ -40,21 +40,14 @@ export default function TrendingStyleSection({
 
   useGSAP(
     () => {
-      const mm = gsap.matchMedia();
       if (window.innerWidth <= 748) return;
 
       const cards = gsap.utils.toArray<HTMLElement>(".card-color");
       const cardTexts = gsap.utils.toArray<HTMLElement>(".text-color");
 
       gsap.set(".border-main", { opacity: 0 });
-      gsap.set(".card-color-trigger", {
-        opacity: 0,
-      });
-
-      gsap.set(".card-main", {
-        backgroundColor: "#ffffff",
-      });
-
+      gsap.set(".card-color-trigger", { opacity: 0 });
+      gsap.set(".card-main", { backgroundColor: "#ffffff" });
       gsap.set(cards, {
         rotation: 35,
         scale: 0.45,
@@ -62,10 +55,13 @@ export default function TrendingStyleSection({
         y: (i) => i * -130,
         z: (i) => -i * 50,
       });
+      gsap.set(cardTexts, { fontSize: "60px" });
 
-      gsap.set(cardTexts, {
-        fontSize: "60px",
-      });
+      const getTextX = () => {
+        if (window.innerWidth >= 1300) return -200;
+        if (window.innerWidth >= 1020) return -120;
+        return -20;
+      };
 
       const favoriteTimeline = gsap.timeline({
         scrollTrigger: {
@@ -77,187 +73,31 @@ export default function TrendingStyleSection({
           invalidateOnRefresh: true,
         },
       });
-      mm.add("(min-width: 1300px)", () => {
-        favoriteTimeline
-          .to(".card-color-trigger", {
-            opacity: 1,
-          })
-          .to(".card-color-trigger", {
-            y: 200,
-          })
-          .to(cardTexts, {
-            fontSize: "28px",
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * -140,
-            rotation: 0,
-            scale: 1,
-            yPercent: 0,
-          })
-          .to(".card-color-trigger", {
-            y: 0,
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * 0,
-          })
-          .to(".border-main", {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cardMainRef, {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cards, {
-            scale: 0.7,
-          })
-          .to(cards, {
-            height: "40px",
-            y: 22,
-          })
-          .to(
-            cardTexts,
-            {
-              fontSize: "24px",
-              x: -200,
-            },
-            "<"
-          )
-          .to(cards, {
-            opacity: 0,
-          })
-          .to(".card-main", {
-            backgroundColor: (i) => bgCardColor[i],
-            duration: 0.5,
-          })
-          .to(".card-color-trigger", {
-            zIndex: 0,
-          });
-      });
 
-      mm.add("(min-width: 1020px) and (max-width: 1301px)", () => {
-        favoriteTimeline
-          .to(".card-color-trigger", {
-            opacity: 1,
-          })
-          .to(".card-color-trigger", {
-            y: 200,
-          })
-          .to(cardTexts, {
-            fontSize: "28px",
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * -140,
-            rotation: 0,
-            scale: 1,
-            yPercent: 0,
-          })
-          .to(".card-color-trigger", {
-            y: 0,
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * 0,
-          })
-          .to(".border-main", {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cardMainRef, {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cards, {
-            scale: 0.7,
-          })
-          .to(cards, {
-            height: "40px",
-            y: 22,
-          })
-          .to(
-            cardTexts,
-            {
-              fontSize: "24px",
-              x: -120,
-            },
-            "<"
-          )
-          .to(cards, {
-            duration: 0.5,
-            opacity: 0,
-          })
-          .to(".card-main", {
-            backgroundColor: (i) => bgCardColor[i],
-            duration: 0.5,
-          })
-          .to(".card-color-trigger", {
-            zIndex: 0,
-          });
-      });
-
-      mm.add("(min-width: 749px) and (max-width: 1020px)", () => {
-        favoriteTimeline
-          .to(".card-color-trigger", {
-            opacity: 1,
-          })
-          .to(".card-color-trigger", {
-            y: 200,
-          })
-          .to(cardTexts, {
-            fontSize: "28px",
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * -140,
-            rotation: 0,
-            scale: 1,
-            yPercent: 0,
-          })
-          .to(".card-color-trigger", {
-            y: 0,
-          })
-          .to(cards, {
-            duration: 1,
-            y: (i) => i * 0,
-          })
-          .to(".border-main", {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cardMainRef, {
-            duration: 1,
-            opacity: 1,
-          })
-          .to(cards, {
-            scale: 0.7,
-          })
-          .to(cards, {
-            height: "40px",
-            y: 22,
-          })
-          .to(
-            cardTexts,
-            {
-              fontSize: "24px",
-              x: -20,
-            },
-            "<"
-          )
-          .to(cards, {
-            duration: 0.5,
-            opacity: 0,
-          })
-          .to(".card-main", {
-            backgroundColor: (i) => bgCardColor[i],
-            duration: 0.5,
-          })
-          .to(".card-color-trigger", {
-            zIndex: 0,
-          });
-      });
+      favoriteTimeline
+        .to(".card-color-trigger", { opacity: 1 })
+        .to(".card-color-trigger", { y: 200 })
+        .to(cardTexts, { fontSize: "28px" })
+        .to(cards, {
+          duration: 1,
+          y: (i) => i * -140,
+          rotation: 0,
+          scale: 1,
+          yPercent: 0,
+        })
+        .to(".card-color-trigger", { y: 0 })
+        .to(cards, { duration: 1, y: 0 })
+        .to(".border-main", { duration: 1, opacity: 1 })
+        .to(cardMainRef, { duration: 1, opacity: 1 })
+        .to(cards, { scale: 0.7 })
+        .to(cards, { height: "40px", y: 22 })
+        .to(cardTexts, { fontSize: "24px", x: getTextX() }, "<")
+        .to(cards, { duration: 0.5, opacity: 0 })
+        .to(".card-main", {
+          backgroundColor: (i) => bgCardColor[i],
+          duration: 0.5,
+        })
+        .to(".card-color-trigger", { zIndex: 0 });
 
       ScrollTrigger.create({
         trigger: favoriteRef.current,
@@ -276,17 +116,17 @@ export default function TrendingStyleSection({
       className="relative min-h-screen bg-black text-white flex items-center justify-center md:py-0 py-10"
     >
       <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-9/11 lg:w-1/2 h-[900px] lg:h-96 bg-lime-500/15 blur-3xl"></div>
+        <div className="w-1/2 h-3/4 bg-[#FF56E0]/30 blur-3xl rounded-full"></div>
       </div>
       <div className="relative z-10">
         <div className="relative w-full flex justify-center z-0">
           <div className="px-5 md:px-4 lg:px-20 w-fit grid grid-cols-1 md:grid-cols-2 justify-center items-center gap-10">
             <div className="md:w-9/12 lg:w-full title-description-favorite grid grid-cols-1 gap-6">
-              <h1 className="split-title-favorite text-3xl lg:text-5xl font-rubik font-medium leading-tight">
+              <h1 className="split-title-favorite text-3xl lg:text-5xl font-albert-sans font-bold leading-tight">
                 {data.section.title}
               </h1>
 
-              <div className="max-w-xl font-inter text-xs lg:text-sm leading-relaxed opacity-80 grid gap-6">
+              <div className="max-w-xl font-albert-sans text-xs lg:text-sm leading-relaxed opacity-80 grid gap-6">
                 <p>{data.section.description}</p>
               </div>
 
@@ -295,12 +135,12 @@ export default function TrendingStyleSection({
                   size={55}
                   className="bg-white border border-black rounded-full p-4 transition-all duration-300 group-hover:-mr-14 group-hover:text-white text-black group-hover:bg-black hover:text-white group-hover:scale-90"
                 />
-                <p className="bg-white px-8 py-4 border border-black rounded-full whitespace-nowrap transition-all text-black duration-300 group-hover:pl-22.5">
+                <p className="bg-white px-8 py-4 border border-black rounded-full whitespace-nowrap transition-all text-black duration-300 group-hover:pl-22.5 font-albert-sans font-medium">
                   {data.ctaButton?.title}
                 </p>
               </div>
 
-              <div className="lg:hidden flex cursor-pointer p-2 w-1/2 bg-white text-black rounded-full justify-start items-center font-inter">
+              <div className="lg:hidden flex cursor-pointer p-2 w-1/2 bg-white text-black rounded-full justify-start items-center font-albert-sans">
                 <div className="flex items-center gap-2 bg-white">
                   <div className="bg-black p-2 rounded-full">
                     <HiOutlineArrowUpRight
@@ -321,7 +161,7 @@ export default function TrendingStyleSection({
                       key={product.id}
                       className={`card-color ${bgColors[index]} flex items-center justify-center rounded-xl text-center`}
                     >
-                      <h1 className="text-color text-2xl text-gray-900 font-inter font-bold whitespace-nowrap">
+                      <h1 className="text-color text-2xl text-gray-900 font-albert-sans font-bold whitespace-nowrap">
                         {product.name}
                       </h1>
                     </div>
@@ -347,10 +187,10 @@ export default function TrendingStyleSection({
                         />
                         <div className="flex items-center justify-between w-full">
                           <div className="grid grid-cols-1 gap-3">
-                            <h1 className="text-base text-gray-900 font-inter font-bold">
+                            <h1 className="text-base text-gray-900 font-albert-sans font-bold">
                               {product.name}
                             </h1>
-                            <p className="text-xs text-gray-900 font-inter font-bold">
+                            <p className="text-xs text-gray-900 font-albert-sans font-bold">
                               {formatCurrency(product.price)}
                             </p>
                           </div>

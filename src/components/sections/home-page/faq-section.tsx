@@ -12,9 +12,9 @@ import type { FAQSection } from "@/types/strapi/components/home-page/faq-section
 
 export default function FAQSection({ data }: { data: FAQSection }) {
   return (
-    <div className="bg-white w-full h-fit font-rubik flex flex-col items-start space-y-10 py-20">
+    <div className=" bg-white w-full h-fit font-albert-sans flex flex-col items-start space-y-10 py-20">
       <div className="px-5 md:px-5 lg:px-10 space-y-4">
-        <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold">
+        <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold">
           {data.section.title}
         </h1>
         <p>{data.section.description}</p>
@@ -30,14 +30,14 @@ export default function FAQSection({ data }: { data: FAQSection }) {
             <div className="px-4 md:px-5 lg:px-10">
               <AccordionTrigger
                 iconBg="bg-black group-hover:bg-white data-[state=open]:!bg-white"
-                className="group text-xl lg:text-xl font-bold md:font-medium hover:text-white data-[state=open]:text-white"
+                className="group text-xl lg:text-xl font-bold md:font-bold hover:text-white data-[state=open]:text-white"
               >
                 <span className="inline-block transition-transform group-hover:translate-x-2">
                   {item.title}
                 </span>
               </AccordionTrigger>
 
-              <AccordionContent className="text-balance">
+              <AccordionContent className="text-balance font-medium">
                 <p>{item.content}</p>
               </AccordionContent>
             </div>

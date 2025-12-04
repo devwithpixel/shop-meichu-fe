@@ -8,8 +8,9 @@
   --color-foreground: var(--foreground);
   --font-rubik: "Rubik", sans-serif;
   --font-inter: "Inter", sans-serif;
+  --font-albert-sans: "albertSans", sans-serif;
   --font-arial: var(--font-arial);
-  --font-outfit: var(--font-outfit);
+  --font-jogging: var(--font-jogging);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -58,6 +59,7 @@
   --font-rubik: "__Rubik_generated_name__";
   --font-inter: "__Inter_generated_name__";
   --font-arial: Arial, sans-serif;
+  --font-albert-sans: "__albertSans_generated_name__";
   --radius: 0.625rem;
   --background: #111113;
   --foreground: oklch(0.13 0.028 261.692);
@@ -151,6 +153,7 @@ html {
 body {
   font-family: var(--font-rubik), sans-serif;
   font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-albert-sans), sans-serif;
   font-family: var(--font-arial);
 }
 .text-outline-white {

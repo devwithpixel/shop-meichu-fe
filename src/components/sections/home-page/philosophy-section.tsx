@@ -47,13 +47,13 @@ function Card({
           src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${category.thumbnail?.url}`}
           alt={category.name}
           className={cn(
-            "bg-white object-cover rounded-full border-white border-6 shadow-lg",
+            "bg-white object-cover max-w-20 max-h-20 md:max-h-none md:max-w-none rounded-full border-white border-6 shadow-lg",
             className
           )}
           style={style}
         />
       </TooltipTrigger>
-      <TooltipContent className="font-rubik text-white">
+      <TooltipContent className="font-albert-sans text-white">
         {category.name}
       </TooltipContent>
     </Tooltip>
@@ -169,9 +169,9 @@ export default function PhilosophySection({
   return (
     <section
       ref={sectionRef}
-      className="px-6 md:px-10 flex flex-col items-center lg:justify-start justify-center bg-[#C8F51D] md:bg-white font-rubik py-12 md:min-h-screen overflow-hidden relative"
+      className="px-6 md:px-10 flex flex-col items-center lg:justify-start justify-center bg-[#FF8BC6] md:bg-white font-albert-sans py-12 md:min-h-screen overflow-hidden relative"
     >
-      <h3 className="text-2xl md:text-3xl font-semibold md:font-medium text-center max-w-5xl w-full mb-5 xl:text-5xl relative z-1000">
+      <h3 className="text-2xl md:text-3xl font-semibold md:font-bold text-center max-w-5xl w-full mb-5 xl:text-5xl relative z-40 md:z-1000">
         {data.description}
       </h3>
 
@@ -190,7 +190,7 @@ export default function PhilosophySection({
         <div className="size-28 md:size-44 flex items-center justify-center relative rounded-full">
           <svg
             ref={svgTextRef}
-            className="absolute w-full h-full z-1000"
+            className="absolute w-full h-full z-40 md:z-1000"
             viewBox="0 0 300 300"
           >
             <defs>
@@ -231,7 +231,7 @@ export default function PhilosophySection({
           </svg>
           <div
             ref={circleBackgroundRef}
-            className="hidden md:block absolute size-full bg-[#C8F51D] rounded-full scale-110 will-change-transform z-900"
+            className="hidden md:block absolute size-full bg-[#FF8BC6] rounded-full scale-110 will-change-transform z-900"
           ></div>
         </div>
         {rightCards.slice(0, 3).map((card, index) => (

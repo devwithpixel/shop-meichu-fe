@@ -38,10 +38,10 @@ export default function Footer() {
   const data = response!.data;
 
   return (
-    <div className="bg-carbon text-white">
+    <div className="bg-carbon text-white relative z-30">
       {data.runningText && <FooterRunningText data={data.runningText} />}
 
-      <div className="py-16 px-6 font-inter">
+      <div className="py-16 px-6 font-albert-sans">
         <div className="grid grid-cols-1 lg:grid-cols-6 lg:grid-rows-1 gap-8">
           <div className="lg:col-span-2 leading-7">
             <p>{data.description}</p>

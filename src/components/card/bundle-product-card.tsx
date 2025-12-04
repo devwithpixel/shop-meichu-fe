@@ -58,7 +58,7 @@ export default function BundleProductCard({ product }: { product: Product }) {
             }`}
           >
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold font-rubik text-white text-sm line-clamp-2">
+              <h3 className="font-semibold font-albert-sans text-white text-sm line-clamp-2">
                 {product.name}
               </h3>
               <p className="text-sm text-slate-300 mt-1">
@@ -76,7 +76,7 @@ export default function BundleProductCard({ product }: { product: Product }) {
         <div className="hidden md:block lg:hidden absolute bottom-0 left-0 w-full p-4 bg-linear-to-t from-black/90 via-black/50 to-transparent">
           <div className="flex items-start justify-between mb-3">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold font-rubik text-white text-sm line-clamp-2">
+              <h3 className="font-semibold font-albert-sans text-white text-sm line-clamp-2">
                 {product.name}
               </h3>
               <p className="text-sm text-slate-300 mt-1">
@@ -98,7 +98,7 @@ export default function BundleProductCard({ product }: { product: Product }) {
         <div className="p-4 flex-1">
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold font-rubik text-white text-sm line-clamp-2 leading-tight">
+              <h3 className="font-semibold font-albert-sans text-white text-sm line-clamp-2 leading-tight">
                 {product.name}
               </h3>
               <p className="text-xs text-gray-300 mt-1">

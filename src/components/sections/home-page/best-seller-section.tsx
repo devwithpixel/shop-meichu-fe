@@ -141,19 +141,19 @@ export default function BestSellerSection({
         ref={sectionRef}
         className="relative w-screen h-screen bg-black overflow-hidden"
       >
-        <div className="md:absolute inset-0 px-4 pt-20 flex pointer-events-none z-20">
-          <div className="w-full md:w-1/2 space-y-4 mt-0 md:mt-10 lg:mt-0">
-            <h1 className="text-white font-rubik text-4xl md:text-5xl font-semibold">
+        <div className="md:absolute inset-0 pl-5 md:pl-14 pt-20 flex pointer-events-none z-20">
+          <div className="w-full md:w-1/2 space-y-6 mt-0 md:mt-10 lg:mt-0">
+            <h1 className="text-white font-jogging text-4xl md:text-5xl font-medium">
               {data.section.title}
             </h1>
-            <p className="text-white font-inter text-xs">
+            <p className="text-white font-albert-sans text-xs font-medium max-w-xl">
               {data.section.description}
             </p>
           </div>
         </div>
         <div className="videoContainer relative md:h-screen lg:w-full lg:h-full md:z-10 flex justify-center items-start md:items-center mt-8 md:mt-0">
           <div className="absolute inset-0 flex items-center justify-center z-0">
-            <div className="w-9/11 md:w-3/4 h-120 md:h-196 lg:h-206 bg-lime-500/20 blur-3xl rounded-full"></div>
+            <div className="w-9/11 md:w-3/4 h-120 md:h-196 lg:h-200 bg-[#5689FF]/40 blur-3xl rounded-full"></div>
           </div>
           <div className="relative flex justify-center items-center lg:static lg:block">
             {data.media.mime.startsWith("video/") ? (
@@ -185,10 +185,10 @@ export default function BestSellerSection({
         <div className="running-wrapper absolute top-150 md:top-0 md:left-0 w-full h-full md:overflow-hidden z-0 pointer-events-none space-y-1 md:space-y-2 lg:space-y-6 pt-16">
           <div className="row -rotate-5">
             <div className="running-right flex flex-row-reverse text-nowrap">
-              <p className="text-4xl md:text-7xl lg:text-9xl font-bold font-inter text-transparent text-outline-white">
+              <p className="text-4xl md:text-7xl lg:text-9xl font-medium font-jogging text-white">
                 Stay Cozy, Stay Stylish, Winter Collection,
               </p>
-              <p className="text-4xl md:text-7xl lg:text-9xl font-bold font-inter text-transparent text-outline-white">
+              <p className="text-4xl md:text-7xl lg:text-9xl font-medium font-jogging text-white">
                 Stay Cozy, Stay Stylish, Winter Collection,
               </p>
             </div>
@@ -196,10 +196,10 @@ export default function BestSellerSection({
 
           <div className="row -rotate-5">
             <div className="running-left flex text-nowrap">
-              <p className="text-4xl md:text-7xl lg:text-9xl font-bold font-inter text-white">
+              <p className="text-4xl md:text-7xl lg:text-9xl font-medium font-jogging text-transparent text-outline-white">
                 Stay Cozy, Stay Stylish, Winter Collection,
               </p>
-              <p className="text-4xl md:text-7xl lg:text-9xl font-bold font-inter text-white">
+              <p className="text-4xl md:text-7xl lg:text-9xl font-medium font-jogging text-transparent text-outline-white">
                 Stay Cozy, Stay Stylish, Winter Collection,
               </p>
             </div>
@@ -207,10 +207,10 @@ export default function BestSellerSection({
 
           <div className="row -rotate-5">
             <div className="running-right flex flex-row-reverse text-nowrap">
-              <p className="text-4xl md:text-7xl lg:text-9xl font-bold font-inter text-transparent text-outline-white">
+              <p className="text-4xl md:text-7xl lg:text-9xl font-medium font-jogging text-white">
                 Stay Cozy, Stay Stylish, Winter Collection,
               </p>
-              <p className="text-4xl md:text-7xl lg:text-9xl font-bold font-inter text-transparent text-outline-white">
+              <p className="text-4xl md:text-7xl lg:text-9xl font-medium font-jogging text-white">
                 Stay Cozy, Stay Stylish, Winter Collection,
               </p>
             </div>

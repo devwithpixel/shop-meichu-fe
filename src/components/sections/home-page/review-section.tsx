@@ -72,13 +72,14 @@ export default function ReviewSection({ data }: { data: ReviewSection }) {
   }, [isDragging]);
 
   return (
-    <div className="w-full pl-6 lg:pl-8 min-h-full bg-[#f2f2f2]">
+    <div className=" w-full pl-6 lg:pl-8 min-h-full bg-[#D9E4E8]">
+
       <div className="flex-col items-center justify-center py-20 md:py-40">
         <div className="flex flex-col gap-4 md:gap-6">
-          <h2 className="md:text-lg font-medium tracking-wide font-rubik">
+          <h2 className="text-xs md:text-lg font-medium tracking-wide font-albert-sans">
             {data.section.title}
           </h2>
-          <h1 className="text-3xl md:text-4xl lg:text-6xl font-medium md:mb-6 sm:max-w-xs md:max-w-none font-rubik">
+          <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold md:mb-6 max-w-sm md:max-w-5xl font-albert-sans">
             {data.section.description}
           </h1>
         </div>
@@ -90,7 +91,7 @@ export default function ReviewSection({ data }: { data: ReviewSection }) {
           onMouseUp={handleMouseUp}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
-          className="flex space-x-4 overflow-x-hidden scroll-smooth no-scrollbar py-4 cursor-grab select-none"
+          className="flex gap-4 md:space-x-4 overflow-x-hidden scroll-smooth no-scrollbar py-4 cursor-grab select-none"
         >
           {data.reviews?.map((review) => (
             <Card
@@ -99,11 +100,11 @@ export default function ReviewSection({ data }: { data: ReviewSection }) {
             >
               <CardContent>
                 <div className="">
-                  <p className="text-sm lg:text-base font-inter font-medium leading-relaxed mb-4">
+                  <p className="text-sm lg:text-base font-albert-sans font-medium leading-relaxed mb-4">
                     {review.review}
                   </p>
                 </div>
-                <div className="flex items-center gap-5 mt-6 md:mt-8 font-inter">
+                <div className="flex items-center gap-5 mt-6 md:mt-8 font-albert-sans">
                   <img
                     src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${review.avatar?.url}`}
                     alt={review.name}

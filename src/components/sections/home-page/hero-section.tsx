@@ -70,7 +70,7 @@ export default function HeroSection({
     <>
       <section
         ref={mainSectionRef}
-        className="relative min-h-screen overflow-hidden font-rubik flex items-center"
+        className="relative min-h-screen overflow-hidden font-albert-sans flex items-center"
       >
         {data.background.mime.startsWith("video/") ? (
           <video
@@ -94,8 +94,8 @@ export default function HeroSection({
 
         <div className="absolute inset-0 bg-black/40" />
 
-        <div className="relative ms-6">
-          <h1 className="text-white text-5xl font-medium leading-none">
+        <div className="relative ms-14">
+          <h1 className="text-white text-5xl md:text-6xl font-bold max-w-2xl leading-none">
             {data.section.title}
           </h1>
 
@@ -105,9 +105,9 @@ export default function HeroSection({
             </p>
           )}
 
-          <div className="flex items-center gap-0.5 cursor-pointer group mt-4">
+          <div className="flex items-center gap-0.5 cursor-pointer group mt-12 w-fit">
             <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
-            <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5">
+            <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5 font-medium">
               Explore More
             </p>
           </div>
@@ -116,7 +116,7 @@ export default function HeroSection({
         {data.runningText && (
           <div
             ref={bigTextRef}
-            className="font-inter absolute inline-flex bottom-8 left-0 pointer-events-none z-30 text-white text-8xl whitespace-nowrap"
+            className="font-jogging absolute inline-flex bottom-8 left-0 pointer-events-none z-30 text-white text-8xl whitespace-nowrap"
           >
             <p className="w-[260%]">{data.runningText}</p>
             <p className="w-[260%]">{data.runningText}</p>

@@ -8,7 +8,16 @@ interface CategoryCardProps {
   slideAnimationClassName: string;
   exitAnimationClassName: string;
   className?: string;
+  index: number;
+  nextIndex?: number;
 }
+
+const featuredColors = [
+  { bg: "bg-[#FFEB56]" },
+  { bg: "bg-[#FF56E0]" },
+  { bg: "bg-[#5689FF]" },
+  { bg: "bg-[#5FFF56]" },
+];
 
 export default function CategoryCard({
   item,
@@ -17,20 +26,34 @@ export default function CategoryCard({
   slideAnimationClassName,
   exitAnimationClassName,
   className = "",
+  index,
+  nextIndex,
 }: CategoryCardProps) {
   const currentItem = item;
   const animatedItem = nextItem || item;
 
-  const CardContent = ({ data }: { data: FeaturedCategoryItem }) => (
-    <div className="space-y-3">
-      <h3 className="text-2xl md:text-3xl font-medium font-rubik">
+  const currentColors = featuredColors[index % featuredColors.length];
+
+  const nextColors =
+    nextIndex !== undefined
+      ? featuredColors[nextIndex % featuredColors.length]
+      : currentColors;
+
+  const CardContent = ({
+    data,
+  }: {
+    data: FeaturedCategoryItem;
+    colors: (typeof featuredColors)[0];
+  }) => (
+    <div className="space-y-3 text-black">
+      <h3 className="text-2xl md:text-3xl font-bold font-albert-sans">
         {data.title}
       </h3>
-      <p className="text-sm font-normal font-inter">{data.description}</p>
+      <p className="text-sm font-medium font-albert-sans">{data.description}</p>
       {data.category && (
         <Link
-          href={`/products?category=${data.category.slug}`}
-          className="inline-block mt-2 bg-black text-white px-6 py-3 md:px-8 md:py-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors"
+          href={`/products/${data.category.slug}`}
+          className="inline-block mt-2 bg-black text-white px-6 py-3 md:px-8 md:py-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors font-albert-sans"
         >
           SHOP NOW
         </Link>
@@ -40,13 +63,15 @@ export default function CategoryCard({
 
   return (
     <div
-      className={`rounded-3xl md:rounded-4xl overflow-hidden relative h-full bg-gray-100 ${className}`}
+      className={`rounded-3xl md:rounded-4xl overflow-hidden relative h-full ${
+        isAnimating && nextItem ? nextColors.bg : currentColors.bg
+      } transition-colors duration-500 ${className}`}
     >
       {isAnimating && nextItem && (
         <div
           className={`absolute inset-0 z-10 p-6 md:px-6 md:py-10 flex flex-col ${exitAnimationClassName}`}
         >
-          <CardContent data={currentItem} />
+          <CardContent data={currentItem} colors={currentColors} />
         </div>
       )}
 
@@ -57,6 +82,7 @@ export default function CategoryCard({
       >
         <CardContent
           data={isAnimating && nextItem ? animatedItem : currentItem}
+          colors={isAnimating && nextItem ? nextColors : currentColors}
         />
       </div>
     </div>

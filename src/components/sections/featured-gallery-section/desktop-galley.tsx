@@ -37,11 +37,13 @@ export default function DesktopGalleryGrid({
         slideAnimationClassName={slideAnimationClassName}
         exitAnimationClassName={exitAnimationClassName}
         className="col-start-3"
+        index={getIndex(1)}
+        nextIndex={getNextIndexFor(1)}
       />
 
-      <CategoryCard
-        item={categories[getIndex(2)]}
-        nextItem={categories[getNextIndexFor(2)]}
+      <CategoryImageCard
+        item={categories[getIndex(0)]}
+        nextItem={categories[getNextIndexFor(0)]}
         isAnimating={isAnimating}
         slideAnimationClassName={slideAnimationClassName}
         exitAnimationClassName={exitAnimationClassName}
@@ -64,6 +66,8 @@ export default function DesktopGalleryGrid({
         slideAnimationClassName={slideAnimationClassName}
         exitAnimationClassName={exitAnimationClassName}
         className="row-span-2 col-start-1 row-start-3"
+        index={getIndex(4)}
+        nextIndex={getNextIndexFor(4)}
       />
 
       <CategoryCard
@@ -73,6 +77,8 @@ export default function DesktopGalleryGrid({
         slideAnimationClassName={slideAnimationClassName}
         exitAnimationClassName={exitAnimationClassName}
         className="row-span-2 col-start-4 row-start-1"
+        index={getIndex(5)}
+        nextIndex={getNextIndexFor(5)}
       />
 
       <CategoryImageCard
@@ -91,6 +97,8 @@ export default function DesktopGalleryGrid({
         slideAnimationClassName={slideAnimationClassName}
         exitAnimationClassName={exitAnimationClassName}
         className="col-start-3 row-start-4"
+        index={getIndex(7)}
+        nextIndex={getNextIndexFor(7)}
       />
     </div>
   );

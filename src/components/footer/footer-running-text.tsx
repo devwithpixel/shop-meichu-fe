@@ -25,7 +25,7 @@ export default function FooterRunningText({ data }: { data: RunningText }) {
 
       <div
         ref={footerRunningTextRef}
-        className="flex whitespace-nowrap font-rubik pt-5"
+        className="flex whitespace-nowrap font-jogging pt-5"
       >
         <p className="text-7xl md:text-8xl font-medium">
           {data.firstText} &nbsp;

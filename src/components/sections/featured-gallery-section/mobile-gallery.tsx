@@ -38,6 +38,8 @@ export default function MobileGalleryGrid({
           slideAnimationClassName={slideAnimationClassName}
           exitAnimationClassName={exitAnimationClassName}
           className="min-h-[200px]"
+          index={getIndex(1)}
+          nextIndex={getNextIndexFor(1)}
         />
 
         <CategoryImageCard
@@ -67,6 +69,8 @@ export default function MobileGalleryGrid({
           slideAnimationClassName={slideAnimationClassName}
           exitAnimationClassName={exitAnimationClassName}
           className="min-h-[220px]"
+          index={getIndex(4)}
+          nextIndex={getNextIndexFor(4)}
         />
 
         <CategoryImageCard
@@ -87,6 +91,8 @@ export default function MobileGalleryGrid({
           slideAnimationClassName={slideAnimationClassName}
           exitAnimationClassName={exitAnimationClassName}
           className="min-h-[200px]"
+          index={getIndex(6)}
+          nextIndex={getNextIndexFor(6)}
         />
 
         <CategoryCard
@@ -96,6 +102,8 @@ export default function MobileGalleryGrid({
           slideAnimationClassName={slideAnimationClassName}
           exitAnimationClassName={exitAnimationClassName}
           className="min-h-[200px]"
+          index={getIndex(7)}
+          nextIndex={getNextIndexFor(7)}
         />
       </div>
     </div>

@@ -10,6 +10,7 @@ import { useMemo, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 import type { CollectionSection } from "@/types/strapi/components/home-page/collection-section";
+import Link from "next/link";
 
 export default function CollectionSection({
   data,
@@ -215,22 +216,33 @@ export default function CollectionSection({
   return (
     <>
       {/* Desktop & Ipad */}
-      <div id="style-section" className="hidden md:block" ref={styleRef}>
+      <div
+        id="style-section"
+        className="hidden md:block font-albert-sans"
+        ref={styleRef}
+      >
         <div className="relative w-full min-h-screen bg-black text-white px-8 flex items-center justify-center">
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="lg:h-96 h-[900px] lg:w-1/2 w-9/11 rounded-full bg-lime-500/15 blur-3xl"></div>
+          <div className="absolute inset-0 flex items-center justify-between">
+            <div className="w-[400px] h-[400px] rounded-full bg-[#703632] blur-[180px] pointer-events-none"></div>
+
+            <div className="w-[400px] h-[400px] rounded-full bg-[#703632] blur-[180px] pointer"></div>
           </div>
+
           <div className="relative z-10">
             <div className="w-full flex justify-center">
               <div className="absolute max-w-6xl w-full flex justify-center items-center gap-6">
                 <div className="title-style">
-                  <h1 className="text-4xl md:text-5xl font-bold text-slate-200 leading-tight font-rubik flex justify-center items-center text-center"></h1>
-                  <p className="mt-8 text-base leading-relaxed opacity-80 font-inter flex justify-center items-center text-center"></p>
+                  <h1 className="text-4xl md:text-5xl font-bold text-slate-200 leading-tight font-albert-sans flex justify-center items-center text-center">
+                    {data.section.title}
+                  </h1>
+                  <p className="mt-8 text-base leading-relaxed opacity-80 font-albert-sans flex justify-center items-center text-center">
+                    {data.section.description}
+                  </p>
                 </div>
               </div>
             </div>
 
-            <div className="category-style relative  z-40 w-full flex justify-center mb-16">
+            <div className="category-style relative z-40 w-full flex justify-center mb-16">
               <div className="max-w-6xl w-full flex justify-center items-center gap-6">
                 {data.collections?.map((collection) => {
                   const isActive = activeCollectionId === collection.id;
@@ -250,17 +262,13 @@ export default function CollectionSection({
                       <img
                         src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.category.thumbnail?.url}`}
                         alt={collection.category?.name}
-                        className={`object-contain transition-all duration-300
-                        ${
-                          isActive
-                            ? "w-[65px] h-[65px] absolute"
-                            : "w-[70px] h-[70px]"
-                        }
+                        className={`rounded-full object-cover transition-all duration-300
+                        ${isActive ? "w-16 h-16 absolute" : "w-17 h-17"}
                       `}
                       />
 
                       {isActive && (
-                        <h1 className="text-[26px] font-arial font-normal flex-1 text-center">
+                        <h1 className="text-[26px] font-albert-sans font-normal flex-1 text-center">
                           {collection.category?.name}
                         </h1>
                       )}
@@ -273,25 +281,28 @@ export default function CollectionSection({
             <div className="relative w-full flex justify-center z-0">
               <div className="max-w-6xl w-full grid grid-cols-2 gap-4 justify-center items-center px-12">
                 <div className="title-description-style grid grid-cols-1 gap-6">
-                  <h1 className="split-title-style text-4xl md:text-3xl lg:text-5xl font-bold text-white leading-tight font-rubik max-w-[480px]">
+                  <h1 className="split-title-style text-4xl md:text-3xl lg:text-5xl font-bold text-white leading-tight font-albert-sans max-w-[480px]">
                     {activeCollection?.category.name}
                   </h1>
 
-                  <p className="text-xs lg:text-sm leading-relaxed opacity-80 font-inter">
+                  <p className="text-xs lg:text-sm leading-relaxed opacity-80 font-albert-sans">
                     {activeCollection?.section.description}
                   </p>
                 </div>
 
                 <div className="image-transform-trigger relative w-full">
                   <div className="button-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95%] z-30">
-                    <div className=" bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-inter">
-                      <span className="text-btn flex items-center flex-1 font-inter text-sm md:text-base lg:text-lg text-gray-900 truncate">
+                    <div className=" bg-white text-black pl-4 pr-2 py-2.5 rounded-full shadow-xl flex items-center gap-3 w-full font-albert-sans">
+                      <span className="text-btn flex items-center flex-1 font-albert-sans text-sm md:text-base lg:text-lg text-gray-900 truncate">
                         {activeCollection?.ctaText}
                       </span>
 
-                      <Button className=" w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
+                      <Link
+                        href="/collections/all"
+                        className=" w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0"
+                      >
                         <MdOutlineArrowOutward className="w-5 h-5" />
-                      </Button>
+                      </Link>
                     </div>
                   </div>
 
@@ -345,15 +356,15 @@ export default function CollectionSection({
       </div>
 
       {/* Mobile */}
-      <div className="md:hidden bg-white text-black min-h-screen px-4 py-12">
+      <div className="md:hidden bg-white text-black min-h-screen px-4 py-12 font-albert-sans">
         <div className="w-full">
           <div className="w-full flex justify-center mb-8">
             <div className="max-w-6xl w-full">
               <div>
-                <h1 className="text-3xl font-medium text-gray-900 leading-tight font-rubik text-center">
+                <h1 className="text-3xl font-bold text-gray-900 leading-tight font-albert-sans text-center">
                   {data.section.title}
                 </h1>
-                <p className="mt-4 text-xs leading-relaxed text-gray-600 font-inter text-center">
+                <p className="mt-4 text-xs font-medium leading-relaxed text-gray-600 font-albert-sans text-center">
                   {data.section.description}
                 </p>
               </div>
@@ -380,13 +391,13 @@ export default function CollectionSection({
                     <img
                       src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.category.thumbnail?.url}`}
                       alt={collection.category?.name}
-                      className={`object-contain transition-all duration-300
+                      className={`rounded-full object-cover transition-all duration-300
                       ${isActive ? "w-12 h-12 absolute" : "w-12 h-12"}
                     `}
                     />
 
                     {isActive && (
-                      <h1 className="text-lg font-arial font-normal flex-1 text-center pl-10">
+                      <h1 className="text-lg font-arial font-mod flex-1 text-center pl-10">
                         {collection.category?.name}
                       </h1>
                     )}
@@ -397,10 +408,10 @@ export default function CollectionSection({
           </div>
 
           <div className="w-full my-8">
-            <h1 className="text-2xl font-medium text-gray-900 leading-tight font-rubik">
+            <h1 className="text-2xl font-bold text-gray-900 leading-tight font-albert-sans">
               {activeCollection?.section.title}
             </h1>
-            <p className="mt-4 text-xs leading-relaxed text-gray-800 font-inter">
+            <p className="mt-4 text-xs leading-relaxed text-gray-800 font-albert-sans">
               {activeCollection?.section.description}
             </p>
           </div>
@@ -433,8 +444,8 @@ export default function CollectionSection({
           </div>
 
           <div className="w-full mb-4">
-            <div className="button bg-white text-black pl-4 pr-2 py-3 rounded-full flex items-center gap-3 w-full font-inter">
-              <span className="flex items-center flex-1 font-inter text-sm text-black truncate">
+            <div className="button bg-white text-black pl-4 pr-2 py-3 rounded-full flex items-center gap-3 w-full font-albert-sans">
+              <span className="flex items-center flex-1 font-albert-sans text-sm text-black truncate">
                 {activeCollection?.ctaText}
               </span>
               <Button className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
