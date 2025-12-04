@@ -1,4 +1,3 @@
-import { CartProvider } from "@/context/cart-provider";
 import Navbar from "@/components/navbar/navbar";
 import ScrollSmootherWrapper from "@/components/ScrollSmootherWrapper";
 
@@ -29,11 +28,11 @@ export default async function UserPageLayout({
   const { data: categoryData } = await getCategoryData();
 
   return (
-    <CartProvider>
+    <>
       <Navbar data={navbarData} categories={categoryData} />
       <ScrollSmootherWrapper>
         <main className="md:pb-0 pb-16 select-none pt-0">{children}</main>
       </ScrollSmootherWrapper>
-    </CartProvider>
+    </>
   );
 }

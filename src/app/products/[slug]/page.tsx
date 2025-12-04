@@ -1,4 +1,3 @@
-import Footer from "@/components/footer/footer";
 import ProductDetailSection from "@/components/sections/detail-product/product-detail-section";
 
 import type { StrapiResponse } from "@/types/strapi/response";
@@ -25,13 +24,10 @@ export default async function ProductDetailPage({
   }
 
   return (
-    <>
-      <ProductDetailSection
-        product={productData.data}
-        // relatedProducts={[]}
-        // productDesc={[]}
-      />
-      <Footer />
-    </>
+    <ProductDetailSection
+      product={productData.data}
+      // relatedProducts={[]}
+      // productDesc={[]}
+    />
   );
 }

@@ -5,6 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import type { Metadata } from "next";
+import { CartProvider } from "@/context/cart-provider";
 
 const rubik = Rubik({
   variable: "--font-rubik",
@@ -45,7 +46,9 @@ export default function RootLayout({
         className={`${rubik.variable} ${inter.variable} ${outfit.variable} ${albertSans.variable} ${jogging.variable} antialiased`}
         suppressHydrationWarning
       >
-        <NuqsAdapter>{children}</NuqsAdapter>
+        <NuqsAdapter>
+          <CartProvider>{children}</CartProvider>
+        </NuqsAdapter>
         <Toaster position="top-center" reverseOrder={false} />
       </body>
     </html>
