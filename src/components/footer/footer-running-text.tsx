@@ -19,13 +19,13 @@ export default function FooterRunningText({ data }: { data: RunningText }) {
   });
 
   return (
-    <div className="relative w-full overflow-hidden">
+    <div className="relative w-full overflow-hidden mb-16">
       <div className="pointer-events-none absolute left-0 top-0 h-full w-24 bg-linear-to-r from-carbon to-transparent z-20" />
       <div className="pointer-events-none absolute right-0 top-0 h-full w-24 bg-linear-to-l from-carbon to-transparent z-20" />
 
       <div
         ref={footerRunningTextRef}
-        className="flex whitespace-nowrap font-jogging pt-5"
+        className="flex whitespace-nowrap font-jogging"
       >
         <p className="text-7xl md:text-8xl font-medium">
           {data.firstText} &nbsp;

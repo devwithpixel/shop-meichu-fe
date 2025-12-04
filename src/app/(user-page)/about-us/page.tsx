@@ -1,9 +1,11 @@
 import Footer from "@/components/footer/footer";
 import HeaderPage from "@/components/header/header-page";
-import ScrollSmootherWrapper from "@/components/ScrollSmootherWrapper";
 import AboutSection from "@/components/sections/about-us/about-section";
 import VideoSection from "@/components/sections/about-us/video-section";
 import ReviewSection from "@/components/sections/home-page/review-section";
+
+import type { StrapiResponse } from "@/types/strapi/response";
+import type { HomePage } from "@/types/strapi/single-type/home-page";
 
 const headerData = {
   type: "about",
@@ -41,9 +43,18 @@ const videoData = {
   ],
 };
 
-export default function AboutUsPage() {
+async function getReviewData(): Promise<StrapiResponse<HomePage>> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/home-page?populate[reviewSection][populate][section]=true&populate[reviewSection][populate][reviews][populate][avatar]=true`
+  );
+  return await res.json();
+}
+
+export default async function AboutUsPage() {
+  const { data } = await getReviewData();
+
   return (
-    <ScrollSmootherWrapper>
+    <>
       <HeaderPage
         type={headerData.type}
         img={headerData.img}
@@ -64,8 +75,8 @@ export default function AboutUsPage() {
         videoTitle={videoData.videoTitle}
         boxes={videoData.boxes}
       />
-      <ReviewSection />
+      <ReviewSection data={data.reviewSection!} />
       <Footer />
-    </ScrollSmootherWrapper>
+    </>
   );
 }

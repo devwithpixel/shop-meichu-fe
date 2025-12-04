@@ -1,10 +1,8 @@
-import { StrapiTimestamp } from "@/types/strapi/timestamp";
-import { StrapiImage } from "@/types/strapi/media/image";
-import { Category } from "./category";
+import type { BaseModel } from "@/types/strapi/models/base-model";
+import type { StrapiImage } from "@/types/strapi/media/image";
+import type { Category } from "./category";
 
-export interface Product extends StrapiTimestamp {
-  id: number;
-  documentId: string;
+export interface Product extends BaseModel {
   name: string;
   slug: string;
   description: string;

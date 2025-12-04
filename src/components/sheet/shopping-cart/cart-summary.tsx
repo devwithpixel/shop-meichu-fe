@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/accordion";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { formatCurrency } from "@/lib/utils";
 
 interface CartSummaryProps {
   subtotal: number;
@@ -42,17 +43,15 @@ export default function CartSummary({
       <div className="text-sm space-y-1">
         <div className="flex justify-between font-medium">
           <span>Subtotal</span>
-          <span>${subtotal.toLocaleString()}</span>
+          <span>{formatCurrency(subtotal)}</span>
         </div>
 
-        <p className="text-gray-500 text-xs">
-          calculated at checkout.
-        </p>
+        <p className="text-gray-500 text-xs">Calculated at checkout.</p>
       </div>
 
       <div className="flex justify-between items-center">
         <div className="text-lg font-bold">Grand total</div>
-        <div className="text-2xl font-bold">${grandTotal.toLocaleString()}</div>
+        <div className="text-2xl font-bold">{formatCurrency(grandTotal)}</div>
       </div>
 
       <div className="flex gap-3">
@@ -63,4 +62,3 @@ export default function CartSummary({
     </div>
   );
 }
-

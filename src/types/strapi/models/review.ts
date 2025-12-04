@@ -1,8 +1,7 @@
-import { StrapiImage } from "@/types/strapi/media/image";
+import type { BaseModel } from "@/types/strapi/models/base-model";
+import type { StrapiImage } from "@/types/strapi/media/image";
 
-export interface Review {
-  id: number;
-  documentId: string;
+export interface Review extends BaseModel {
   review: string;
   avatar: StrapiImage;
   name: string;

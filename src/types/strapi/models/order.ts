@@ -1,8 +1,7 @@
-import { OrderItem } from "@/types/strapi/components/order/order-item";
+import type { OrderItem } from "@/types/strapi/components/order/order-item";
+import type { BaseModel } from "@/types/strapi/models/base-model";
 
-export interface Order {
-  id: number;
-  documentId: string;
+export interface Order extends BaseModel {
   buyerName: string;
   contact: string;
   orderStatus:

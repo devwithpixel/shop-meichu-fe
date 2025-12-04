@@ -1,107 +1,51 @@
 import CollectionsCard from "@/components/card/collections-card";
 import Footer from "@/components/footer/footer";
 import HeaderPage from "@/components/header/header-page";
-import ScrollSmootherWrapper from "@/components/ScrollSmootherWrapper";
+import { StrapiRelationCount } from "@/types/strapi/count-relation";
 
-const headerData = {
-  type: "collections",
-  img: "/assets/gallery/girl3.jpg",
-  title: "SEASONAL MUST-HAVES",
-  desc: "Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal.",
-} as const;
+import type { Metadata } from "next";
+import type { Category } from "@/types/strapi/models/category";
+import type { StrapiResponse } from "@/types/strapi/response";
 
-const collections = [
-  {
-    id: 1,
-    title: "SPORTS JACKET",
-    image: "/assets/gallery/girl3.jpg",
-    productsCount: 6,
-    bgColor: "bg-gray-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 2,
-    title: "SPORTS WEAR",
-    image: "/assets/gallery/girl4.jpg",
-    productsCount: 8,
-    bgColor: "bg-green-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 3,
-    title: "SUMMER DRIFT",
-    image: "/assets/gallery/girl3.jpg",
-    productsCount: 8,
-    bgColor: "bg-purple-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 4,
-    title: "SUMMER DRIFT",
-    image: "/assets/gallery/girl4.jpg",
-    productsCount: 13,
-    bgColor: "bg-orange-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 5,
-    title: "SUMMER ESSENTIALS",
-    image: "/assets/gallery/girl4.jpg",
-    productsCount: 13,
-    bgColor: "bg-orange-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 6,
-    title: "SUMMER ESSENTIALS",
-    image: "/assets/gallery/girl3.jpg",
-    productsCount: 13,
-    bgColor: "bg-orange-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 7,
-    title: "SUMMER ESSENTIALS",
-    image: "/assets/gallery/girl4.jpg",
-    productsCount: 13,
-    bgColor: "bg-orange-200",
-    link: "/collections/sports",
-  },
-  {
-    id: 8,
-    title: "SUMMER ESSENTIALS",
-    image: "/assets/gallery/girl3.jpg",
-    productsCount: 13,
-    bgColor: "bg-orange-200",
-    link: "/collections/sports",
-  },
-];
+async function getAllCategories(): Promise<StrapiResponse<Category[]>> {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories?populate[products][count]=true&populate[thumbnail]=true&sort[0]=name:asc`
+  );
+  return await res.json();
+}
 
-export default function CollectionsAllPage() {
+export const metadata: Metadata = {
+  title: "Collections – Shop Meichu",
+};
+
+export default async function CollectionsAllPage() {
+  const { data: categories } = await getAllCategories();
+
   return (
-    <ScrollSmootherWrapper>
-      <div className="bg-white">
-        <HeaderPage
-          type={headerData.type}
-          img={headerData.img}
-          title={headerData.title}
-          desc={headerData.desc}
-        />
-        <div className="flex flex-wrap w-screen">
-          {collections.map((collec, index) => (
-            <CollectionsCard
-              key={collec.id}
-              index={index}
-              title={collec.title}
-              image={collec.image}
-              productsCount={collec.productsCount}
-              bgColor={collec.bgColor}
-              link={collec.link}
-            />
-          ))}
-        </div>
-        <Footer />
+    <div className="bg-white">
+      <HeaderPage
+        type="collections"
+        img="/assets/gallery/girl3.jpg"
+        title="SEASONAL MUST-HAVES"
+        desc="Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal."
+      />
+
+      <div className="flex flex-wrap">
+        {categories.map((category, index) => (
+          <CollectionsCard
+            key={category.id}
+            index={index}
+            title={category.name}
+            image={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${category.thumbnail?.url}`}
+            productsCount={
+              (category.products as StrapiRelationCount)?.count || 0
+            }
+            bgColor="bg-gray-200"
+            link={`/collections/${category.slug}`}
+          />
+        ))}
       </div>
-    </ScrollSmootherWrapper>
+      <Footer />
+    </div>
   );
 }

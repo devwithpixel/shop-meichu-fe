@@ -1,30 +1,30 @@
-// navabr-link
-export interface Subcategory {
+export interface SingleSubNavigation {
+  type: "single";
+  items: {
     title: string;
-    href: string;
+    url: string;
+  }[];
 }
 
-export interface Category {
+export interface GroupedSubNavigation {
+  type: "grouped";
+  items?: {
     title: string;
-    href: string;
-    subcategories?: Subcategory[];
+    items: {
+      title: string;
+      url: string;
+    }[];
+  }[];
 }
 
-export interface NavItem {
-    title: string;
-    href: string;
-}
-
-export interface NavLink {
-    text: string;
-    href?: string;
-    items?: NavItem[];
-    categories?: Category[];
-    isDropdown?: boolean;
+export interface Navigation {
+  title: string;
+  url?: string;
+  subNavigation?: SingleSubNavigation | GroupedSubNavigation;
 }
 
 export interface BottomNavItem {
-    href: string;
-    icon: string;
-    label: string;
+  href: string;
+  icon: string;
+  label: string;
 }
