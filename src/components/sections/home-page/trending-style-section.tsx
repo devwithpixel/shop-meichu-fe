@@ -7,22 +7,13 @@ import { useGSAP } from "@gsap/react";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import { GoArrowUpRight } from "react-icons/go";
 import { formatCurrency } from "@/lib/utils";
+import { bgColors, bgCardColor } from "@/lib/data/color";
 import gsap from "gsap";
 
 import type { TrendingStyleSection } from "@/types/strapi/components/home-page/trending-style-section";
 import Link from "next/link";
 
 gsap.registerPlugin(Flip);
-
-const bgCardColor = ["#CBDAFF", "#FFCBE5", "#FFF7BA", "#C1FFBE", "#DFCCFF"];
-
-const bgColors = [
-  "bg-lemon",
-  "bg-lavender",
-  "bg-electric",
-  "bg-citrus",
-  "bg-rose",
-];
 
 export default function TrendingStyleSection({
   data,

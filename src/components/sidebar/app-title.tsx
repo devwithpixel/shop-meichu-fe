@@ -5,7 +5,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Logo } from "@/components/global/logo";
+// import { Logo } from "@/components/global/logo";
 
 export function AppTitle() {
   const { setOpenMobile } = useSidebar();

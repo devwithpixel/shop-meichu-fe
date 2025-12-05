@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { FeaturedCategoryItem } from "@/types/strapi/components/home-page-item/featured-category-item";
+import { featuredColors } from "@/lib/data/color";
 
 interface CategoryCardProps {
   item: FeaturedCategoryItem;
@@ -12,13 +13,6 @@ interface CategoryCardProps {
   index: number;
   nextIndex?: number;
 }
-
-const featuredColors = [
-  { bg: "bg-[#FFEB56]" },
-  { bg: "bg-[#FF56E0]" },
-  { bg: "bg-[#5689FF]" },
-  { bg: "bg-[#5FFF56]" },
-];
 
 export default function CategoryCard({
   item,
