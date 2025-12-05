@@ -1,12 +1,13 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import MobileMenu from "./mobile-menu";
 import NavbarActions from "./navbar-actions";
 import NavLink from "./nav-link";
-import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import Image from "@/components/global/image";
 
 import type { Navbar } from "@/types/strapi/components/shared/navbar";
 import type { Category } from "@/types/strapi/models/category";
@@ -86,8 +87,8 @@ export default function Navbar({
 
               <div className="shrink-0">
                 <Link href="/" className="text-3xl font-light tracking-wide">
-                  <img
-                    src="./assets/logo/meichu.png"
+                  <Image
+                    src="/assets/logo/meichu.png"
                     alt="Meichu"
                     className="w-auto h-7"
                   />

@@ -1,3 +1,4 @@
+import { getCollectionData } from "@/lib/api/collection";
 import IconElement from "@/components/element/icon-element";
 import Footer from "@/components/footer/footer";
 import ProductCard from "@/components/card/product-card";
@@ -20,16 +21,18 @@ export const metadata: Metadata = {
 };
 
 export default async function CollectionsAllProductsPage() {
+  const { data: collection } = await getCollectionData();
   const { data: products } = await getAllProducts();
 
   return (
     <div className="bg-[#D9E4E8]">
       <HeaderPage
         type="collections"
-        img="/assets/gallery/girl3.jpg"
-        title="SEASONAL MUST-HAVES"
-        desc="Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal."
+        img={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.heading.thumbnail?.url}`}
+        title={collection.heading.title}
+        desc={collection.heading.description}
       />
+
       <div className="relative">
         <IconElement variant={3} />
         <div className="px-5 py-10 space-y-6 md:space-y-14 h-full">

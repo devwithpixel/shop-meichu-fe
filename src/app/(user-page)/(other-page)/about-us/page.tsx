@@ -16,7 +16,6 @@ async function getAboutUsData(): Promise<StrapiResponse<AboutUs>> {
 
 export default async function AboutUsPage() {
   const { data } = await getAboutUsData();
-  console.log(data);
 
   return (
     <>

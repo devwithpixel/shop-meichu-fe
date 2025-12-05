@@ -1,33 +1,35 @@
+import { getCollectionData } from "@/lib/api/collection";
+import { getAllCategories } from "@/lib/api/categories";
 import CollectionsCard from "@/components/card/collections-card";
 import Footer from "@/components/footer/footer";
 import HeaderPage from "@/components/header/header-page";
-import { StrapiRelationCount } from "@/types/strapi/count-relation";
 
 import type { Metadata } from "next";
-import type { Category } from "@/types/strapi/models/category";
-import type { StrapiResponse } from "@/types/strapi/response";
-
-async function getAllCategories(): Promise<StrapiResponse<Category[]>> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/categories?populate[products][count]=true&populate[thumbnail]=true&sort[0]=name:asc`
-  );
-  return await res.json();
-}
+import type { StrapiRelationCount } from "@/types/strapi/count-relation";
 
 export const metadata: Metadata = {
   title: "Collections – Shop Meichu",
 };
 
 export default async function CollectionsAllPage() {
-  const { data: categories } = await getAllCategories();
+  const { data: collection } = await getCollectionData();
+  const { data: categories } = await getAllCategories({
+    populate: {
+      products: {
+        count: true,
+      },
+      thumbnail: true,
+    },
+    sort: ["name:asc"],
+  });
 
   return (
     <div className="bg-white">
       <HeaderPage
         type="collections"
-        img="/assets/gallery/girl3.jpg"
-        title="SEASONAL MUST-HAVES"
-        desc="Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal."
+        img={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.heading.thumbnail?.url}`}
+        title={collection.heading.title}
+        desc={collection.heading.description}
       />
 
       <div className="flex flex-wrap">

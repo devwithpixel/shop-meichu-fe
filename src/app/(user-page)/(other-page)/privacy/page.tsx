@@ -21,7 +21,7 @@ export default async function Page() {
     <main className="bg-white font-rubik">
       <section className="max-w-6xl mx-auto py-18">
         <h1 className="text-center text-6xl md:text-8xl font-medium mb-12">
-          Privacy policy
+          Privacy Policy
         </h1>
 
         <div className="prose prose-lg max-w-none">

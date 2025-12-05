@@ -68,12 +68,6 @@ export default function OrderSummary({
           </span>
         </div>
 
-        <div className="space-y-1 max-h-96 overflow-y-auto">
-          {items.map((item) => (
-            <CheckoutItemCard key={item.id} item={item} />
-          ))}
-        </div>
-
         <div className="border-t border-gray-200 pt-3 flex justify-between items-center">
           <span className="font-bold text-base text-gray-900">Total</span>
           <span className="font-bold text-2xl text-gray-900">
