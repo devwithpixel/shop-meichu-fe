@@ -10,16 +10,11 @@ import { formatCurrency } from "@/lib/utils";
 import gsap from "gsap";
 
 import type { TrendingStyleSection } from "@/types/strapi/components/home-page/trending-style-section";
+import Link from "next/link";
 
 gsap.registerPlugin(Flip);
 
-const bgCardColor = [
-  "#f5e98c", // lemon
-  "#b1b8f2", // lavender
-  "#d08ed4", // electric
-  "#addd35", // citrus
-  "#d68ca7", // rose
-];
+const bgCardColor = ["#CBDAFF", "#FFCBE5", "#FFF7BA", "#C1FFBE", "#DFCCFF"];
 
 const bgColors = [
   "bg-lemon",
@@ -130,7 +125,10 @@ export default function TrendingStyleSection({
                 <p>{data.section.description}</p>
               </div>
 
-              <div className="hidden lg:flex items-center space-x-0.5 cursor-pointer group w-fit rounded-3xl ">
+              <Link
+                href="/collections"
+                className="hidden lg:flex items-center space-x-0.5 cursor-pointer group w-fit rounded-3xl "
+              >
                 <HiOutlineArrowUpRight
                   size={55}
                   className="bg-white border border-black rounded-full p-4 transition-all duration-300 group-hover:-mr-14 group-hover:text-white text-black group-hover:bg-black hover:text-white group-hover:scale-90"
@@ -138,9 +136,12 @@ export default function TrendingStyleSection({
                 <p className="bg-white px-8 py-4 border border-black rounded-full whitespace-nowrap transition-all text-black duration-300 group-hover:pl-22.5 font-albert-sans font-medium">
                   {data.ctaButton?.title}
                 </p>
-              </div>
+              </Link>
 
-              <div className="lg:hidden flex cursor-pointer p-2 w-1/2 bg-white text-black rounded-full justify-start items-center font-albert-sans">
+              <Link
+                href="/collections"
+                className="lg:hidden flex cursor-pointer p-2 w-1/2 bg-white text-black rounded-full justify-start items-center font-albert-sans"
+              >
                 <div className="flex items-center gap-2 bg-white">
                   <div className="bg-black p-2 rounded-full">
                     <HiOutlineArrowUpRight
@@ -150,7 +151,7 @@ export default function TrendingStyleSection({
                   </div>
                   <p className="text-sm font-base">{data.ctaButton?.title}</p>
                 </div>
-              </div>
+              </Link>
             </div>
 
             <div className="image-trigger-favorite relative w-full">
@@ -194,12 +195,15 @@ export default function TrendingStyleSection({
                               {formatCurrency(product.price)}
                             </p>
                           </div>
-                          <div className="border border-gray-900 hover:bg-white hover:border-transparent rounded-full transition-all duration-500 p-1 md:p-3 mr-4 group/icon">
+                          <Link
+                            href={`/products/${product.slug}`}
+                            className="border border-gray-900 hover:bg-white hover:border-transparent rounded-full transition-all duration-500 p-1 md:p-3 mr-4 group/icon"
+                          >
                             <GoArrowUpRight
                               size={24}
                               className="text-gray-900 font-normal cursor-pointer group-hover/icon:rotate-45 transition-all duration-500 ease-out"
                             />
-                          </div>
+                          </Link>
                         </div>
                       </div>
                     ))}

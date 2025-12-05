@@ -22,9 +22,3 @@ export interface Navigation {
   url?: string;
   subNavigation?: SingleSubNavigation | GroupedSubNavigation;
 }
-
-export interface BottomNavItem {
-  href: string;
-  icon: string;
-  label: string;
-}

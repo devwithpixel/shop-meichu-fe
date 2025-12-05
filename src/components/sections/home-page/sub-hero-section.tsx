@@ -17,36 +17,60 @@ export default function SubHeroSection({
   const collectionsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
+    const isMobile = window.innerWidth < 768;
+
     const buttons = gsap.utils.selector(collectionsRef.current!)("button");
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: collectionsRef.current!,
-        start: "top bottom",
-        scrub: 1,
-      },
-    });
-
-    buttons.forEach((button, i) =>
-      tl.fromTo(
-        button,
+    if (isMobile) {
+      gsap.fromTo(
+        buttons,
         {
-          y: 80 * (i % 2 ? 1 : -1),
+          opacity: 0,
+          y: 30,
         },
         {
+          opacity: 1,
           y: 0,
-          duration: 1,
-          ease: "power3.out",
+          duration: 0.6,
+          stagger: 0.1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: collectionsRef.current!,
+            start: "top 80%",
+            toggleActions: "play none none none",
+          },
+        }
+      );
+    } else {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: collectionsRef.current!,
+          start: "top bottom",
+          scrub: 1,
         },
-        i && "<"
-      )
-    );
+      });
+
+      buttons.forEach((button, i) =>
+        tl.fromTo(
+          button,
+          {
+            y: 80 * (i % 2 ? 1 : -1),
+          },
+          {
+            y: 0,
+            duration: 1,
+            ease: "power3.out",
+          },
+          i && "<"
+        )
+      );
+    }
   }, []);
 
   return (
     <section
       ref={ref}
-      className="relative z-20 min-h-[150vh] w-full flex flex-col items-center justify-center text-center font-albert-sans"
+      className="relative z-20 md:min-h-[150vh] w-full flex flex-col items-center justify-center text-center font-albert-sans py-20 md:py-0"
       style={{
         background: `linear-gradient(
             to bottom,
@@ -57,13 +81,13 @@ export default function SubHeroSection({
             )`,
       }}
     >
-      <h2 className="text-white text-4xl font-bold leading-relaxed max-w-5xl">
+      <h2 className="text-white text-xl md:text-4xl font-bold leading-relaxed max-w-5xl px-4">
         {data.description}
       </h2>
 
       <div
         ref={collectionsRef}
-        className="flex flex-wrap justify-center gap-6 mt-20"
+        className="flex flex-wrap justify-center gap-6 mt-20 px-4"
       >
         {data.items.map((item, i) => (
           <Button
@@ -73,6 +97,7 @@ export default function SubHeroSection({
             <img
               src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${item.icon?.url}`}
               className="size-8 rounded-full object-cover"
+              alt={item.category?.name || "Category icon"}
             />
             <span className="text-black text-lg font-bold">
               {item.category?.name}

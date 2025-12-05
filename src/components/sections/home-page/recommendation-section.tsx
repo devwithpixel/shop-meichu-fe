@@ -19,12 +19,34 @@ export default function RecommendationSection({
   const isMobile = useIsMobile();
 
   useGSAP(() => {
-    if (!sectionWardrobe.current || isMobile) return;
+    if (!sectionWardrobe.current) return;
 
     const productCards = gsap.utils.selector(sectionWardrobe.current)(
       ".recommendation-card"
     );
 
+    // ANIMASI MOBILE
+    if (isMobile) {
+      gsap.fromTo(
+        productCards,
+        { opacity: 0, y: 40 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          stagger: 0.15,
+          ease: "power1.out",
+          scrollTrigger: {
+            trigger: sectionWardrobe.current,
+            start: "top 90%",
+            toggleActions: "play none none reverse",
+          },
+        }
+      );
+      return;
+    }
+
+    // ANIMASI DESKTOP
     gsap.set(productCards, { opacity: 0, y: 150, scale: 0.8 });
 
     ScrollTrigger.create({
@@ -43,7 +65,7 @@ export default function RecommendationSection({
         ease: "sine.out",
       }),
     });
-  }, []);
+  }, [isMobile]);
 
   return (
     <>

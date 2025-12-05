@@ -10,6 +10,7 @@ import gsap from "gsap";
 
 import type { HeroSection } from "@/types/strapi/components/home-page/hero-section";
 import type { SubHeroSection as SubHeroSectionType } from "@/types/strapi/components/home-page/sub-hero-section";
+import Link from "next/link";
 
 export default function HeroSection({
   data,
@@ -21,50 +22,71 @@ export default function HeroSection({
   const bigTextRef = useRef<HTMLDivElement>(null);
   const nextSectionRef = useRef<HTMLElement>(null);
   const mainSectionRef = useRef<HTMLDivElement>(null);
-  const timelineRef = useRef<gsap.core.Timeline>(null);
+  const timelineRef = useRef<gsap.core.Timeline | null>(null);
 
   useGSAP(() => {
-    const textAnimation = bigTextRef.current
-      ? gsap.to(bigTextRef.current, {
+    const isMobile = window.innerWidth < 768;
+
+    if (!isMobile) {
+      const textAnimation = bigTextRef.current
+        ? gsap.to(bigTextRef.current, {
+            xPercent: -50,
+            repeat: -1,
+            duration: 20,
+            ease: "none",
+          })
+        : undefined;
+
+      ScrollTrigger.create({
+        trigger: mainSectionRef.current!,
+        start: "top top",
+        pin: true,
+        pinSpacing: false,
+        animation: textAnimation,
+      });
+
+      timelineRef.current = gsap.timeline({
+        scrollTrigger: {
+          trigger: nextSectionRef.current!,
+          start: "top bottom",
+          end: "top top",
+          scrub: true,
+        },
+      });
+
+      if (data.runningText && timelineRef.current) {
+        timelineRef.current.fromTo(
+          bigTextRef.current,
+          {
+            xPercent: 0,
+            y: 0,
+          },
+          {
+            xPercent: -100,
+            y: `-${mainSectionRef.current!.offsetHeight}px`,
+            ease: "none",
+            duration: 10,
+          }
+        );
+      }
+    } else {
+      if (data.runningText && bigTextRef.current) {
+        gsap.to(bigTextRef.current, {
           xPercent: -50,
           repeat: -1,
-          duration: 20,
+          duration: 25,
           ease: "none",
-        })
-      : undefined;
+        });
+      }
+    }
 
-    ScrollTrigger.create({
-      trigger: mainSectionRef.current!,
-      start: "top top",
-      pin: true,
-      pinSpacing: false,
-      animation: textAnimation,
-    });
-
-    timelineRef.current = gsap.timeline({
-      scrollTrigger: {
-        trigger: nextSectionRef.current!,
-        start: "top bottom",
-        end: "top top",
-        scrub: true,
-      },
-    });
-
-    if (data.runningText)
-      timelineRef.current.fromTo(
-        bigTextRef.current,
-        {
-          xPercent: 0,
-          y: 0,
-        },
-        {
-          xPercent: -100,
-          y: `-${mainSectionRef.current!.offsetHeight}px`,
-          ease: "none",
-          duration: 10,
-        }
-      );
-  }, []);
+    return () => {
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+      }
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [data.runningText]);
 
   return (
     <>
@@ -78,6 +100,7 @@ export default function HeroSection({
             autoPlay
             loop
             muted
+            playsInline
           >
             <source
               src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${data.background.url}`}
@@ -105,12 +128,12 @@ export default function HeroSection({
             </p>
           )}
 
-          <div className="flex items-center gap-0.5 cursor-pointer group mt-12 w-fit">
+          <Link href="/collections" className="flex items-center gap-0.5 cursor-pointer group mt-12 w-fit">
             <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
             <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5 font-medium">
               Explore More
             </p>
-          </div>
+          </Link>
         </div>
 
         {data.runningText && (
@@ -126,7 +149,7 @@ export default function HeroSection({
 
       <SubHeroSection
         ref={nextSectionRef as React.RefObject<HTMLElement>}
-        data={subHeroData}  
+        data={subHeroData}
       />
     </>
   );

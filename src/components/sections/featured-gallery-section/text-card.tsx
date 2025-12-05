@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { FeaturedCategoryItem } from "@/types/strapi/components/home-page-item/featured-category-item";
 
 interface CategoryCardProps {
@@ -45,20 +46,24 @@ export default function CategoryCard({
     data: FeaturedCategoryItem;
     colors: (typeof featuredColors)[0];
   }) => (
-    <div className="space-y-3 text-black">
-      <h3 className="text-2xl md:text-3xl font-bold font-albert-sans">
-        {data.title}
-      </h3>
-      <p className="text-sm font-medium font-albert-sans">{data.description}</p>
-      {data.category && (
-        <Link
-          href={`/products/${data.category.slug}`}
-          className="inline-block mt-2 bg-black text-white px-6 py-3 md:px-8 md:py-4 rounded-full text-sm font-medium hover:bg-gray-800 transition-colors font-albert-sans"
-        >
-          SHOP NOW
-        </Link>
-      )}
-    </div>
+    <div className="space-y-3 text-black pr-4">
+        <h3 className="text-md md:text-2xl lg:text-3xl font-bold font-albert-sans">
+          {data.title}
+        </h3>
+        <ScrollArea className="h-22 w-full">
+        <p className="text-sm font-medium font-albert-sans leading-relaxed">
+          {data.description}
+        </p>
+        </ScrollArea>
+        {data.category && (
+          <Link
+            href={`/collections/${data.category.slug}`}
+            className="inline-block mt-2 bg-black text-white px-6 py-3 lg:px-8 md:py-4 rounded-full text-sm md:text-xs lg:text-sm font-medium hover:bg-gray-800 transition-colors font-albert-sans"
+          >
+            SHOP NOW
+          </Link>
+        )}
+      </div>
   );
 
   return (

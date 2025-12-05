@@ -5,13 +5,7 @@ import Link from "next/link";
 import MobileMenu from "./mobile-menu";
 import NavbarActions from "./navbar-actions";
 import NavLink from "./nav-link";
-import BottomNav from "./bottom-navbar";
 import { cn } from "@/lib/utils";
-import {
-  homeCategories,
-  catalogCategories,
-  bottomNavItems,
-} from "@/lib/data/navbar";
 import { usePathname } from "next/navigation";
 
 import type { Navbar } from "@/types/strapi/components/shared/navbar";
@@ -26,13 +20,14 @@ export default function Navbar({
   categories: Category[];
 }) {
   const pathname = usePathname();
-  const isCatalogAdded = useRef(false);
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const isHomePage = pathname === "/";
+
   const navigations: Navigation[] = useMemo(() => {
-    const navs = data.navigations as Navigation[];
-    if (!isCatalogAdded.current) {
-      navs.splice(1, 0, {
+    return [
+      ...(data.navigations as Navigation[]).slice(0, 1),
+      {
         title: "Catalog",
         subNavigation: {
           type: "single",
@@ -41,11 +36,11 @@ export default function Navbar({
             url: `/collections/${category.slug}`,
           })),
         },
-      });
-      isCatalogAdded.current = true;
-    }
-    return navs;
-  }, []);
+      },
+      ...(data.navigations as Navigation[]).slice(1),
+    ];
+  }, [data.navigations, categories]);
+
   const lastScrollY = useRef(0);
 
   useEffect(() => {
@@ -53,8 +48,13 @@ export default function Navbar({
       const current = window.scrollY;
 
       setIsScrolled(current > 1000);
-      if (current > lastScrollY.current && current > 100) {
-        setIsVisible(false);
+
+      if (isHomePage) {
+        if (current > lastScrollY.current && current > 100) {
+          setIsVisible(false);
+        } else {
+          setIsVisible(true);
+        }
       } else {
         setIsVisible(true);
       }
@@ -64,15 +64,15 @@ export default function Navbar({
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [isHomePage]);
 
   return (
     <>
       <nav
         className={cn(
           "fixed top-0 left-0 right-0 z-50 font-inter transition-all duration-300 text-white select-none",
-          isVisible ? "translate-y-0" : "-translate-y-full",
-          pathname === "/"
+          isHomePage && !isVisible ? "-translate-y-full" : "translate-y-0",
+          isHomePage
             ? isScrolled
               ? "bg-black border-b border-[#222121]"
               : "bg-transparent border-b border-[#222121]/20"
@@ -82,19 +82,20 @@ export default function Navbar({
         <div className="mx-auto px-4 sm:px-6 lg:px-6 lg:py-1">
           <div className="flex justify-between items-center h-16">
             <div className="flex item-center">
-              <MobileMenu
-                homeCategories={homeCategories}
-                catalogCategories={catalogCategories}
-              />
+              <MobileMenu navigations={navigations} categories={categories} />
 
-              <div className="shrink-0 lg:ml-0 ml-4">
+              <div className="shrink-0">
                 <Link href="/" className="text-3xl font-light tracking-wide">
-                  MEICHU
+                  <img
+                    src="./assets/logo/meichu.png"
+                    alt="Meichu"
+                    className="w-auto h-7"
+                  />
                 </Link>
               </div>
             </div>
 
-            <div className="hidden lg:flex items-center px-6 flex-1 gap-1">
+            <div className="hidden lg:flex items-center px-6 flex-1 gap-4">
               {navigations.map((navigation, index) => (
                 <NavLink key={index} {...navigation} />
               ))}
@@ -106,8 +107,6 @@ export default function Navbar({
           </div>
         </div>
       </nav>
-
-      <BottomNav items={bottomNavItems} isVisible={isVisible} />
     </>
   );
 }

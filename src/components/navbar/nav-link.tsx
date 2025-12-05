@@ -64,14 +64,14 @@ export default function NavLink({ title, url, subNavigation }: Navigation) {
             <div className="flex items-start gap-10">
               {subNavigation.items?.map((group, index) => (
                 <div key={index} className="flex flex-col gap-2">
-                  <h1 className="text-base font-rubik font-medium mb-1">
+                  <h1 className="text-base font-albert-sans font-bold mb-1">
                     {group.title}
                   </h1>
                   {group.items.map((item, index) => (
                     <Link
                       key={index}
                       href={item.url}
-                      className="group relative font-inter text-sm font-normal hover:text-gray-600 transition-colors flex items-center gap-2 py-1"
+                      className="group relative font-albert-sans text-sm font-normal hover:text-gray-600 transition-colors flex items-center gap-2 py-1"
                     >
                       <span>{item.title}</span>
                       <ArrowRight className="h-3 w-3 transition-all duration-300 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />
@@ -83,13 +83,13 @@ export default function NavLink({ title, url, subNavigation }: Navigation) {
             </div>
           </div>
         ) : (
-          <div className="p-6">
+          <div className="p-2">
             <div className="flex flex-col gap-1">
               {subNavigation.items?.map((navigationItem, index) => (
                 <Link
                   key={index}
                   href={navigationItem.url}
-                  className="group font-rubik text-base font-medium text-black hover:text-white hover:bg-black transition-colors px-4 py-2 rounded-lg"
+                  className="group font-albert-sans text-base font-bold text-black hover:text-white hover:bg-black transition-colors px-4 py-2 rounded-lg "
                 >
                   {navigationItem.title}
                 </Link>

@@ -1,6 +1,6 @@
 import "../styles/globals.css";
 import { Inter, Rubik, Outfit, Albert_Sans } from "next/font/google";
-import localFont from "next/font/local"; // ← wajib buat font lokal
+import localFont from "next/font/local"; 
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 

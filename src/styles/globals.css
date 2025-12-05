@@ -45,11 +45,11 @@
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
   --color-background-admin: #181826;
-  --color-lemon: #f5e98c;
-  --color-lavender: #b1b8f2;
-  --color-electric: #d08ed4;
-  --color-citrus: #addd35;
-  --color-rose: #d68ca7;
+  --color-lemon: #CBDAFF;
+  --color-lavender: #FFCBE5;
+  --color-electric: #FFF7BA;
+  --color-citrus: #C1FFBE;
+  --color-rose: #DFCCFF;
   --color-grayyy: #787774;
   --color-carbon: #242427;
   --color-blackfull: #212123;

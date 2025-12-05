@@ -15,30 +15,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Category } from "@/types/navigation";
-
-interface MobileMenuProps {
-  homeCategories: Category[];
-  catalogCategories: Category[];
-}
+import type { Navigation } from "@/types/navigation";
+import type { Category } from "@/types/strapi/models/category";
 
 export default function MobileMenu({
-  homeCategories,
-  catalogCategories,
-}: MobileMenuProps) {
+  navigations,
+  categories,
+}: {
+  navigations: Navigation[];
+  categories: Category[];
+}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isOpenHome, setIsOpenHome] = useState(false);
-  const [isOpenHomeCategory, setIsOpenHomeCategory] = useState(false);
   const [isOpenCatalog, setIsOpenCatalog] = useState(false);
-  const [selectedHomeCategory, setSelectedHomeCategory] =
-    useState<Category | null>(null);
 
   return (
-    <div className="lg:hidden">
+    <div className="lg:hidden ">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <button className="text-white bg-transparent">
-            <CgMenuLeft className="h-7 w-7" />
+            <CgMenuLeft className="h-8 w-8" />
           </button>
         </SheetTrigger>
         <SheetContent
@@ -59,8 +54,12 @@ export default function MobileMenu({
                   >
                     <IoCloseCircleOutline className="h-8 w-8 md:h-10 md:w-10" />
                   </div>
-                  <SheetTitle className="text-3xl md:text-4xl font-light tracking-wide text-white font-rubik">
-                    MEICHU
+                  <SheetTitle className="text-3xl md:text-4xl font-light tracking-wide text-white font-albert-sans">
+                    <img
+                      src="./assets/logo/meichu.png"
+                      alt="Meichu"
+                      className="w-auto h-8"
+                    />
                   </SheetTitle>
                   <div className="w-6"></div>
                 </div>
@@ -81,217 +80,86 @@ export default function MobileMenu({
 
             <div className="flex-1 overflow-y-auto p-8">
               <div className="flex flex-col gap-6 text-lg">
-                {/* Home Link */}
-                <div>
-                  <Sheet open={isOpenHome} onOpenChange={setIsOpenHome}>
-                    <div className="flex items-center justify-between">
-                      <Link
-                        href="/"
-                        className="w-full text-start"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <h1 className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors">
-                          Home
-                        </h1>
-                      </Link>
-                      <SheetTrigger asChild>
-                        <div className="rounded-full p-1.5 border border-white cursor-pointer hover:bg-white hover:text-black transition-colors">
-                          <GoArrowUpRight className="w-5 h-5" />
-                        </div>
-                      </SheetTrigger>
-                    </div>
-                    <SheetContent
-                      side="right"
-                      defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
-                      className="bg-white text-black"
-                    >
-                      <SheetHeader
-                        onClick={() => setIsOpenHome(false)}
-                        className="cursor-pointer"
-                      >
-                        <div className="flex items-center">
-                          <MdOutlineKeyboardArrowLeft className="w-8 h-8 mt-1" />
-                          <SheetTitle className="font-normal text-xl">
-                            Back
-                          </SheetTitle>
-                        </div>
-                      </SheetHeader>
-                      <div className="px-6 flex flex-col gap-6 mt-6">
-                        {homeCategories.map((category) => (
-                          <Sheet
-                            key={category.title}
-                            open={
-                              isOpenHomeCategory &&
-                              selectedHomeCategory?.title === category.title
-                            }
-                            onOpenChange={(open) => {
-                              setIsOpenHomeCategory(open);
-                              if (open) {
-                                setSelectedHomeCategory(category);
-                              }
-                            }}
-                          >
-                            <div className="flex items-center justify-between">
-                              <Link
-                                href={category.href}
-                                className="w-full text-start"
-                                onClick={() => {
-                                  setIsOpen(false);
-                                  setIsOpenHome(false);
-                                }}
-                              >
-                                <h1 className="font-semibold font-rubik text-lg hover:text-gray-500 transition-colors">
-                                  {category.title}
-                                </h1>
-                              </Link>
-                              <SheetTrigger asChild>
-                                <div className="rounded-full p-1.5 border border-black cursor-pointer hover:bg-black hover:text-white transition-colors">
-                                  <GoArrowUpRight className="w-5 h-5" />
-                                </div>
-                              </SheetTrigger>
-                            </div>
-                            <SheetContent
-                              side="right"
-                              defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
-                              className="bg-white text-black"
+                {navigations.map((navigationItem, index) => (
+                  <div key={index}>
+                    {navigationItem.title === "Catalog" ? (
+                      <div>
+                        <Sheet
+                          open={isOpenCatalog}
+                          onOpenChange={setIsOpenCatalog}
+                        >
+                          <div className="flex items-center justify-between font-albert-sans">
+                            <Link
+                              href={navigationItem.url || "/collections"}
+                              className="w-full text-start"
+                              onClick={() => setIsOpen(false)}
                             >
-                              <SheetHeader
-                                onClick={() => setIsOpenHomeCategory(false)}
-                                className="cursor-pointer"
-                              >
-                                <div className="flex items-center">
-                                  <MdOutlineKeyboardArrowLeft className="w-8 h-8 mt-1" />
-                                  <SheetTitle className="font-normal text-xl">
-                                    Back
-                                  </SheetTitle>
-                                </div>
-                              </SheetHeader>
-                              <div className="flex flex-col px-6 gap-4 mt-6">
-                                {selectedHomeCategory?.subcategories?.map(
-                                  (sub) => (
-                                    <Link
-                                      key={sub.title}
-                                      href={sub.href}
-                                      className="w-full text-start"
-                                      onClick={() => {
-                                        setIsOpen(false);
-                                        setIsOpenHome(false);
-                                        setIsOpenHomeCategory(false);
-                                      }}
-                                    >
-                                      <h1 className="font-normal font-rubik text-lg hover:text-gray-500 transition-colors">
-                                        {sub.title}
-                                      </h1>
-                                    </Link>
-                                  )
-                                )}
+                              <h1 className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors font-albert-sans">
+                                {navigationItem.title}
+                              </h1>
+                            </Link>
+                            <SheetTrigger asChild>
+                              <div className="rounded-full p-1.5 border border-white cursor-pointer hover:bg-white hover:text-black transition-colors">
+                                <GoArrowUpRight className="w-5 h-5" />
                               </div>
-                            </SheetContent>
-                          </Sheet>
-                        ))}
+                            </SheetTrigger>
+                          </div>
+                          <SheetContent
+                            side="right"
+                            defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
+                            className="bg-white text-black"
+                          >
+                            <SheetHeader
+                              onClick={() => setIsOpenCatalog(false)}
+                              className="cursor-pointer"
+                            >
+                              <div className="flex items-center">
+                                <MdOutlineKeyboardArrowLeft className="w-8 h-8 mt-1" />
+                                <SheetTitle className="font-normal text-xl">
+                                  Back
+                                </SheetTitle>
+                              </div>
+                            </SheetHeader>
+                            <div className="flex flex-col px-6 gap-6 mt-6">
+                              {categories.map((category) => (
+                                <Link
+                                  key={category.slug}
+                                  href={`/collections/${category.slug}`}
+                                  className="w-full text-start"
+                                  onClick={() => {
+                                    setIsOpen(false);
+                                    setIsOpenCatalog(false);
+                                  }}
+                                >
+                                  <h1 className="font-semibold font-albert-sans text-lg hover:text-gray-500 transition-colors">
+                                    {category.name}
+                                  </h1>
+                                </Link>
+                              ))}
+                            </div>
+                          </SheetContent>
+                        </Sheet>
                       </div>
-                    </SheetContent>
-                  </Sheet>
-                </div>
-
-                <div className="h-0.5">
-                  <Separator className="opacity-10" orientation="horizontal" />
-                </div>
-
-                {/* Catalog Link */}
-                <div>
-                  <Sheet open={isOpenCatalog} onOpenChange={setIsOpenCatalog}>
-                    <div className="flex items-center justify-between">
+                    ) : (
                       <Link
-                        href="/catalog"
-                        className="w-full text-start"
+                        href={navigationItem.url || "#"}
+                        className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors"
                         onClick={() => setIsOpen(false)}
                       >
-                        <h1 className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors">
-                          Catalog
-                        </h1>
+                        {navigationItem.title}
                       </Link>
-                      <SheetTrigger asChild>
-                        <div className="rounded-full p-1.5 border border-white cursor-pointer hover:bg-white hover:text-black transition-colors">
-                          <GoArrowUpRight className="w-5 h-5" />
-                        </div>
-                      </SheetTrigger>
-                    </div>
-                    <SheetContent
-                      side="right"
-                      defaultRight="data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right transition-all duration-300 ease-in-out inset-y-0 h-full w-full"
-                      className="bg-white text-black"
-                    >
-                      <SheetHeader
-                        onClick={() => setIsOpenCatalog(false)}
-                        className="cursor-pointer"
-                      >
-                        <div className="flex items-center">
-                          <MdOutlineKeyboardArrowLeft className="w-8 h-8 mt-1" />
-                          <SheetTitle className="font-normal text-xl">
-                            Back
-                          </SheetTitle>
-                        </div>
-                      </SheetHeader>
-                      <div className="flex flex-col px-6 gap-6 mt-6">
-                        {catalogCategories.map((category) => (
-                          <Link
-                            key={category.title}
-                            href={category.href}
-                            className="w-full text-start"
-                            onClick={() => {
-                              setIsOpen(false);
-                              setIsOpenCatalog(false);
-                            }}
-                          >
-                            <h1 className="font-semibold font-rubik text-lg hover:text-gray-500 transition-colors">
-                              {category.title}
-                            </h1>
-                          </Link>
-                        ))}
+                    )}
+
+                    {index < navigations.length - 1 && (
+                      <div className="h-0.5 my-4">
+                        <Separator
+                          className="opacity-10 md:opacity-20"
+                          orientation="horizontal"
+                        />
                       </div>
-                    </SheetContent>
-                  </Sheet>
-                </div>
-
-                <div className="h-0.5">
-                  <Separator className="opacity-10" orientation="horizontal" />
-                </div>
-
-                {/* Other Links */}
-                <Link
-                  href="/about"
-                  className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  About
-                </Link>
-
-                <Separator
-                  className="opacity-10 md:opacity-30"
-                  orientation="horizontal"
-                />
-
-                <Link
-                  href="/blogs"
-                  className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Blogs
-                </Link>
-
-                <Separator
-                  className="opacity-10 md:opacity-30"
-                  orientation="horizontal"
-                />
-
-                <Link
-                  href="/privacy"
-                  className="font-normal text-lg md:text-xl hover:text-gray-300 transition-colors"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Privacy
-                </Link>
+                    )}
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -56,7 +56,7 @@ export default function CategoryImageCard({
 
   return (
     <div
-      className={`relative w-full h-52 md:h-[560px] lg:h-[460px] rounded-3xl lg::rounded-4xl overflow-hidden ${className}`}
+      className={`relative w-full h-full rounded-3xl lg::rounded-4xl overflow-hidden ${className}`}
     >
       {isAnimating && nextItem && (
         <div className={`absolute inset-0 ${exitAnimationClassName}`}>

@@ -6,7 +6,6 @@ export default async function BlogSlugPage({
 }: { 
   params: Promise<{ slug: string }> 
 }) {
-  // Await params di Next.js 15+
   const { slug } = await params;
   const blog = getBlog(slug);
 

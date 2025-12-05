@@ -8,7 +8,6 @@ import { Label } from "@/components/ui/label";
 import { Eye, EyeOff, Lock, ArrowRight } from "lucide-react";
 import AuthLayout from "@/components/auth/layout/AuthLayout";
 import AuthHeader from "@/components/auth/layout/AuthHeader";
-import toast from "react-hot-toast";
 
 export default function NewPasswordForm() {
   const [showPassword, setShowPassword] = useState(false);

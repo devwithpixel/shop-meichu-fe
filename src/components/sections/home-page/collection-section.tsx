@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { MdOutlineArrowOutward } from "react-icons/md";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -298,7 +297,7 @@ export default function CollectionSection({
                       </span>
 
                       <Link
-                        href="/collections/all"
+                        href={`collections/${activeCollection?.category.slug}`}
                         className=" w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0"
                       >
                         <MdOutlineArrowOutward className="w-5 h-5" />
@@ -448,9 +447,12 @@ export default function CollectionSection({
               <span className="flex items-center flex-1 font-albert-sans text-sm text-black truncate">
                 {activeCollection?.ctaText}
               </span>
-              <Button className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0">
+              <Link
+                href={`collections/${activeCollection?.category.slug}`}
+                className="w-8 h-8 rounded-full bg-black text-white flex items-center justify-center cursor-pointer shrink-0"
+              >
                 <MdOutlineArrowOutward className="w-5 h-5" />
-              </Button>
+              </Link>
             </div>
           </div>
 

@@ -9,6 +9,7 @@ import Image from "@/components/global/image";
 import gsap from "gsap";
 
 import type { BenefitSection } from "@/types/strapi/components/home-page/benefit-section";
+import Link from "next/link";
 
 export default function BenefitSection({ data }: { data: BenefitSection }) {
   const [progress, setProgress] = useState(0);
@@ -77,8 +78,9 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
     >
       <div className="hidden md:block w-auto h-auto absolute inset-0 z-0 rounded-4xl bg-gray-100 mx-6 md:my-20 lg:my-10">
         <Image
-          src="/assets/image/my.png"
-          alt="bg"
+          src="./assets/image/slide.png"
+          // src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${data.background}`}
+          alt={data.section.title}
           className="w-full h-full object-cover opacity-20 rounded-4xl"
         />
       </div>
@@ -87,19 +89,22 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
         <div className="leftBox min-w-90 lg:min-w-[28%] max-w-86 sm:max-w-96 space-y-5 mb-10 sm:mb-0 mx-5 lg:ml-16 md:mx-20 lg:mr-20">
           <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold font-albert-sans">
             <span className="text-transparent text-outline-black">
-              {`${titleFirstWord}` + ""}
-            </span>
+              {`${titleFirstWord}`}
+            </span>{" "}
             {titleRestWord}
           </h1>
           <p className="font-albert-sans text-xs font-medium">
             {data.section.description}
           </p>
-          <div className="flex items-center gap-0.5 cursor-pointer group w-fit">
+          <Link
+            href="/collections"
+            className="flex items-center gap-0.5 cursor-pointer group w-fit"
+          >
             <HiOutlineArrowUpRight className="w-10 h-10 z-1 sm:z-0 sm:w-14 sm:h-14 text-white sm:text-black bg-black sm:bg-white border border-black rounded-full p-3 sm:p-4 sm:transition-all sm:duration-300 -mr-11.5 sm:mr-0 sm:group-hover:-mr-14.5 sm:group-hover:bg-black sm:group-hover:text-white sm:group-hover:scale-90" />
             <p className="bg-white px-4 sm:px-8 py-2.5 sm:py-4 border border-black rounded-full whitespace-nowrap pl-14 sm:pl-8 sm:transition-all sm:duration-300 sm:group-hover:pl-22.5 font-albert-sans font-medium">
               {data.ctaButton.title}
             </p>
-          </div>
+          </Link>
         </div>
 
         <div
@@ -127,9 +132,12 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
                   <p className="font-albert-sans font-semibold text-xl sm:text-3xl">
                     {item.product?.name}
                   </p>
-                  <button className="text-xs px-4 sm:px-8 py-2.5 sm:py-4 border border-gray-800 rounded-full bg-transparent hover:bg-white cursor-pointer">
+                  <Link
+                    href={`/products/${item.product?.slug}`}
+                    className="text-xs font-medium px-4 sm:px-8 py-2.5 sm:py-4 border border-gray-800 rounded-full bg-transparent hover:bg-white cursor-pointer"
+                  >
                     SHOP NOW
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}

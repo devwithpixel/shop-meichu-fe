@@ -29,12 +29,18 @@ export default function CheckoutClient() {
   );
 
   return (
-    <form
-      className="flex justify-stretch"
-      onSubmit={form.handleSubmit(onSubmit)}
-    >
-      <CheckoutForm form={form} />
-      <OrderSummary />
-    </form>
+    <div className="container mx-auto px-4 py-8">
+      <form
+        className="flex flex-col lg:flex-row gap-6"
+        onSubmit={form.handleSubmit(onSubmit)}
+      >
+        <div className="w-full lg:w-1/2">
+          <CheckoutForm form={form} />
+        </div>
+        <div className="w-full lg:w-1/2">
+          <OrderSummary />
+        </div>
+      </form>
+    </div>
   );
 }
