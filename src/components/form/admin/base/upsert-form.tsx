@@ -82,7 +82,12 @@ export default function UpsertForm<
         <form
           ref={formElemRef}
           id={`form-${props.id}`}
-          onSubmit={form.handleSubmit((data) => props.onSubmit(form, data))}
+          onSubmit={form.handleSubmit(
+            (data) => props.onSubmit(form, data),
+            (error) => {
+              console.log(error);
+            }
+          )}
         >
           {props.formFields?.(props.id, form)}
         </form>

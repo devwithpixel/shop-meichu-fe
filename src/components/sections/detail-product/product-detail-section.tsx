@@ -103,7 +103,7 @@ export default function ProductDetailSection({
       onUpdate: (self) => {
         const progress = self.progress;
         const fromBottom = 2;
-        const toTop = 2;
+        const toTop = 8;
         const viewportHeight = window.innerHeight / 16;
 
         const currentBottom =

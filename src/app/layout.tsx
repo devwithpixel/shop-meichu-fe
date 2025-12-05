@@ -1,12 +1,11 @@
 import "../styles/globals.css";
 import { Inter, Rubik, Outfit, Albert_Sans } from "next/font/google";
-import localFont from "next/font/local"; 
+import localFont from "next/font/local";
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { CartProvider } from "@/context/cart-provider";
 
 import type { Metadata } from "next";
-import { CartProvider } from "@/context/cart-provider";
-import ShoppingCart from "@/components/sheet/shopping-cart";
 
 const rubik = Rubik({
   variable: "--font-rubik",

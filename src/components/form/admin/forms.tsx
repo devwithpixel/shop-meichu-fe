@@ -30,6 +30,8 @@ import type { Category } from "@/types/strapi/models/category";
 import type { Product } from "@/types/strapi/models/product";
 import { useMemo, useState } from "react";
 import { MultipleImageField } from "../multiple-image";
+import { ImageField } from "../image";
+import { Textarea } from "@/components/ui/textarea";
 
 interface CreateFormProps {
   type: "create";
@@ -44,17 +46,30 @@ interface UpdateFormProps<T> {
 type UpsertFormProps<T> = CreateFormProps | UpdateFormProps<T>;
 
 export function UpsertCategoryForm(props: UpsertFormProps<Category>) {
+  const [isImageChanged, setIsImageChanged] = useState(false);
   const defaultValues = useMemo(
     () =>
       props.type === "create"
         ? {
             name: "",
+            backgroundColor: "",
+            thumbnail: null,
+            heading: {
+              title: "",
+              description: "",
+              thumbnail: undefined,
+            },
           }
         : {
             name: props.data.name,
+            backgroundColor: props.data.backgroundColor,
+            thumbnail: props.data.thumbnail,
+            heading: props.data.heading,
           },
     [props]
   );
+
+  console.log(props.data);
 
   return (
     <UpsertForm
@@ -66,46 +81,244 @@ export function UpsertCategoryForm(props: UpsertFormProps<Category>) {
           .string()
           .regex(/^[a-zA-Z0-9 ]+$/, "Only alphanumeric and spaces allowed")
           .min(1, "The name field is required."),
+        backgroundColor: z.string().min(7).max(7),
+        thumbnail: z
+          .instanceof(File, { message: "Please select an image file." })
+          .refine((file) => file.size > 0, {
+            message: "Image file is required.",
+          })
+          .refine((file) => file.size <= maxFileSize, {
+            message: `Image file size must be less than ${bytesToMB(maxFileSize)} MB.`,
+          })
+          .refine(
+            (file) => {
+              const validTypes = [
+                "image/jpeg",
+                "image/jpg",
+                "image/png",
+                "image/webp",
+              ];
+              return validTypes.includes(file.type);
+            },
+            {
+              message: "Only JPEG, PNG, WebP images are allowed.",
+            }
+          ),
+        heading: z.object({
+          title: z.string().min(1, "The title field is required."),
+          description: z.string().min(1, "The description field is required."),
+          thumbnail: z
+            .instanceof(File, { message: "Please select an image file." })
+            .refine((file) => file.size > 0, {
+              message: "Image file is required.",
+            })
+            .refine((file) => file.size <= maxFileSize, {
+              message: `Image file size must be less than ${bytesToMB(maxFileSize)} MB.`,
+            })
+            .refine(
+              (file) => {
+                const validTypes = [
+                  "image/jpeg",
+                  "image/jpg",
+                  "image/png",
+                  "image/webp",
+                ];
+                return validTypes.includes(file.type);
+              },
+              {
+                message: "Only JPEG, PNG, WebP images are allowed.",
+              }
+            ),
+        }),
       })}
       defaultValues={defaultValues}
       formFields={(formId, form) => {
         return (
-          <FieldGroup>
-            <Controller
-              name="name"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={`form-${formId}-input-name`}>
-                    Name
-                    <MarkRequired />
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    type="text"
-                    required
-                    id={`form-${formId}-input-name`}
-                    aria-invalid={fieldState.invalid}
-                    autoComplete="name"
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
+          <>
+            <FieldGroup className="mb-12">
+              <Controller
+                name="name"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={`form-${formId}-input-name`}>
+                      Name
+                      <MarkRequired />
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      type="text"
+                      required
+                      id={`form-${formId}-input-name`}
+                      aria-invalid={fieldState.invalid}
+                      autoComplete="name"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="backgroundColor"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor={`form-${formId}-input-background-color`}
+                    >
+                      Background Color
+                      <MarkRequired />
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      type="text"
+                      minLength={7}
+                      maxLength={7}
+                      required
+                      id={`form-${formId}-input-background-color`}
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="thumbnail"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={`form-${formId}-input-thumbnail`}>
+                      Thumbnail
+                      <MarkRequired />
+                    </FieldLabel>
+                    <ImageField
+                      field={field}
+                      defaultValue={
+                        props.type === "create"
+                          ? undefined
+                          : `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${props.data.thumbnail?.url}`
+                      }
+                      setIsImageChanged={setIsImageChanged}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <h3 className="text-xl font-semibold mb-5">Heading</h3>
+            <FieldGroup>
+              <Controller
+                name="heading.title"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={`form-${formId}-input-heading-title`}>
+                      Title
+                      <MarkRequired />
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      type="text"
+                      required
+                      id={`form-${formId}-input-heading-title`}
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="heading.description"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor={`form-${formId}-input-heading-description`}
+                    >
+                      Description
+                      <MarkRequired />
+                    </FieldLabel>
+                    <Textarea
+                      {...field}
+                      required
+                      id={`form-${formId}-input-heading-description`}
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="heading.thumbnail"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel
+                      htmlFor={`form-${formId}-input-heading-thumbnail`}
+                    >
+                      Thumbnail
+                      <MarkRequired />
+                    </FieldLabel>
+                    <ImageField
+                      field={field}
+                      defaultValue={
+                        props.type === "create"
+                          ? undefined
+                          : `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${props.data.heading!.thumbnail?.url}`
+                      }
+                      setIsImageChanged={setIsImageChanged}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </>
         );
       }}
       onSubmit={async (form, data) => {
+        const { thumbnail, heading, ...restData } = data;
+
+        const headingImage = heading!.thumbnail;
+        delete heading!.thumbnail;
+
         const result =
           props.type === "create"
-            ? await createItem<Category>("categories", data)
-            : await updateItem<Category>(
-                "categories",
-                props.data.documentId,
-                data
-              );
+            ? await createItem<Category>("categories", {
+                ...restData,
+                heading: heading as any,
+              })
+            : await updateItem<Category>("categories", props.data.documentId, {
+                ...restData,
+                heading: heading as any,
+              });
+
+        if (result.type === "success" && isImageChanged) {
+          await createImage({
+            morphId: result.data.data.id,
+            file: thumbnail as any,
+            apiName: "api::category.category",
+            fieldName: "thumbnail",
+          });
+
+          await createImage({
+            morphId: result.data.data.heading!.id,
+            file: headingImage as any,
+            apiName: "shared.heading",
+            fieldName: "thumbnail",
+          });
+        }
 
         switch (result.type) {
           case "success":
