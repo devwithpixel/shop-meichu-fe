@@ -58,6 +58,7 @@
 :root {
   --font-rubik: "__Rubik_generated_name__";
   --font-inter: "__Inter_generated_name__";
+  --font-outfit: var(--font-outfit);
   --font-arial: Arial, sans-serif;
   --font-albert-sans: "__albertSans_generated_name__";
   --radius: 0.625rem;
@@ -144,7 +145,7 @@
 
 html {
   scroll-behavior: smooth;
-} 
+}
 
 .text-outline-black {
   -webkit-text-stroke: 1px black;
@@ -156,6 +157,7 @@ body {
   font-family: var(--font-albert-sans), sans-serif;
   font-family: var(--font-arial);
 }
+
 .text-outline-white {
   -webkit-text-stroke: 1px white;
 }
@@ -168,4 +170,3 @@ body {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-

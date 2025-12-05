@@ -17,6 +17,8 @@ const inter = Inter({
 
 const outfit = Outfit({
   variable: "--font-outfit",
+  preload: true,
+  fallback: ["sans-serif"],
   subsets: ["latin"],
 });
 
@@ -49,7 +51,11 @@ export default function RootLayout({
         <NuqsAdapter>
           <CartProvider>{children}</CartProvider>
         </NuqsAdapter>
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster
+          position="top-center"
+          reverseOrder={false}
+          containerClassName="font-outfit"
+        />
       </body>
     </html>
   );

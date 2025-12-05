@@ -9,13 +9,6 @@ import type { Product } from "@/types/strapi/models/product";
 import type { Category } from "@/types/strapi/models/category";
 import IconElement from "@/components/element/icon-element";
 
-const headerData = {
-  type: "collections",
-  img: "/assets/gallery/girl3.jpg",
-  title: "SEASONAL MUST-HAVES",
-  desc: "Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal.",
-} as const;
-
 async function getProductsByCategory(
   slug: string
 ): Promise<StrapiResponse<Product[]>> {
@@ -59,10 +52,10 @@ export default async function CollectionsPage({
   return (
     <div className="bg-[#D9E4E8]">
       <HeaderPage
-        type={headerData.type}
-        img={headerData.img}
-        title={headerData.title}
-        desc={headerData.desc}
+        type="collections"
+        img={`${process.env.NEXT_PUBLIC_BACKEND_API_URL}${category.heading?.thumbnail?.url}`}
+        title={category.heading!.title}
+        desc={category.heading!.description}
       />
       <div className="relative">
         <IconElement variant={2} />

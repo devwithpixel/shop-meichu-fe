@@ -1,5 +1,10 @@
 import { SidebarNavigationGroupProps } from "@/types/admin/navbar";
-import { LayoutDashboard, Package, ShoppingBag } from "lucide-react";
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingBag,
+  ShoppingCart,
+} from "lucide-react";
 
 export const sidebarConfig: SidebarNavigationGroupProps[] = [
   {
@@ -19,6 +24,11 @@ export const sidebarConfig: SidebarNavigationGroupProps[] = [
         title: "Products",
         href: "/admin/products",
         icon: Package,
+      },
+      {
+        title: "Orders",
+        href: "/admin/orders",
+        icon: ShoppingCart,
       },
     ],
   },

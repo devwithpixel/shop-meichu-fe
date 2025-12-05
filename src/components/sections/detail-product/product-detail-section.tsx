@@ -164,6 +164,7 @@ export default function ProductDetailSection({
         <OverviewSection ref={sections.overview.ref} product={product} />
         <DescriptionSection
           ref={sections.description.ref}
+          description={product.description}
           image={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url || ""}`}
         />
         <SpecificationsSection

@@ -158,15 +158,17 @@ export async function updateItem<TModel>(
   return { type: "success", data: await response.json() };
 }
 
-export async function createProductImage(data: {
-  productId: number;
+export async function createImage(data: {
   file: File;
+  apiName: string;
+  morphId: number;
+  fieldName: string;
 }): Promise<ResultContract<null>> {
   const formData = new FormData();
   formData.set("files", data.file);
-  formData.set("ref", "api::product.product");
-  formData.set("refId", data.productId.toString());
-  formData.set("field", "image");
+  formData.set("ref", data.apiName);
+  formData.set("refId", data.morphId.toString());
+  formData.set("field", data.fieldName);
 
   const response = await fetchAdmin(
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/upload`,

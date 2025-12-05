@@ -14,13 +14,23 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { CropIcon, Pencil, TrashIcon, X, XIcon } from "lucide-react";
+import {
+  CropIcon,
+  Pencil,
+  TrashIcon,
+  X,
+  XIcon,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import {
   base64ToFile,
   bytesToMB,
   fetchImageAsFile,
   fileToBase64,
 } from "@/lib/utils";
+import { maxFileSize } from "@/config/form";
+import { useMutative } from "use-mutative";
 
 import type {
   ControllerRenderProps,
@@ -28,36 +38,37 @@ import type {
   FieldValues,
 } from "react-hook-form";
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { maxFileSize } from "@/config/form";
 
-export function ImageField<
+export function MultipleImageField<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
 >({
   field,
+  maximumImage,
   defaultValue,
   setIsImageChanged,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>;
-  defaultValue?: string;
+  maximumImage?: number;
+  defaultValue?: string[];
   setIsImageChanged?: Dispatch<SetStateAction<boolean>>;
 }) {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useMutative<File[]>([]);
+  const [currentActiveImage, setCurrentActiveImage] = useState(0);
   const [currentImage, setCurrentImage] = useState<string | null>(null);
-  const maxImageSizeReadable = useMemo(
-    () => bytesToMB(maxFileSize),
-    [maxFileSize]
-  );
+  const maxImageSizeReadable = useMemo(() => bytesToMB(maxFileSize), []);
 
   useEffect(() => {
-    if (!defaultValue) return;
+    if (!defaultValue || defaultValue.length === 0) return;
 
     async function fetchImage() {
-      const file = await fetchImageAsFile(defaultValue!);
-      field.onChange(file);
-      setSelectedFile(file);
-      setCurrentImage(defaultValue!);
+      const files = await Promise.all(
+        defaultValue!.map((url) => fetchImageAsFile(url))
+      );
+      field.onChange(files);
+      setSelectedFiles(files);
+      setCurrentImage(defaultValue![0]);
     }
 
     fetchImage();
@@ -65,14 +76,17 @@ export function ImageField<
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
-      const file = event.target.files?.[0];
-      if (!file) return;
+      const files = event.target.files;
+      if (!files) return;
 
-      const base64Data = await fileToBase64(file);
-      setSelectedFile(file);
-      setCurrentImage(base64Data);
+      const base64Data = await Promise.all(
+        Array.from(files).map((file) => fileToBase64(file))
+      );
+      setSelectedFiles(Array.from(files));
+      setCurrentActiveImage(0);
+      setCurrentImage(base64Data[0]);
       setIsImageChanged?.(true);
-      field.onChange(file);
+      field.onChange(Array.from(files));
     },
     [field]
   );
@@ -81,6 +95,9 @@ export function ImageField<
     async (data: string) => {
       const file = base64ToFile(data, "image.jpg");
       setDialogOpen(false);
+      setSelectedFiles((draft) => {
+        draft[currentActiveImage] = file;
+      });
       setCurrentImage(data);
       setIsImageChanged?.(true);
       field.onChange(file);
@@ -88,32 +105,53 @@ export function ImageField<
     [field]
   );
 
-  const handleRemove = useCallback(() => {
-    setCurrentImage(null);
+  const handleRemove = useCallback(async () => {
+    setSelectedFiles((draft) => {
+      draft.splice(currentActiveImage, 1);
+    });
+    setCurrentActiveImage(Math.max(0, currentActiveImage - 1));
     setDialogOpen(false);
     setIsImageChanged?.(true);
-    field.onChange(undefined);
+    field.onChange(selectedFiles);
+
+    if (selectedFiles.length === 1) {
+      setCurrentImage(null);
+    } else {
+      setCurrentImage(await fileToBase64(selectedFiles[currentActiveImage]));
+    }
   }, [field]);
 
   const handleResetCrop = useCallback(async () => {
-    if (!selectedFile) return handleRemove();
+    if (!selectedFiles[currentActiveImage]) return handleRemove();
 
-    const base64Data = await fileToBase64(selectedFile);
+    const base64Data = await fileToBase64(selectedFiles[currentActiveImage]);
     setDialogOpen(false);
     setCurrentImage(base64Data);
     setIsImageChanged?.(true);
-    field.onChange(selectedFile);
+    field.onChange(selectedFiles);
   }, [field]);
 
-  return selectedFile && currentImage ? (
+  const changeActiveImage = useCallback(
+    async (index: number) => {
+      setCurrentActiveImage(index);
+
+      if (selectedFiles[index]) {
+        const image = await fileToBase64(selectedFiles[index]);
+        setCurrentImage(image);
+      }
+    },
+    [selectedFiles]
+  );
+
+  return selectedFiles.length > 0 && currentImage ? (
     <>
       <ImageCrop
         aspect={1}
-        file={selectedFile}
+        file={selectedFiles[currentActiveImage]}
         maxImageSize={1024 * 1024}
         onCrop={handleCropChange}
       >
-        <section className="rounded-md px-4 border bg-accent shadow-xs relative h-96 overflow-hidden">
+        <section className="rounded-md px-4 border bg-accent shadow-xs h-96 overflow-hidden relative">
           <div className="absolute flex justify-end gap-1 left-0 top-0 p-3 bg-linear-to-b from-black to-transparent w-full">
             <Button
               variant="outline"
@@ -130,8 +168,29 @@ export function ImageField<
           <img
             alt="Edited Image"
             src={currentImage}
-            className=" mx-auto h-full w-auto object-contain"
+            className="mx-auto h-full w-auto object-contain"
           />
+
+          {selectedFiles.length > 1 && (
+            <>
+              <Button
+                variant="outline"
+                onClick={() => changeActiveImage(currentActiveImage - 1)}
+                type="button"
+                className="absolute left-1 top-1/2 -translate-1/2"
+              >
+                <ChevronLeft />
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => changeActiveImage(currentActiveImage + 1)}
+                type="button"
+                className="absolute right-1 top-1/2 -translate-1/2"
+              >
+                <ChevronRight />
+              </Button>
+            </>
+          )}
         </section>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -181,7 +240,7 @@ export function ImageField<
       <Input
         accept="image/*"
         onChange={handleFileChange}
-        maxLength={1}
+        maxLength={maximumImage}
         type="file"
       />
       <p className="text-xs text-muted-foreground">

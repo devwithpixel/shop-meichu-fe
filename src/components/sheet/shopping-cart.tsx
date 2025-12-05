@@ -8,7 +8,7 @@ import {
   SheetHeader,
 } from "@/components/ui/sheet";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { FiShoppingBag } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
 import { useCart } from "@/context/cart-provider";
@@ -35,7 +35,6 @@ export default function ShoppingCart() {
     }
   );
   const { isOpen, setIsOpen, items, updateQuantity, removeItem } = useCart();
-  const [specialInstructions, setSpecialInstructions] = useState("");
 
   const subtotal = items.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -128,12 +127,7 @@ export default function ShoppingCart() {
           </div>
 
           {items.length > 0 && (
-            <CartSummary
-              subtotal={subtotal}
-              grandTotal={subtotal}
-              specialInstructions={specialInstructions}
-              onSpecialInstructionsChange={setSpecialInstructions}
-            />
+            <CartSummary subtotal={subtotal} grandTotal={subtotal} />
           )}
         </div>
       </SheetContent>

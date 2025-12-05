@@ -1,17 +1,21 @@
-import type { CartItem } from "@/types/cart";
+"use server";
+
 import type { ResultContract } from "@/types/api-return";
 
 interface CheckoutParams {
   buyerName: string;
   contact: string;
-  items: CartItem[];
+  orderItems: {
+    productId: number;
+    quantity: number;
+  }[];
   note?: string;
 }
 
 export async function checkout(
   params: CheckoutParams
 ): Promise<ResultContract<null>> {
-  const res = await fetch(
+  const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/orders/new`,
     {
       method: "POST",
@@ -22,7 +26,11 @@ export async function checkout(
     }
   );
 
-  if (!res.ok) {
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
     return { type: "error", message: "An error occurred" };
   }
 

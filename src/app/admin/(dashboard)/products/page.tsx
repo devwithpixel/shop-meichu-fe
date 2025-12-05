@@ -7,7 +7,7 @@ export default async function Page() {
       columns={productsColumn}
       model="products"
       populate={{
-        image: true,
+        images: true,
       }}
       enableDelete={true}
     />

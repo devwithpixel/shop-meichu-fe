@@ -31,15 +31,15 @@ export default async function CollectionsAllProductsPage() {
         desc="Elevate your wardrobe with the latest essentials tailored for the season—handpicked styles that blend comfort, trend, and timeless appeal."
       />
       <div className="relative">
-        <IconElement variant={3}/>
-      <div className="px-5 py-10 space-y-6 md:space-y-14 h-full">
-        <FilterCard />
-        <div className="flex items-center justify-center md:justify-start lg:justify-start flex-wrap gap-y-14 md:gap-y-14 lg:gap-y-14 gap-2 md:gap-5.5 lg:gap-4 pb-6 overflow-x-scroll lg:overflow-x-visible">
-          {products.map((p) => (
-            <ProductCard key={p.id} product={p} size="lg" />
-          ))}
+        <IconElement variant={3} />
+        <div className="px-5 py-10 space-y-6 md:space-y-14 h-full">
+          <FilterCard />
+          <div className="flex items-center justify-center md:justify-start lg:justify-start flex-wrap gap-y-14 md:gap-y-14 lg:gap-y-14 gap-2 md:gap-5.5 lg:gap-4 pb-6 overflow-x-scroll lg:overflow-x-visible">
+            {products.map((p) => (
+              <ProductCard key={p.id} product={p} size="lg" />
+            ))}
+          </div>
         </div>
-      </div>
       </div>
 
       <Footer />

@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function Page() {
   return (
     <GuestOnly fallback="/admin">
-      <main className="font-outfit bg-gray-900 h-screen pt-24 dark">
+      <main className="bg-gray-900 h-screen pt-24 dark">
         <LoginForm className="mx-auto w-96 bg-gray-800 text-white border-none" />
       </main>
     </GuestOnly>

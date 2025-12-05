@@ -3,7 +3,7 @@
 import * as z from "zod";
 
 import { toast } from "react-hot-toast";
-import { createItem, createProductImage, updateItem } from "@/actions/admin";
+import { createImage, createItem, updateItem } from "@/actions/admin";
 import { Controller } from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { displayValidationError } from "@/lib/validation-handler";
@@ -24,12 +24,12 @@ import { bytesToMB } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import { maxFileSize } from "@/config/form";
 import { MarkRequired } from "@/components/form/mark-required";
-import { ImageField } from "@/components/form/image";
 import UpsertForm from "@/components/form/admin/base/upsert-form";
 
 import type { Category } from "@/types/strapi/models/category";
 import type { Product } from "@/types/strapi/models/product";
 import { useMemo, useState } from "react";
+import { MultipleImageField } from "../multiple-image";
 
 interface CreateFormProps {
   type: "create";
@@ -127,6 +127,13 @@ export function UpsertCategoryForm(props: UpsertFormProps<Category>) {
 export function UpsertProductForm(
   props: UpsertFormProps<Product> & { categories: Category[] }
 ) {
+  const defaultImages = useMemo(() => {
+    return (
+      props.data?.images?.map(
+        (image) => `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${image?.url}`
+      ) || []
+    );
+  }, [props.data]);
   const [isImageChanged, setIsImageChanged] = useState(false);
   const defaultValues = useMemo(
     () =>
@@ -137,7 +144,7 @@ export function UpsertProductForm(
             price: 0,
             stock: 0,
             category: undefined,
-            image: undefined,
+            images: [],
           }
         : {
             name: props.data.name,
@@ -147,7 +154,7 @@ export function UpsertProductForm(
             category: props.data.category?.id
               ? String(props.data.category?.id)
               : undefined,
-            image: undefined,
+            images: [],
           },
     [props]
   );
@@ -166,28 +173,30 @@ export function UpsertProductForm(
         price: z.coerce.number().min(0, "The price field is required."),
         stock: z.coerce.number().min(0, "The stock field is required."),
         category: z.coerce.number("The category field is required."),
-        image: z
-          .instanceof(File, { message: "Please select an image file." })
-          .refine((file) => file.size > 0, {
-            message: "Image file is required.",
-          })
-          .refine((file) => file.size <= maxFileSize, {
-            message: `Image file size must be less than ${bytesToMB(maxFileSize)} MB.`,
-          })
-          .refine(
-            (file) => {
-              const validTypes = [
-                "image/jpeg",
-                "image/jpg",
-                "image/png",
-                "image/webp",
-              ];
-              return validTypes.includes(file.type);
-            },
-            {
-              message: "Only JPEG, PNG, WebP images are allowed.",
-            }
-          ),
+        images: z.array(
+          z
+            .instanceof(File, { message: "Please select an image file." })
+            .refine((file) => file.size > 0, {
+              message: "Image file is required.",
+            })
+            .refine((file) => file.size <= maxFileSize, {
+              message: `Image file size must be less than ${bytesToMB(maxFileSize)} MB.`,
+            })
+            .refine(
+              (file) => {
+                const validTypes = [
+                  "image/jpeg",
+                  "image/jpg",
+                  "image/png",
+                  "image/webp",
+                ];
+                return validTypes.includes(file.type);
+              },
+              {
+                message: "Only JPEG, PNG, WebP images are allowed.",
+              }
+            )
+        ),
       })}
       defaultValues={defaultValues}
       formFields={(formId, form) => {
@@ -321,7 +330,7 @@ export function UpsertProductForm(
               )}
             />
             <Controller
-              name="image"
+              name="images"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
@@ -329,12 +338,8 @@ export function UpsertProductForm(
                     Image
                     <MarkRequired />
                   </FieldLabel>
-                  <ImageField
-                    defaultValue={
-                      (props as UpsertFormProps<Product>).data?.image?.url
-                        ? `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${(props as UpsertFormProps<Product>).data?.image?.url}`
-                        : undefined
-                    }
+                  <MultipleImageField
+                    defaultValue={defaultImages}
                     field={field}
                     setIsImageChanged={setIsImageChanged}
                   />
@@ -349,21 +354,24 @@ export function UpsertProductForm(
       }}
       onSubmit={async (form, data) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { image: _, ...selectedData } = data;
+        const { images, ...selectedData } = data;
         const result =
           props.type === "create"
             ? await createItem<Product>("products", selectedData as any)
-            : await updateItem<Product>(
-                "products",
-                props.data.documentId,
-                selectedData as any
-              );
+            : await updateItem<Product>("products", props.data.documentId, {
+                ...selectedData,
+                images: [],
+              } as any);
 
         if (result.type === "success" && isImageChanged) {
-          await createProductImage({
-            productId: result.data.data.id,
-            file: data.image as unknown as File,
-          });
+          for (const image of images) {
+            await createImage({
+              morphId: result.data.data.id,
+              file: image,
+              apiName: "api::product.product",
+              fieldName: "images",
+            });
+          }
         }
 
         switch (result.type) {

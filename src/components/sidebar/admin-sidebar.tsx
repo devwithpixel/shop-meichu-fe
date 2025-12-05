@@ -19,7 +19,11 @@ export default function AdminSidebar({ user }: { user: User }) {
   const { collapsible, variant } = useLayout();
 
   return (
-    <Sidebar collapsible={collapsible} variant={variant}>
+    <Sidebar
+      collapsible={collapsible}
+      variant={variant}
+      className="rounded-lg!"
+    >
       <SidebarHeader>
         <AppTitle />
       </SidebarHeader>
