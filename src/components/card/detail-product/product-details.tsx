@@ -4,10 +4,11 @@ import { FaCheck } from "react-icons/fa6";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import type { Product } from "@/types/strapi/models/product";
-import VariantSelector from "./variant-selector";
+// import VariantSelector from "./variant-selector";
 import QuantitySelector from "./quantity-selector";
 import SocialMediaLinks from "./social-media-links";
 import { useCart } from "@/context/cart-provider";
+import { formatCurrency } from "@/lib/utils";
 
 interface ProductDetailsProps {
   product: Product;
@@ -81,7 +82,7 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
               </h1>
 
               <p className="text-xl font-bold leading-9 font-inter">
-                ${product.price.toLocaleString()} USD
+                {formatCurrency(product.price)}
               </p>
               <p className="text-xs font-medium text-gray-800">
                 Taxes included. <span className="underline">Shipping</span>{" "}
@@ -141,22 +142,13 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
             <SocialMediaLinks socialMedia={socialMedia} />
 
             <div className="mt-4">
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-4">
-                <button
-                  onClick={handleAddToCart}
-                  disabled={isButtonDisabled}
-                  className="w-full py-4 border border-black bg-black text-white hover:bg-gray-200 hover:text-black rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
-                >
-                  {product.stock === 0 ? "Out of Stock" : "Add to cart"}
-                </button>
-
-                <button
-                  disabled={isButtonDisabled}
-                  className="w-full py-4 border border-black bg-black text-white hover:bg-gray-200 hover:text-black rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
-                >
-                  Buy it now
-                </button>
-              </div>
+              <button
+                onClick={handleAddToCart}
+                disabled={isButtonDisabled}
+                className="w-full py-4 border border-black bg-black text-white hover:bg-gray-200 hover:text-black rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
+              >
+                {product.stock === 0 ? "Out of Stock" : "Add to cart"}
+              </button>
             </div>
           </div>
         </div>

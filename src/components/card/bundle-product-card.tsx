@@ -3,6 +3,7 @@
 import { Check } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { formatCurrency } from "@/lib/utils";
+import { redirect } from "next/navigation";
 
 import type { Product } from "@/types/strapi/models/product";
 
@@ -40,6 +41,7 @@ export default function BundleProductCard({ product }: { product: Product }) {
           setIsHovered(false);
         }
       }}
+      onClick={() => redirect(`/products/${product.slug}`)}
     >
       <div className="relative w-full h-64 sm:h-80 md:h-96 shrink-0">
         <img

@@ -5,7 +5,6 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Logo } from "@/components/global/logo";
 
 export function AppTitle() {
   const { setOpenMobile } = useSidebar();
@@ -18,7 +17,6 @@ export function AppTitle() {
           asChild
         >
           <div>
-            <Logo className="size-8 me-3" />
             <Link
               href="/"
               onClick={() => setOpenMobile(false)}

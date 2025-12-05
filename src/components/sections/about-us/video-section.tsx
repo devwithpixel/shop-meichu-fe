@@ -6,18 +6,16 @@ import { useGSAP } from "@gsap/react";
 import { useRef } from "react";
 import Link from "next/link";
 
-gsap.registerPlugin(ScrollTrigger);
-
-interface BoxItem {
-  title: string;
-  desc: string;
-  link: string;
-}
+import type { CTAButton } from "@/types/strapi/components/shared/cta-button";
 
 interface VideoSectionProps {
   videoSrc: string;
   videoTitle: string;
-  boxes: BoxItem[];
+  boxes: {
+    header: string;
+    description?: string;
+    ctaButton: CTAButton;
+  }[];
 }
 
 export default function VideoSection({
@@ -131,7 +129,7 @@ export default function VideoSection({
             ref={boxesRef}
             className="md:absolute md:bottom-75 md:right-10 lg:bottom-25 lg:right-25 flex flex-row md:flex-col items-end gap-y-14"
           >
-            {boxes.map((item, index) => (
+            {boxes.slice(0, 2).map((item, index) => (
               <div
                 key={index}
                 className={`bg-gray-100 w-80 px-8 py-6 space-y-2 rounded-3xl ${
@@ -139,15 +137,18 @@ export default function VideoSection({
                 }`}
               >
                 <h1 className="font-rubik font-medium md:text-md lg:text-xl leading-tight">
-                  {item.title}
+                  {item.header}
                 </h1>
-                <p className="font-inter md:text-xs lg:text-sm">{item.desc}</p>
+                <p className="font-inter md:text-xs lg:text-sm mb-5">
+                  {item.description}
+                </p>
 
-                <a href={item.link}>
-                  <button className="font-inter bg-white text-sm py-3 px-8 border border-black rounded-full mt-2">
-                    EXPLORE
-                  </button>
-                </a>
+                <Link
+                  href={item.ctaButton.url}
+                  className="font-inter bg-white text-sm py-3 px-8 border border-black rounded-full mt-2"
+                >
+                  {item.ctaButton.title}
+                </Link>
               </div>
             ))}
           </div>
@@ -162,11 +163,11 @@ export default function VideoSection({
             className="bg-gray-100 min-w-[95%] min-h-full p-6 space-y-2 rounded-2xl"
           >
             <h1 className="font-rubik font-medium text-xl leading-tight">
-              {item.title}
+              {item.header}
             </h1>
-            <p className="font-inter text-sm">{item.desc}</p>
+            <p className="font-inter text-sm mb-5">{item.description}</p>
 
-            <Link href={item.link}>
+            <Link href={item.ctaButton.url}>
               <button className="font-inter bg-white text-sm py-3 px-8 border border-black rounded-full mt-2">
                 EXPLORE
               </button>

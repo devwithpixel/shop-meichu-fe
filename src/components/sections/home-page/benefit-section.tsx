@@ -10,6 +10,7 @@ import gsap from "gsap";
 
 import type { BenefitSection } from "@/types/strapi/components/home-page/benefit-section";
 import Link from "next/link";
+import StrapiImage from "@/components/global/strapi-image";
 
 export default function BenefitSection({ data }: { data: BenefitSection }) {
   const [progress, setProgress] = useState(0);
@@ -77,10 +78,10 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
       className="relative w-full min-h-fit sm:min-h-screen bg-white flex flex-col items-center justify-center overflow-x-hidden sm:h-screen sm:overflow-hidden"
     >
       <div className="hidden md:block w-auto h-auto absolute inset-0 z-0 rounded-4xl bg-gray-100 mx-6 md:my-20 lg:my-10">
-        <Image
-          src="./assets/image/slide.png"
-          // src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${data.background}`}
+        <StrapiImage
+          src={data.backgroundImage}
           alt={data.section.title}
+          size="large"
           className="w-full h-full object-cover opacity-20 rounded-4xl"
         />
       </div>
