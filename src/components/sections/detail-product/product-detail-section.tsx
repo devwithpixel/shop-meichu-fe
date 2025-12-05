@@ -76,13 +76,16 @@ export default function ProductDetailSection({
       top: "auto",
     });
 
+    const isMobile = window.innerWidth < 768;
+    const startPosition = isMobile ? "top 30%" : "top 60%";
+
     (Object.values(sections) as SectionInfo[]).forEach((el, i) => {
       if (!el.ref.current) return;
 
       ScrollTrigger.create({
         trigger: el.ref.current,
-        start: i === 0 ? "top top" : "top 60%",
-        end: "bottom 40%",
+        start: i === 0 ? "top top" : startPosition,
+        end: isMobile ? "bottom 90%" : "bottom 40%",
         onEnter: () => {
           setActive(i);
         },
@@ -186,7 +189,7 @@ export default function ProductDetailSection({
 
       <nav
         ref={navRef}
-        className="fixed h-fit left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 backdrop-blur-md bg-white/60 rounded-full shadow-lg px-1 py-1 z-100"
+        className="fixed h-fit left-1/2 -translate-x-1/2 md:left-8 md:translate-x-0 backdrop-blur-md bg-white/60 rounded-full shadow-lg px-1 py-1 z-50"
       >
         <div className="relative flex gap-1">
           <div

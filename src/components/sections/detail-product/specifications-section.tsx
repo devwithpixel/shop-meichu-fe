@@ -61,7 +61,7 @@ export default function SpecificationsSection({
           </p> */}
 
           <img
-            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url}`}
+            src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[1]?.url}`}
             className="feature-1-img w-30 h-30 md:w-33 md:h-33 lg:w-40 lg:h-40 object-cover bg-gray-400 rounded-lg border border-black"
             alt=""
           />
@@ -88,7 +88,7 @@ export default function SpecificationsSection({
 
       <div className="z-10">
         <img
-          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[1]?.url}`}
+          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url}`}
           className="bg-gray-400 w-124 h-124 md:w-76 md:h-76 lg:w-124 lg:h-124 object-cover rounded-3xl"
           alt=""
         />

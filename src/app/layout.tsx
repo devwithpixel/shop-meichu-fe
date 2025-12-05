@@ -6,6 +6,7 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import type { Metadata } from "next";
 import { CartProvider } from "@/context/cart-provider";
+import ShoppingCart from "@/components/sheet/shopping-cart";
 
 const rubik = Rubik({
   variable: "--font-rubik",
