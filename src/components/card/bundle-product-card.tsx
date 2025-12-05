@@ -4,6 +4,7 @@ import { Check } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { formatCurrency } from "@/lib/utils";
 import { redirect } from "next/navigation";
+import StrapiImage from "@/components/global/strapi-image";
 
 import type { Product } from "@/types/strapi/models/product";
 
@@ -44,9 +45,10 @@ export default function BundleProductCard({ product }: { product: Product }) {
       onClick={() => redirect(`/products/${product.slug}`)}
     >
       <div className="relative w-full h-64 sm:h-80 md:h-96 shrink-0">
-        <img
-          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product.images?.[0]?.url}`}
+        <StrapiImage
+          src={product.images?.[0]}
           alt={product.name}
+          size="medium"
           className="object-cover w-full h-full transition-transform duration-700 ease-out rounded-2xl"
         />
 

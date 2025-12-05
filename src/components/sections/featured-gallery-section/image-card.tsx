@@ -1,3 +1,4 @@
+import Image from "@/components/global/image";
 import { FeaturedCategoryItem } from "@/types/strapi/components/home-page-item/featured-category-item";
 
 interface CategoryImageCardProps {
@@ -60,7 +61,7 @@ export default function CategoryImageCard({
     >
       {isAnimating && nextItem && (
         <div className={`absolute inset-0 ${exitAnimationClassName}`}>
-          <img
+          <Image
             src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${currentImageUrl}`}
             alt={
               item.category?.thumbnail?.alternativeText ||
@@ -78,14 +79,14 @@ export default function CategoryImageCard({
           isAnimating && nextItem ? slideAnimationClassName : ""
         }`}
       >
-        <img
+        <Image
           src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${
             isAnimating && nextItem ? nextImageUrl : currentImageUrl
           }`}
           alt={
             isAnimating && nextItem
               ? nextItem.category?.thumbnail?.alternativeText ||
-                nextItem.title ||
+                nextItem.title || 
                 "Category image"
               : item.category?.thumbnail?.alternativeText ||
                 item.title ||

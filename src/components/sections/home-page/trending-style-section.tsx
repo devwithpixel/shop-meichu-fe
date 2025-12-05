@@ -8,6 +8,7 @@ import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import { GoArrowUpRight } from "react-icons/go";
 import { formatCurrency } from "@/lib/utils";
 import { bgColors, bgCardColor } from "@/lib/data/color";
+import StrapiImage from "@/components/global/strapi-image";
 import gsap from "gsap";
 
 import type { TrendingStyleSection } from "@/types/strapi/components/home-page/trending-style-section";
@@ -173,9 +174,11 @@ export default function TrendingStyleSection({
                           backgroundColor: bgCardColor[index],
                         }}
                       >
-                        <img
+                        <StrapiImage
+                          src={product?.images?.[0]}
+                          alt={product.name}
+                          size="thumbnail"
                           className="aspect-square object-cover rounded-3xl w-20 h-20 md:w-24 md:h-24"
-                          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product?.images?.[0]?.url}`}
                         />
                         <div className="flex items-center justify-between w-full">
                           <div className="grid grid-cols-1 gap-3">

@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 import { useMemo, useRef, useState } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import StrapiImage from "@/components/global/strapi-image";
 
 import type { CollectionSection } from "@/types/strapi/components/home-page/collection-section";
 import Link from "next/link";
@@ -258,16 +259,17 @@ export default function CollectionSection({
                       }
                     `}
                     >
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${collection.category.thumbnail?.url}`}
+                      <StrapiImage
+                        src={collection.category.thumbnail}
                         alt={collection.category?.name}
+                        size="thumbnail"
                         className={`rounded-full object-cover transition-all duration-300
                         ${isActive ? "w-16 h-16 absolute" : "w-17 h-17"}
                       `}
                       />
 
                       {isActive && (
-                        <h1 className="text-[26px] font-albert-sans font-normal flex-1 text-center">
+                        <h1 className="text-[26px] font-albert-sans font-normal flex-1 text-center truncate">
                           {collection.category?.name}
                         </h1>
                       )}
@@ -307,9 +309,10 @@ export default function CollectionSection({
 
                   <div className="single-image-container w-full z-10">
                     <div className="relative w-full h-[500px]">
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${activeCollection?.category.thumbnail?.url}`}
-                        alt={activeCollection?.category.name}
+                      <StrapiImage
+                        src={activeCollection?.category.thumbnail}
+                        alt={activeCollection?.category.name || "image"}
+                        size="medium"
                         className="w-full h-[500px] object-cover rounded-3xl"
                       />
                     </div>
@@ -325,9 +328,10 @@ export default function CollectionSection({
                               key={product.id}
                               className={`image-item-${index + 1} w-full h-48 overflow-hidden rounded-2xl bg-gray-200`}
                             >
-                              <img
-                                src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${product?.images?.[0]?.url}`}
+                              <StrapiImage
+                                src={product?.images?.[0]}
                                 alt={product?.name}
+                                size="medium"
                                 className="w-full h-48 object-cover"
                               />
                             </div>

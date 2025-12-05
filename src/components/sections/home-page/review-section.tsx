@@ -5,6 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import type { ReviewSection } from "@/types/strapi/components/home-page/review-section";
 import IconElement from "@/components/element/icon-element";
+import StrapiImage from "@/components/global/strapi-image";
+
 
 export default function ReviewSection({ data }: { data: ReviewSection }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -106,9 +108,10 @@ export default function ReviewSection({ data }: { data: ReviewSection }) {
                   </p>
                 </div>
                 <div className="flex items-center gap-5 mt-6 md:mt-8 font-albert-sans">
-                  <img
-                    src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${review.avatar?.url}`}
+                  <StrapiImage
+                    src={review.avatar}
                     alt={review.name}
+                    size="small"
                     className="w-14 h-14 lg:w-16 lg:h-16 rounded-full object-cover"
                   />
                   <div>
