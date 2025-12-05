@@ -1,4 +1,5 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@/components/ui/visually-hidden";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import {
   IoMdArrowBack,
@@ -70,6 +71,9 @@ export default function ImageDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="p-0 h-screen rounded-none max-w-screen! w-screen! border-0 overflow-hidden">
+        <VisuallyHidden>
+          <DialogTitle>Product Image</DialogTitle>
+        </VisuallyHidden>
         <div className="relative w-full h-full bg-white overflow-hidden">
           <button
             onClick={onPrevImage}
@@ -92,7 +96,7 @@ export default function ImageDialog({
           </button>
 
           <div
-            className={`absolute left-7 bottom-7 text-white transition-all duration-300 z-20 overflow-hidden ${
+            className={`absolute left-7 bottom-12 md:bottom-7 text-white transition-all duration-300 z-20 overflow-hidden ${
               menuOpen
                 ? "bg-gray-300 rounded-full p-2 flex flex-col gap-2"
                 : "rounded-full bg-black"

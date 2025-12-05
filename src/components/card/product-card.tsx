@@ -6,6 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useCart } from "@/context/cart-provider";
+import Link from "next/link";
 import Image from "@/components/global/image";
 
 import type { Product } from "@/types/strapi/models/product";
@@ -67,22 +68,32 @@ export default function ProductCard({
     images?.[activeColorIndex]?.url
   );
 
-  const changeQuickViewImage = useCallback((index: number) => {
-    setActiveColorIndex(index);
-    setSelectedImage(images?.[index]?.url);
-  }, []);
+  const changeQuickViewImage = useCallback(
+    (index: number, e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setActiveColorIndex(index);
+      setSelectedImage(images?.[index]?.url);
+    },
+    [images]
+  );
 
-  const handleAddToCart = useCallback(() => {
-    addItem({
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      price: product.price,
-      images: product.images,
-      stock: product.stock,
-      quantity: 1,
-    });
-  }, []);
+  const handleAddToCart = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      addItem({
+        id: product.id,
+        slug: product.slug,
+        name: product.name,
+        price: product.price,
+        images: product.images,
+        stock: product.stock,
+        quantity: 1,
+      });
+    },
+    [product, addItem]
+  );
 
   return (
     <div
@@ -91,54 +102,62 @@ export default function ProductCard({
         className
       )}
     >
-      <div className="bg-gray-400 w-fit border border-gray-500 rounded-xl md:rounded-2xl lg:rounded-3xl relative overflow-hidden group">
-        {images.length > 0 && (
-          <img
-            src={selectedImage}
-            className={`${sizeClass.mobile}  ${sizeClass.dekstop} object-cover rounded-xl md:rounded-3xl transition-all duration-700 ease-out hover:scale-105`}
-          />
-        )}
+      <Link href={`/products/${product.slug}`}>
+        <div className="bg-gray-400 w-fit border border-gray-500 rounded-xl md:rounded-2xl lg:rounded-3xl relative overflow-hidden group cursor-pointer">
+          {images.length > 0 && (
+            <img
+              src={selectedImage}
+              className={`${sizeClass.mobile}  ${sizeClass.dekstop} object-cover rounded-xl md:rounded-3xl transition-all duration-700 ease-out hover:scale-105`}
+            />
+          )}
 
-        <div className="absolute inset-0 flex items-end justify-center text-black text-[10px] font-medium font-inter opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-full transition-all duration-400 ease-out lg:group-hover:opacity-100 lg:group-hover:translate-y-0">
           <div
-            className={`${sizeClass.quickView} group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16`}
+            className="absolute inset-0 flex items-end justify-center text-black text-[10px] font-medium font-inter opacity-100 translate-y-0 lg:opacity-0 lg:translate-y-full transition-all duration-400 ease-out lg:group-hover:opacity-100 lg:group-hover:translate-y-0"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }}
           >
             <div
-              className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-md rounded-b-md lg:rounded-b-none lg:rounded-t-xl bg-gray-100 cursor-pointer mb-1.5 lg:mb-0"
-              onClick={handleAddToCart}
+              className={`${sizeClass.quickView} group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16`}
             >
-              <h1 className="lg:-mb-2">Add to Cart</h1>
-              <FaPlus className="lg:-mb-2" />
-            </div>
+              <div
+                className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-md rounded-b-md lg:rounded-b-none lg:rounded-t-xl bg-gray-100 cursor-pointer mb-1.5 lg:mb-0"
+                onClick={handleAddToCart}
+              >
+                <h1 className="lg:-mb-2">Add to Cart</h1>
+                <FaPlus className="lg:-mb-2" />
+              </div>
 
-            <div className="hidden lg:block bg-gray-100 rounded-b-xl px-3 pb-2 max-h-0 transition-all duration-800 ease-out group-hover/quickview:max-h-20 group-hover/quickview:mb-2">
-              <div className="pt-2">
-                <Separator className="mb-3" />
-                <div className="flex gap-1.5 flex-wrap">
-                  {images.map((image, index) => (
-                    <Button
-                      key={image.id}
-                      variant="outline"
-                      className={cn(
-                        "size-8! p-0 overflow-hidden",
-                        activeColorIndex === index
-                          ? "border-black scale-110"
-                          : "border-gray-300"
-                      )}
-                      onClick={() => changeQuickViewImage(index)}
-                    >
-                      <Image
-                        src={image.url}
-                        className="object-cover size-full"
-                      />
-                    </Button>
-                  ))}
+              <div className="hidden lg:block bg-gray-100 rounded-b-xl px-3 pb-2 max-h-0 transition-all duration-800 ease-out group-hover/quickview:max-h-20 group-hover/quickview:mb-2">
+                <div className="pt-2">
+                  <Separator className="mb-3" />
+                  <div className="flex gap-1.5 flex-nowrap overflow-x-auto scrollbar-hide">
+                    {images.map((image, index) => (
+                      <Button
+                        key={image.id}
+                        variant="outline"
+                        className={cn(
+                          "size-8! p-0 overflow-hidden",
+                          activeColorIndex === index
+                            ? "border-black scale-110"
+                            : "border-gray-300"
+                        )}
+                        onClick={(e) => changeQuickViewImage(index, e)}
+                      >
+                        <Image
+                          src={image.url}
+                          className="object-cover size-full"
+                        />
+                      </Button>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </Link>
 
       <div className="text-center px-1.5 space-y-1.5 transition-all duration-300 ease-out relative font-albert-sans">
         <h1 className="text-xs font-semibold">{product.name}</h1>

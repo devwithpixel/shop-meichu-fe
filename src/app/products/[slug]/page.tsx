@@ -10,6 +10,13 @@ async function getProductData(slug: string): Promise<StrapiResponse<Product>> {
   return await response.json();
 }
 
+async function getOtherProduct(): Promise<StrapiResponse<Product[]>> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/recommended-product`
+  );
+  return await response.json();
+}
+
 export default async function ProductDetailPage({
   params,
 }: {
@@ -17,7 +24,10 @@ export default async function ProductDetailPage({
 }) {
   const { slug } = await params;
 
-  const productData = await getProductData(slug);
+  const [productData, otherProductsData] = await Promise.all([
+    getProductData(slug),
+    getOtherProduct(),
+  ]);
 
   if (!productData.data) {
     return <div>Product not found.</div>;
@@ -26,7 +36,7 @@ export default async function ProductDetailPage({
   return (
     <ProductDetailSection
       product={productData.data}
-      // relatedProducts={[]}
+      relatedProducts={otherProductsData.data || []}
       // productDesc={[]}
     />
   );
