@@ -1,7 +1,7 @@
 "use client";
 
-import { nextStepOrder, cancelOrder } from "@/lib/api/admin/order";
 import { useTableAction } from "@/context/table-action-provider";
+import { nextStepOrder, cancelOrder } from "@/lib/api/orders";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
@@ -12,14 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency } from "@/lib/utils";
-import Link from "next/link";
-import Image from "@/components/global/image";
 import toast from "react-hot-toast";
+import Link from "next/link";
+import StrapiImage from "@/components/global/strapi-image";
 
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Product } from "@/types/strapi/models/product";
 import type { Category } from "@/types/strapi/models/category";
-import type { StrapiImage } from "@/types/strapi/media/image";
+import type { StrapiImage as StrapiImageType } from "@/types/strapi/media/image";
 import type { Order } from "@/types/strapi/models/order";
 
 const orderStatus = {
@@ -79,6 +79,7 @@ export const categoriesColumn: ColumnDef<Category>[] = [
       return <div>{products.count}</div>;
     },
     enableColumnFilter: true,
+    enableSorting: false,
     meta: {
       label: "Total Products",
     },
@@ -90,9 +91,10 @@ export const categoriesColumn: ColumnDef<Category>[] = [
       <DataTableColumnHeader column={column} label="Thumbnail" />
     ),
     cell: ({ row }) => (
-      <Image
-        className="size-12 object-contain rounded-4"
-        src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${(row.getValue("thumbnail") as StrapiImage).url}`}
+      <StrapiImage
+        className="size-12 object-cover rounded-lg"
+        src={row.getValue("thumbnail") as StrapiImageType}
+        size="thumbnail"
       />
     ),
     enableSorting: false,
@@ -104,7 +106,8 @@ export const categoriesColumn: ColumnDef<Category>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { deleteAction } = useTableAction();
+      const { deleteAction, refresh } = useTableAction();
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -122,7 +125,16 @@ export const categoriesColumn: ColumnDef<Category>[] = [
             {deleteAction && (
               <DropdownMenuItem
                 variant="destructive"
-                onClick={() => deleteAction(row.original.documentId)}
+                onClick={async () => {
+                  const result = await deleteAction(row.original.documentId);
+
+                  switch (result.type) {
+                    case "success":
+                      toast.success("Category deleted successfully");
+                      refresh();
+                      break;
+                  }
+                }}
               >
                 Delete
               </DropdownMenuItem>
@@ -207,12 +219,13 @@ export const productsColumn: ColumnDef<Product>[] = [
       <DataTableColumnHeader column={column} label="Image" />
     ),
     cell: ({ row }) => {
-      const images = row.getValue("images") as StrapiImage[];
+      const images = row.getValue("images") as StrapiImageType[];
 
       return images ? (
-        <Image
-          className="size-12 object-contain rounded-4"
-          src={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${images?.[0].formats?.thumbnail?.url ?? images?.[0].url}`}
+        <StrapiImage
+          className="size-12 object-cover rounded-lg"
+          src={images?.[0]}
+          size="thumbnail"
         />
       ) : null;
     },
@@ -225,7 +238,8 @@ export const productsColumn: ColumnDef<Product>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      const { deleteAction } = useTableAction();
+      const { deleteAction, refresh } = useTableAction();
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -243,7 +257,16 @@ export const productsColumn: ColumnDef<Product>[] = [
             {deleteAction && (
               <DropdownMenuItem
                 variant="destructive"
-                onClick={() => deleteAction(row.original.documentId)}
+                onClick={async () => {
+                  const result = await deleteAction(row.original.documentId);
+
+                  switch (result.type) {
+                    case "success":
+                      toast.success("Product deleted successfully");
+                      refresh();
+                      break;
+                  }
+                }}
               >
                 Delete
               </DropdownMenuItem>
@@ -319,68 +342,74 @@ export const orderColumn: ColumnDef<Order>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <MoreHorizontal className="h-4 w-4" />
-            <span className="sr-only">Open menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem asChild>
-            <Link href={`/admin/orders/show/${row.original.documentId}`}>
-              View Items
-            </Link>
-          </DropdownMenuItem>
-          {!["cancelled", "completed"].includes(
-            row.getValue("orderStatus")
-          ) && (
-            <DropdownMenuItem
-              onClick={async () => {
-                const result = await nextStepOrder(row.original.documentId);
+    cell: ({ row }) => {
+      const { refresh } = useTableAction();
 
-                switch (result.type) {
-                  case "success":
-                    toast.success("Order status updated successfully");
-                    break;
-                  case "validation":
-                    toast.error(result.validation.message);
-                    break;
-                  case "error":
-                    toast.error(result.message);
-                    break;
-                }
-              }}
-            >
-              Next Step
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <MoreHorizontal className="h-4 w-4" />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem asChild>
+              <Link href={`/admin/orders/show/${row.original.documentId}`}>
+                View Items
+              </Link>
             </DropdownMenuItem>
-          )}
+            {!["cancelled", "completed"].includes(
+              row.getValue("orderStatus")
+            ) && (
+              <DropdownMenuItem
+                onClick={async () => {
+                  const result = await nextStepOrder(row.original.documentId);
 
-          {row.getValue("orderStatus") === "pending" && (
-            <DropdownMenuItem
-              onClick={async () => {
-                const result = await cancelOrder(row.original.documentId);
+                  switch (result.type) {
+                    case "success":
+                      toast.success("Order status updated successfully");
+                      refresh();
+                      break;
+                    case "validation":
+                      toast.error(result.validation.message);
+                      break;
+                    case "error":
+                      toast.error(result.message);
+                      break;
+                  }
+                }}
+              >
+                Next Step
+              </DropdownMenuItem>
+            )}
 
-                switch (result.type) {
-                  case "success":
-                    toast.success("Order status updated successfully");
-                    break;
-                  case "validation":
-                    toast.error(result.validation.message);
-                    break;
-                  case "error":
-                    toast.error(result.message);
-                    break;
-                }
-              }}
-            >
-              Cancel
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
-    ),
+            {row.getValue("orderStatus") === "pending" && (
+              <DropdownMenuItem
+                onClick={async () => {
+                  const result = await cancelOrder(row.original.documentId);
+
+                  switch (result.type) {
+                    case "success":
+                      toast.success("Order sucessfully cancelled");
+                      refresh();
+                      break;
+                    case "validation":
+                      toast.error(result.validation.message);
+                      break;
+                    case "error":
+                      toast.error(result.message);
+                      break;
+                  }
+                }}
+              >
+                Cancel
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
     size: 32,
     meta: {
       label: "Actions",

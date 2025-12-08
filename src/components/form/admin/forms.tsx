@@ -120,7 +120,7 @@ export function UpsertCategoryForm(props: UpsertFormProps<Category>) {
                     </FieldLabel>
                     <Input
                       {...field}
-                      type="text"
+                      type="color"
                       minLength={7}
                       maxLength={7}
                       required
@@ -445,12 +445,11 @@ export function UpsertProductForm(
                     >
                       <SelectValue placeholder="Select a category" />
                     </SelectTrigger>
-                    <SelectContent className="border-gray-400! bg-card">
+                    <SelectContent>
                       {props.categories.map((category) => (
                         <SelectItem
                           key={category.id}
                           value={String(category.id)}
-                          className="text-white"
                         >
                           {category.name}
                         </SelectItem>

@@ -83,6 +83,7 @@ export default function LoginForm(props: React.ComponentProps<"div">) {
                     id="form-admin-login-username"
                     aria-invalid={fieldState.invalid}
                     autoComplete="username"
+                    className="border-white/20"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -105,6 +106,7 @@ export default function LoginForm(props: React.ComponentProps<"div">) {
                     required={true}
                     id="form-admin-login-password"
                     aria-invalid={fieldState.invalid}
+                    className="border-white/20"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />

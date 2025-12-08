@@ -98,7 +98,12 @@ export default function Navbar({
 
             <div className="hidden lg:flex items-center px-6 flex-1 gap-4">
               {navigations.map((navigation, index) => (
-                <NavLink key={index} {...navigation} />
+                <NavLink
+                  key={index}
+                  title={navigation.title}
+                  url={navigation.url}
+                  subNavigation={navigation.subNavigation}
+                />
               ))}
             </div>
 

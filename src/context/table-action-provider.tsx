@@ -1,9 +1,11 @@
 "use client";
 
-import { ExtendedParams } from "@/lib/api/base";
-import { StrapiResponse } from "@/types/strapi/response";
 import { parseAsInteger, parseAsJson, useQueryStates } from "nuqs";
 import { createContext, useContext, useState } from "react";
+
+import type { ExtendedParams } from "@/lib/api/base";
+import type { ResultContract } from "@/types/api-return";
+import type { StrapiResponse } from "@/types/strapi/response";
 
 interface TableActionContext<T> {
   data: T[];
@@ -14,12 +16,19 @@ interface TableActionContext<T> {
   };
   refresh: () => Promise<void>;
   getAction?: (params?: ExtendedParams) => Promise<StrapiResponse<T[]>>;
-  deleteAction?: (identifier: string, init?: RequestInit) => Promise<void>;
+  deleteAction?: (
+    slug: string,
+    params?: ExtendedParams
+  ) => Promise<ResultContract<unknown>>;
+  isLoading: boolean;
 }
 
 interface TableActionProviderProps<T> {
   getAction?: (params?: ExtendedParams) => Promise<StrapiResponse<T[]>>;
-  deleteAction?: (identifier: string, init?: RequestInit) => Promise<void>;
+  deleteAction?: (
+    slug: string,
+    params?: ExtendedParams
+  ) => Promise<ResultContract<unknown>>;
   children?: React.ReactNode;
 }
 
@@ -30,6 +39,7 @@ export function TableActionProvider<T>({
   deleteAction,
   children,
 }: TableActionProviderProps<T>) {
+  const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<T[]>([]);
   const [pagination, setPagination] = useState({
     pageCount: -1,
@@ -59,6 +69,7 @@ export function TableActionProvider<T>({
   const fetchData = async () => {
     if (!getAction) return;
 
+    setIsLoading(true);
     const strapiSort = sort.map((s) => `${s.id}:${s.desc ? "desc" : "asc"}`);
 
     const result = await getAction({
@@ -76,6 +87,7 @@ export function TableActionProvider<T>({
       page: result.meta?.pagination?.page || 1,
       pageSize: result.meta?.pagination?.pageSize || 1,
     });
+    setIsLoading(true);
   };
 
   const refresh = async () => {
@@ -90,6 +102,7 @@ export function TableActionProvider<T>({
         deleteAction,
         pagination,
         refresh,
+        isLoading,
       }}
     >
       {children}

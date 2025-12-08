@@ -31,11 +31,7 @@ export function ProfileDropdown({ user }: { user: User }) {
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent
-          className="w-56 text-white border-gray-800!"
-          align="end"
-          forceMount
-        >
+        <DropdownMenuContent className="w-56" align="end" forceMount>
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col gap-1.5">
               <p className="text-sm leading-none font-medium">

@@ -1,5 +1,3 @@
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import Footer from "@/components/layout/footer";
 import Navbar from "@/components/layout/navbar";
 import ScrollSmootherLayout from "@/components/layout/scroll-smoother-layout";
@@ -17,14 +15,10 @@ export default async function MainLayout({
 
   return (
     <>
-      <Suspense fallback={<Skeleton className="h-16" />}>
-        <Navbar data={navbarData} categories={categoriesData} />
-      </Suspense>
+      <Navbar data={navbarData} categories={categoriesData} />
       <ScrollSmootherLayout>
         {children}
-        <Suspense fallback={<Skeleton className="h-80" />}>
-          <Footer data={footerData} />
-        </Suspense>
+        <Footer data={footerData} />
       </ScrollSmootherLayout>
     </>
   );
