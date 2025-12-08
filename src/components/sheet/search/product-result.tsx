@@ -107,7 +107,6 @@ export default function ProductResults({ products }: ProductResultsProps) {
               key={product.id}
               product={product}
               size={isMobile ? "lg" : "sm"}
-              className="pointer-events-none"
             />
           ))}
         </div>
