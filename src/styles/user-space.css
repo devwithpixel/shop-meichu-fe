@@ -4,6 +4,12 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
+  --font-rubik: var(--font-rubik);
+  --font-inter: var(--font-inter);
+  --font-outfit: var(--font-outfit);
+  --font-albert-sans: var(--font-albert-sans);
+  --font-jogging: var(--font-jogging);
+  --font-arial: Arial, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-sidebar-ring: var(--sidebar-ring);

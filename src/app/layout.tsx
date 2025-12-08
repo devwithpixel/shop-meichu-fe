@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import { Inter, Rubik, Outfit, Albert_Sans } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";

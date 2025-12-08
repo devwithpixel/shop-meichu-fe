@@ -1,5 +1,6 @@
 "use client";
 
+import "@/styles/user-space.css";
 import { useEffect } from "react";
 import { ErrorComponent } from "@/components/errors/error";
 

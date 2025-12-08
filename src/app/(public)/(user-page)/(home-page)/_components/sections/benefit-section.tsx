@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import Image from "@/components/global/image";
 import Link from "next/link";
 import StrapiImage from "@/components/global/strapi-image";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import gsap from "gsap";
 
 import type { BenefitSection } from "@/types/strapi/components/home-page/benefit-section";
@@ -22,9 +23,9 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   useGSAP(() => {
-    if (window.innerWidth <= 748) return;
+    if (window.innerWidth <= 748 || !sectionRef.current || !wrapperRef.current)
+      return;
 
-    if (!sectionRef.current || !wrapperRef.current) return;
     gsap.set(".leftBox", { opacity: 1, scale: 1 });
 
     const section = sectionRef.current;
@@ -41,22 +42,36 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
       setProgress(currentProgress);
     });
 
-    gsap.to(wrapper, {
-      x: -totalScroll,
-      ease: "none",
+    ScrollTrigger.create({
+      trigger: section,
+      start: "top top",
+      end: `+=${totalScroll * 2}`,
+      scrub: 3,
+      pin: true,
+      invalidateOnRefresh: true,
+      onUpdate: (self) => {
+        targetProgress = self.progress * 100;
+      },
+      markers: true,
+    });
+
+    const timeline = gsap.timeline({
       scrollTrigger: {
         trigger: section,
         start: "top top",
-        end: () => `+=${totalScroll * 2}`,
+        end: `+=${totalScroll * 2}`,
         scrub: 3,
-        pin: true,
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          targetProgress = self.progress * 100;
-        },
-        // markers: true
       },
     });
+
+    timeline.fromTo(
+      wrapper,
+      { x: 0 },
+      {
+        x: -totalScroll,
+        ease: "none",
+      }
+    );
 
     gsap.to(".leftBox", {
       opacity: 0,
@@ -67,7 +82,6 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
         start: "70% 90%",
         end: () => `+=${totalScroll * 1}`,
         scrub: 1,
-        // markers: true
       },
     });
   }, []);
@@ -110,7 +124,7 @@ export default function BenefitSection({ data }: { data: BenefitSection }) {
 
         <div
           ref={wrapperRef}
-          className="w-full sm:min-w-max sm:flex-1 overflow-x-auto sm:overflow-visible me-4"
+          className="relative w-full sm:min-w-max sm:flex-1 overflow-x-auto sm:overflow-visible me-4"
         >
           <div className="flex gap-8 sm:gap-12 px-5 sm:px-0 sm:pr-16 mb-6 pe-4">
             {data.items.slice(0, 5).map((item) => (

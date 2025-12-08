@@ -113,10 +113,7 @@ export const categoriesColumn: ColumnDef<Category>[] = [
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="border-gray-800 text-white"
-          >
+          <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link href={`/admin/categories/edit/${row.original.slug}`}>
                 Edit
@@ -237,10 +234,7 @@ export const productsColumn: ColumnDef<Product>[] = [
               <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="border-gray-800 text-white"
-          >
+          <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link href={`/admin/products/edit/${row.original.slug}`}>
                 Edit
@@ -333,7 +327,7 @@ export const orderColumn: ColumnDef<Order>[] = [
             <span className="sr-only">Open menu</span>
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="border-gray-800 text-white">
+        <DropdownMenuContent align="end">
           <DropdownMenuItem asChild>
             <Link href={`/admin/orders/show/${row.original.documentId}`}>
               View Items

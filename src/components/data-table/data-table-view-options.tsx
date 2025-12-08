@@ -49,16 +49,11 @@ export function DataTableViewOptions<TData>({
           View
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-48 p-3 border-gray-800!" {...props}>
+      <PopoverContent className="w-48 p-3" {...props}>
         <Command>
-          <CommandInput
-            className="text-white"
-            placeholder="Search columns..."
-          />
+          <CommandInput placeholder="Search columns..." />
           <CommandList>
-            <CommandEmpty className="text-white">
-              No columns found.
-            </CommandEmpty>
+            <CommandEmpty>No columns found.</CommandEmpty>
             <CommandGroup>
               {columns.map((column) => (
                 <CommandItem
@@ -66,7 +61,6 @@ export function DataTableViewOptions<TData>({
                   onSelect={() =>
                     column.toggleVisibility(!column.getIsVisible())
                   }
-                  className="text-white data-[selected=true]:text-gray-900!"
                 >
                   <span className="truncate">
                     {column.columnDef.meta?.label ?? column.id}
