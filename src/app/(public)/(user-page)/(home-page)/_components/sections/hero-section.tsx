@@ -89,7 +89,7 @@ export default function HeroSection({
   }, [data.runningText]);
 
   return (
-    <>
+    <div className="bg-black">
       <section
         ref={mainSectionRef}
         className="relative min-h-screen overflow-hidden font-albert-sans flex items-center"
@@ -154,6 +154,6 @@ export default function HeroSection({
         ref={nextSectionRef as React.RefObject<HTMLElement>}
         data={subHeroData}
       />
-    </>
+    </div>
   );
 }

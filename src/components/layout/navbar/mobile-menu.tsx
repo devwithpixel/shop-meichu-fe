@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { CgMenuLeft } from "react-icons/cg";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { FaRegUserCircle } from "react-icons/fa";
 import { GoArrowUpRight } from "react-icons/go";
 import { MdOutlineKeyboardArrowLeft } from "react-icons/md";
 import { Separator } from "@/components/ui/separator";
@@ -46,7 +45,7 @@ export default function MobileMenu({
               <div className="flex items-center justify-between">
                 <div
                   onClick={() => setIsOpen(false)}
-                  className="flex items-center gap-4 p-4"
+                  className="flex items-center justify-between gap-4 p-4"
                 >
                   <div
                     onClick={() => setIsOpen(false)}
@@ -61,15 +60,6 @@ export default function MobileMenu({
                       className="w-auto h-8"
                     />
                   </SheetTitle>
-                  <div className="w-6"></div>
-                </div>
-                <div className="pr-4">
-                  <Link
-                    href="/auth/login"
-                    className="text-white hover:bg-gray-900 p-2 rounded-full flex items-center justify-center"
-                  >
-                    <FaRegUserCircle className="h-7 w-7" />
-                  </Link>
                 </div>
               </div>
             </SheetHeader>

@@ -24,6 +24,9 @@ export default function Navbar({
   const [isVisible, setIsVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const isHomePage = pathname === "/";
+  const isAboutPage = pathname === "/about-us";
+
+  const hasScrollEffect = isHomePage || isAboutPage;
 
   const navigations: Navigation[] = useMemo(() => {
     return [
@@ -48,9 +51,9 @@ export default function Navbar({
     const handleScroll = () => {
       const current = window.scrollY;
 
-      setIsScrolled(current > 1000);
+      setIsScrolled(current > 100);
 
-      if (isHomePage) {
+      if (hasScrollEffect) {
         if (current > lastScrollY.current && current > 100) {
           setIsVisible(false);
         } else {
@@ -65,14 +68,14 @@ export default function Navbar({
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [isHomePage]);
+  }, [hasScrollEffect]);
 
   return (
     <>
       <nav
         className={cn(
           "fixed top-0 left-0 right-0 z-50 font-inter transition-all duration-300 text-white select-none",
-          isHomePage && !isVisible ? "-translate-y-full" : "translate-y-0",
+          hasScrollEffect && !isVisible ? "-translate-y-full" : "translate-y-0",
           isHomePage
             ? isScrolled
               ? "bg-black border-b border-[#222121]"

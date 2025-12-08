@@ -11,7 +11,7 @@ export default async function Page() {
           Privacy Policy
         </h1>
 
-        <div className="prose prose-lg max-w-none">
+        <div className="prose prose-lg max-w-none px-4">
           <BlocksRenderer content={privacyPolicy.data.content} />
         </div>
       </section>
