@@ -1,8 +1,13 @@
 "use server";
 
-import { extendedFetch, type ExtendedParams } from "./base";
+import {
+  extendedFetch,
+  extendedFetchWithAuth,
+  type ExtendedParams,
+} from "./base";
 import type { StrapiResponse } from "@/types/strapi/response";
 import type { Product } from "@/types/strapi/models/product";
+import type { ResultContract } from "@/types/api-return";
 
 export async function getProductData(
   slug: string
@@ -60,4 +65,27 @@ export async function getProductsByCategory(
   });
 
   return await res.json();
+}
+
+export async function deleteProduct(
+  slug: string,
+  params?: ExtendedParams
+): Promise<ResultContract<null>> {
+  const response = await extendedFetchWithAuth(`/products/${slug}`, {
+    init: {
+      method: "DELETE",
+    },
+    ...params,
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: null };
 }

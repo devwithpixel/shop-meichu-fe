@@ -13,5 +13,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="font-outfit dark">{children}</div>;
+  return <main className="font-outfit dark bg-background">{children}</main>;
 }

@@ -14,12 +14,14 @@ export interface ExtendedParams {
   sort?: string[];
   filters?: object;
   pagination?: StrapiPaginationOptions;
-  auth?: boolean;
+  raiseError?: boolean;
 }
 
 export async function extendedFetch(
   input: string | URL | Request,
-  params?: ExtendedParams
+  params: ExtendedParams = {
+    raiseError: true,
+  }
 ) {
   const queryParams: Record<string, any> = {};
 
@@ -39,18 +41,6 @@ export async function extendedFetch(
     queryParams["pagination"] = params.pagination;
   }
 
-  if (params?.auth) {
-    const session = await getSession();
-
-    const mergedInit = params?.init ?? {};
-    mergedInit.headers = {
-      ...mergedInit.headers,
-      Authorization: `Bearer ${session.jwt}`,
-    };
-
-    params.init = mergedInit;
-  }
-
   const query = qs.stringify(queryParams);
 
   const response = await fetch(
@@ -58,7 +48,33 @@ export async function extendedFetch(
     params?.init
   );
 
-  if (!response.ok && params?.auth && response.status === 401) {
+  if (!response.ok || params?.raiseError) {
+    throw new Error("Failed to fetch data");
+  }
+
+  return response;
+}
+
+export async function extendedFetchWithAuth(
+  input: string | URL | Request,
+  params?: ExtendedParams
+) {
+  const session = await getSession();
+
+  const mergedInit = params?.init ?? {};
+  mergedInit.headers = {
+    ...mergedInit.headers,
+    Authorization: `Bearer ${session.jwt}`,
+  };
+
+  params = {
+    ...params,
+    init: mergedInit,
+  };
+
+  const response = await extendedFetch(input, params);
+
+  if (!response.ok && response.status === 401) {
     await logout();
   }
 
