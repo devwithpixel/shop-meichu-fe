@@ -66,13 +66,16 @@ export function MultipleImageField<
       const files = await Promise.all(
         defaultValue!.map((url) => fetchImageAsFile(url))
       );
-      field.onChange(files);
       setSelectedFiles(files);
       setCurrentImage(defaultValue![0]);
     }
 
     fetchImage();
   }, [defaultValue]);
+
+  useEffect(() => {
+    field.onChange(selectedFiles);
+  }, [selectedFiles]);
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
@@ -86,7 +89,6 @@ export function MultipleImageField<
       setCurrentActiveImage(0);
       setCurrentImage(base64Data[0]);
       setIsImageChanged?.(true);
-      field.onChange(Array.from(files));
     },
     [field]
   );
@@ -100,7 +102,6 @@ export function MultipleImageField<
       });
       setCurrentImage(data);
       setIsImageChanged?.(true);
-      field.onChange(file);
     },
     [field]
   );
@@ -112,7 +113,6 @@ export function MultipleImageField<
     setCurrentActiveImage(Math.max(0, currentActiveImage - 1));
     setDialogOpen(false);
     setIsImageChanged?.(true);
-    field.onChange(selectedFiles);
 
     if (selectedFiles.length === 1) {
       setCurrentImage(null);
@@ -128,7 +128,6 @@ export function MultipleImageField<
     setDialogOpen(false);
     setCurrentImage(base64Data);
     setIsImageChanged?.(true);
-    field.onChange(selectedFiles);
   }, [field]);
 
   const changeActiveImage = useCallback(
@@ -170,6 +169,10 @@ export function MultipleImageField<
             src={currentImage}
             className="mx-auto h-full w-auto object-contain"
           />
+
+          <p className="text-xs text-muted-foreground">
+            Note: Max file size is {maxImageSizeReadable} MB
+          </p>
 
           {selectedFiles.length > 1 && (
             <>

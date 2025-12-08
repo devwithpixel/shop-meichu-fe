@@ -132,6 +132,10 @@ export function ImageField<
             src={currentImage}
             className=" mx-auto h-full w-auto object-contain"
           />
+
+          <p className="text-xs text-muted-foreground">
+            Note: Max file size is {maxImageSizeReadable} MB
+          </p>
         </section>
 
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
