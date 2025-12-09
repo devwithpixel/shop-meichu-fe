@@ -31,7 +31,7 @@ export function ProfileDropdown({ user }: { user: User }) {
       <DropdownMenuTrigger asChild>
         <div className="flex items-center gap-3 hover:bg-accent/50 px-3 py-3 rounded-lg cursor-pointer transition-colors">
           <Avatar className="h-9 w-9 border border-primary/30 rounded-lg">
-            <AvatarFallback className="text-md font-medium bg-accent-foreground text-accent">
+            <AvatarFallback className="text-lg font-medium bg-accent-foreground text-accent">
               {initial}
             </AvatarFallback>
           </Avatar>
