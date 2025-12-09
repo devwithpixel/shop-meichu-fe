@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Order } from "@/types/strapi/models/order";
+import { Order } from "@/types/strapi/models/request";
 
 const classNames: Record<Order["orderStatus"], string> = {
   cancelled: "bg-red-500 text-white",

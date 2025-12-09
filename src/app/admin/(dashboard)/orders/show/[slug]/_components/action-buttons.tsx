@@ -5,7 +5,7 @@ import { nextStepOrder, cancelOrder } from "@/lib/api/orders";
 import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
 
-import type { Order } from "@/types/strapi/models/order";
+import type { Order } from "@/types/strapi/models/request";
 
 export default function ActionButtons({ order }: { order: Order }) {
   return (

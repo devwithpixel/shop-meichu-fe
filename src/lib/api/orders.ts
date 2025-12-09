@@ -2,7 +2,7 @@
 
 import { extendedFetchWithAuth, type ExtendedParams } from "./base";
 import type { StrapiResponse } from "@/types/strapi/response";
-import type { Order } from "@/types/strapi/models/order";
+import type { Order } from "@/types/strapi/models/request";
 import type { ResultContract } from "@/types/api-return";
 
 export async function getAllOrders(

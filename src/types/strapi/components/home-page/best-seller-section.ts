@@ -6,4 +6,5 @@ export interface BestSellerSection {
   id: number;
   section: BaseSection;
   media: StrapiImage | StrapiVideo;
+  ctaLink: string;
 }

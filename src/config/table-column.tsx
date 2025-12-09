@@ -20,7 +20,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import type { Product } from "@/types/strapi/models/product";
 import type { Category } from "@/types/strapi/models/category";
 import type { StrapiImage as StrapiImageType } from "@/types/strapi/media/image";
-import type { Order } from "@/types/strapi/models/order";
+import type { Order } from "@/types/strapi/models/request";
 
 const orderStatus = {
   pending: "Pending",
