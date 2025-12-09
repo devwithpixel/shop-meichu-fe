@@ -31,19 +31,19 @@ export default async function CollectionsAllPage() {
         desc={collection.heading.description}
       />
 
-      <div className="flex flex-wrap">
+      <div className="grid grid-cols-4 gap-4 auto-rows-fr">
         {categories.map((category, index) => (
-          <CollectionsCard
-            key={category.id}
-            index={index}
-            title={category.name}
-            image={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${category.thumbnail?.url}`}
-            productsCount={
-              (category.products as StrapiRelationCount)?.count || 0
-            }
-            bgColor="bg-gray-200"
-            link={`/collections/${category.slug}`}
-          />
+          <div key={category.id} className="h-64">
+            <CollectionsCard
+              title={category.name}
+              image={`${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${category.thumbnail?.url}`}
+              productsCount={
+                (category.products as StrapiRelationCount)?.count || 0
+              }
+              bgColor="bg-gray-200"
+              link={`/collections/${category.slug}`}
+            />
+          </div>
         ))}
       </div>
     </div>

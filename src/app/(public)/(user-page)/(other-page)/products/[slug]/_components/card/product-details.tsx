@@ -4,7 +4,7 @@ import { FaCheck } from "react-icons/fa6";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import type { Product } from "@/types/strapi/models/product";
-// import VariantSelector from "./variant-selector";
+import VariantSelector from "./variant-selector";
 import QuantitySelector from "./quantity-selector";
 import SocialMediaLinks from "./social-media-links";
 import { useCart } from "@/context/cart-provider";
@@ -92,19 +92,19 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
             <Separator className="my-5" />
 
-            {/* <VariantSelector
+            <VariantSelector
               images={allImages}
               activeIndex={activeVariantIndex}
               onVariantChange={onVariantChange}
-            /> */}
+            />
 
-            <QuantitySelector
+            {/* <QuantitySelector
               quantity={quantity}
               stock={product.stock}
               onQuantityChange={onQuantityChange}
-            />
+            /> */}
 
-            <div className="flex items-center space-x-1.5">
+            {/* <div className="flex items-center space-x-1.5">
               <FaCheck
                 className={`p-1 text-white rounded-full ${
                   isOutOfStock ? "bg-gray-400" : "bg-green-600"
@@ -113,9 +113,9 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
               <p className="text-xs">
                 {isOutOfStock ? "Out of stock" : `${product.stock} in stock`}
               </p>
-            </div>
+            </div> */}
 
-            <div className="flex items-center gap-3 px-4 py-3 border border-gray-300 bg-gray-100 rounded-md my-4">
+            {/* <div className="flex items-center gap-3 px-4 py-3 border border-gray-300 bg-gray-100 rounded-md my-4">
               <Checkbox
                 checked={isTermsAccepted}
                 onCheckedChange={(checked) =>
@@ -135,7 +135,7 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
               <p className="text-orange-500 text-sm font-semibold">
                 Please double check before buying!
               </p>
-            </div>
+            </div> */}
           </div>
 
           <div className="border-t border-gray-200 bg-white px-4 md:px-10 py-4">
@@ -143,11 +143,10 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
             <div className="mt-4">
               <button
-                onClick={handleAddToCart}
-                disabled={isButtonDisabled}
+                // onClick={handleAddToCart}
                 className="w-full py-4 border border-black bg-black text-white hover:bg-gray-200 hover:text-black rounded-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-black disabled:hover:text-white"
               >
-                {product.stock === 0 ? "Out of Stock" : "Add to cart"}
+                Go to imvu
               </button>
             </div>
           </div>
