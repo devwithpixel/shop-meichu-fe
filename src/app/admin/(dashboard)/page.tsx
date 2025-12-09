@@ -32,7 +32,7 @@ export default async function Page() {
   return (
     <>
       <div className="grid grid-cols-1 lg:grid-cols-3 lg:grid-rows-1 gap-3 mb-8">
-        <Card className="relative md:col-span-2 overflow-hidden bg-linear-to-br from-blue-600 to-blue-800 border-none">
+        <Card className="relative col-span-2 overflow-hidden bg-linear-to-br from-blue-600 to-blue-800 border-none">
           <CardContent className="px-6 h-full min-h-[200px] flex items-center justify-between">
             <div className="flex flex-col gap-30">
               <div className="bg-white/30 backdrop-blur-sm rounded-lg px-3 py-2 flex items-center gap-2 w-fit">
@@ -60,16 +60,16 @@ export default async function Page() {
           </CardContent>
         </Card>
 
-        <Card className="relative lg:col-start-3 overflow-hidden py-0 border-none bg-accent">
-          <CardContent className="h-full min-h-[200px] px-0">
-            <div className="flex items-center rounded-xl gap-2 py-10 px-4 bg-linear-to-br from-blue-600 to-blue-800">
+        <Card className="relative col-start-3 overflow-hidden bg-linear-to-br from-blue-600 to-blue-800 border-none">
+          <CardContent className="p-6 h-full flex flex-col justify-between min-h-[200px]">
+            <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="size-5 text-white" />
               <h3 className="text-lg font-semibold text-white">
                 Orders Summary
               </h3>
             </div>
 
-            <div className="space-y-3 px-4 py-8">
+            <div className="space-y-3">
               <div className="flex justify-between items-center bg-white/10 backdrop-blur-sm rounded-lg p-3">
                 <span className="text-purple-100 text-sm">Order Products</span>
                 <span className="text-2xl font-bold text-white">
