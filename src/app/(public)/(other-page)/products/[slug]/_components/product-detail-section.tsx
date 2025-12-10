@@ -15,7 +15,12 @@ import OverviewSection from "./sections/overview-section";
 import DescriptionSection from "./sections/description-section";
 import SpecificationsSection from "./sections/specifications-section";
 import ProductCard from "@/components/card/product-card";
-import NoScrollSmootherContent from "@/components/no-scroll-smoother-content";
+import dynamic from "next/dynamic";
+
+const NoScrollSmootherContent = dynamic(
+  () => import("@/components/no-scroll-smoother-content"),
+  { ssr: false }
+);
 
 import type { Product } from "@/types/strapi/models/product";
 

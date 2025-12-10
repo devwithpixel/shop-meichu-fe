@@ -7,7 +7,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Product } from "@/types/strapi/models/product";
-import { BlocksRenderer } from "@strapi/blocks-react-renderer";
 
 interface DescriptionSectionProps {
   ref: React.RefObject<HTMLDivElement | null>;
@@ -39,7 +38,7 @@ export default function DescriptionSection({
                 </AccordionTrigger>
 
                 <AccordionContent className="text-balance">
-                  <BlocksRenderer content={field.content} />
+                  {field.content}
                 </AccordionContent>
               </AccordionItem>
             ))}

@@ -10,7 +10,7 @@ export async function getPrivacyPolicyData(): Promise<
   const res = await extendedFetch("/privacy-policy", {
     init: {
       next: {
-        revalidate: 1,
+        revalidate: 60,
       },
     },
   });

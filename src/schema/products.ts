@@ -33,5 +33,5 @@ export const upsertProductSchema = z.object({
   images: z
     .array(imageValidation)
     .min(1, "The images field is required.")
-    .max(4, "The images field must be at most 4 images long."),
+    .max(5, "The images field must be at most 5 images long."),
 });

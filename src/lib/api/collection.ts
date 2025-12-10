@@ -8,7 +8,7 @@ export async function getCollectionData(): Promise<StrapiResponse<Collection>> {
   const response = await extendedFetch("/collection", {
     init: {
       next: {
-        revalidate: 60 * 15,
+        revalidate: 10,
       },
     },
   });

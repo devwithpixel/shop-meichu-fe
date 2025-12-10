@@ -15,7 +15,7 @@ export async function getAllCategories(
   const response = await extendedFetch("/categories", {
     init: {
       next: {
-        revalidate: 60,
+        revalidate: 10,
       },
     },
     ...params,
@@ -30,7 +30,7 @@ export async function getCategoryData(
   const response = await extendedFetch(`/categories/${slug}`, {
     init: {
       next: {
-        revalidate: 0,
+        revalidate: 10,
       },
     },
   });

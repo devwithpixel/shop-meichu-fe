@@ -8,7 +8,7 @@ export async function getNavbarData(): Promise<StrapiResponse<Navbar>> {
   const response = await extendedFetch("/global/navbar", {
     init: {
       next: {
-        revalidate: 3600,
+        revalidate: 60,
       },
     },
   });

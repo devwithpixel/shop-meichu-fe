@@ -19,13 +19,14 @@ export async function getAllSubscribers(): Promise<
   return await response.json();
 }
 
-export async function createSubscriber(
-  email: string
+export async function createSubscriber<T>(
+  data: T
 ): Promise<ResultContract<Subscriber>> {
   const response = await extendedFetch("/subscribers", {
     init: {
       method: "POST",
-      body: JSON.stringify({ email }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
     },
   });
 

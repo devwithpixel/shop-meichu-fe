@@ -8,7 +8,7 @@ export async function getFooterData(): Promise<StrapiResponse<Footer>> {
   const response = await extendedFetch("/global/footer", {
     init: {
       next: {
-        revalidate: 1,
+        revalidate: 60,
       },
     },
   });

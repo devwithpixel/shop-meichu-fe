@@ -82,20 +82,6 @@ export function MultipleImageRequestField<
   const maxImageSizeReadable = useMemo(() => bytesToMB(maxFileSize), []);
 
   useEffect(() => {
-    if (!defaultValue || defaultValue.length === 0) return;
-
-    async function fetchImage() {
-      const files = await Promise.all(
-        defaultValue!.map((url) => fetchImageAsFile(url))
-      );
-      setSelectedFiles(files);
-      setCurrentImage(defaultValue![0]);
-    }
-
-    fetchImage();
-  }, [defaultValue]);
-
-  useEffect(() => {
     field.onChange(selectedFiles);
 
     const generatePreviews = async () => {

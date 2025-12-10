@@ -74,7 +74,6 @@ export default function CreateProductForm({
 
   const onSubmit = useCallback(
     async (formData: z.infer<typeof upsertProductSchema>) => {
-      console.log(formData);
       const { images, ...productData } = formData;
 
       const imagesResult = await createImage(images);
@@ -96,7 +95,6 @@ export default function CreateProductForm({
           redirect("/admin/products");
         case "validation":
           toast.error("Validation error");
-          console.log(result.validation);
           displayValidationError(form, result.validation);
           break;
         case "error":
@@ -263,9 +261,9 @@ export default function CreateProductForm({
                       <Button
                         size="icon"
                         variant="outline"
-                        className="rounded-full"
+                        className="rounded-full group"
                       >
-                        <ChevronUp />
+                        <ChevronUp className="group-data-[state=open]:rotate-180 transition-transform" />
                       </Button>
                     </CollapsibleTrigger>
                     {field.title}
@@ -338,7 +336,7 @@ export default function CreateProductForm({
                 variant="outline"
                 size="sm"
                 onClick={() => fields.append({ title: "", content: "" })}
-                disabled={fields.fields.length >= 5}
+                disabled={fields.fields.length >= 4}
               >
                 Add Specification Field
               </Button>

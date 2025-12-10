@@ -21,6 +21,7 @@ import type { Category } from "@/types/strapi/models/category";
 import type { Subscriber } from "@/types/strapi/models/subscriber";
 import type { Request } from "@/types/strapi/models/request";
 import type { StrapiImage as StrapiImageType } from "@/types/strapi/media/image";
+import type { StrapiRelationCount } from "@/types/strapi/count-relation";
 
 const readableRequestStatus = {
   pending: "Pending",
@@ -127,6 +128,9 @@ export const categoriesColumn: ColumnDef<Category>[] = [
             </DropdownMenuItem>
             {deleteAction && (
               <DropdownMenuItem
+                disabled={
+                  (row.original.products as StrapiRelationCount).count > 0
+                }
                 variant="destructive"
                 onClick={async () => {
                   const result = await deleteAction(row.original.documentId);

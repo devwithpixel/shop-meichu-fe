@@ -3,13 +3,14 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { requestProductSchema } from "@/schema/request-product";
-import { requestProduct } from "@/lib/api/request-product";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import toast from "react-hot-toast";
 import CheckoutForm from "./request-product-form";
 import RequestProductProgress from "./request-product-progress";
 import { useStepProgress } from "@/hooks/use-step-progress";
+import { createRequest } from "@/lib/api/requests";
+import { createImage } from "@/lib/api/strapi-image";
 
 export default function RequestProductClient() {
   const form = useForm<z.infer<typeof requestProductSchema>>({
@@ -76,29 +77,35 @@ export default function RequestProductClient() {
     async (data: z.infer<typeof requestProductSchema>) => {
       setConfirmationActive();
 
-      try {
-        const result = await requestProduct(data);
+      const { referenceImages, ...requestProductData } = data;
+      const imagesResult = await createImage(referenceImages);
+      switch (imagesResult.type) {
+        case "validation":
+        case "error":
+          toast.error("An error occured when uploading reference image!");
+          return;
+      }
 
-        switch (result.type) {
-          case "success":
-            toast.success("Request successfully created.");
-            markAllCompleted();
-            break;
-          case "validation":
-            const errors = result.validation.details
-              .errors as unknown as Array<string>;
-            toast.error(errors[0]);
-            resetConfirmation();
-            break;
-          case "error":
-            toast.error(result.message);
-            resetConfirmation();
-            break;
-        }
-      } catch (error) {
-        console.error("Submit error:", error);
-        toast.error("An unexpected error occurred");
-        resetConfirmation();
+      const result = await createRequest({
+        ...requestProductData,
+        referenceImages: imagesResult.data.map((image) => image.id),
+      });
+
+      switch (result.type) {
+        case "success":
+          toast.success("Request process submitted successfully.");
+          markAllCompleted();
+          break;
+        case "validation":
+          const errors = result.validation.details
+            .errors as unknown as Array<string>;
+          toast.error(errors[0]);
+          resetConfirmation();
+          break;
+        case "error":
+          toast.error(result.message);
+          resetConfirmation();
+          break;
       }
     },
     [markAllCompleted, setConfirmationActive, resetConfirmation]

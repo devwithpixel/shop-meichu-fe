@@ -1,8 +1,13 @@
 "use server";
 
-import { extendedFetchWithAuth, type ExtendedParams } from "./base";
+import {
+  extendedFetch,
+  extendedFetchWithAuth,
+  type ExtendedParams,
+} from "./base";
 import type { StrapiResponse } from "@/types/strapi/response";
 import type { Request } from "@/types/strapi/models/request";
+import { ResultContract } from "@/types/api-return";
 
 export async function getRequestData(
   documentId: string
@@ -31,4 +36,30 @@ export async function getAllRequests(
   });
 
   return await res.json();
+}
+
+export async function createRequest<T>(
+  data: T,
+  params?: ExtendedParams
+): Promise<ResultContract<null>> {
+  const response = await extendedFetch("/requests", {
+    init: {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    },
+    ...params,
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: null };
 }

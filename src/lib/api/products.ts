@@ -15,7 +15,7 @@ export async function getProductData(
   const response = await extendedFetch(`/products/${slug}`, {
     init: {
       next: {
-        revalidate: 0,
+        revalidate: 10,
       },
     },
   });
@@ -29,7 +29,7 @@ export async function getAllProducts(
   const res = await extendedFetch("/products", {
     init: {
       next: {
-        revalidate: 0,
+        revalidate: 10,
       },
     },
     ...params,
@@ -58,7 +58,7 @@ export async function getProductsByCategory(
   const res = await extendedFetch(`/categories/${slug}/products`, {
     init: {
       next: {
-        revalidate: 60 * 15,
+        revalidate: 60,
       },
     },
     ...params,

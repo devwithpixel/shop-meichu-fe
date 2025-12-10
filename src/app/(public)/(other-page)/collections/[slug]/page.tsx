@@ -7,6 +7,7 @@ import ProductCard from "@/components/card/product-card";
 import HeaderPage from "@/components/header/header-page";
 import SetFooter from "./_components/set-footer";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 import type { Metadata } from "next";
 
@@ -17,6 +18,11 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const { data: category } = await getCategoryData(slug);
+
+  if (!category)
+    return {
+      title: "Not Found",
+    };
 
   return {
     title: `${category.name} – Shop Meichu`,
@@ -33,6 +39,10 @@ export default async function CollectionsPage({
     populate: "*",
   });
   const { data: category } = await getCategoryData(slug);
+
+  if (!category || !products) {
+    return notFound();
+  }
 
   return (
     <div className="bg-[#D9E4E8]">

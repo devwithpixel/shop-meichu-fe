@@ -52,7 +52,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <NuqsAdapter>
-            <FooterProvider>{children}</FooterProvider>
+          <FooterProvider>{children}</FooterProvider>
         </NuqsAdapter>
         <Toaster
           position="top-center"

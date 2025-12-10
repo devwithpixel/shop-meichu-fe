@@ -11,7 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import OrderStatusBadge from "./_components/order-status-badge";
+import RequestStatusBadge from "./_components/request-status-badge";
 
 export default async function Page({
   params,
@@ -58,7 +58,7 @@ export default async function Page({
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2">Status</h2>
-              <OrderStatusBadge status={data.requestStatus} />
+              <RequestStatusBadge status={data.requestStatus} />
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2">Note</h2>

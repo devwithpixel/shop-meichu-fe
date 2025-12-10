@@ -1,5 +1,6 @@
 "use server";
 
+import { extendedFetch } from "./base";
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
 
@@ -9,14 +10,13 @@ export async function login(email: string, password: string) {
   const session = await getSession();
 
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/auth/local`,
-      {
+    const response = await extendedFetch("/auth/local", {
+      init: {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ identifier: email, password }),
-      }
-    );
+      },
+    });
 
     if (!response.ok) {
       const { error } = await response.json();

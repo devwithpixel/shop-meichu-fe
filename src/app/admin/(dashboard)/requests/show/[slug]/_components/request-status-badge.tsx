@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
-import { Order } from "@/types/strapi/models/request";
+import { Request as RequestType } from "@/types/strapi/models/request";
 
-const classNames: Record<Order["orderStatus"], string> = {
+const classNames: Record<RequestType["requestStatus"], string> = {
   cancelled: "bg-red-500 text-white",
   confirmed: "bg-green-500 text-white",
   in_progress: "bg-yellow-500 text-white",
@@ -9,7 +9,7 @@ const classNames: Record<Order["orderStatus"], string> = {
   pending: "bg-gray-500 text-white",
 };
 
-const statusReadable: Record<Order["orderStatus"], string> = {
+const statusReadable: Record<RequestType["requestStatus"], string> = {
   cancelled: "Cancelled",
   confirmed: "Confirmed",
   in_progress: "In Progress",
@@ -17,10 +17,10 @@ const statusReadable: Record<Order["orderStatus"], string> = {
   pending: "Pending",
 };
 
-export default function OrderStatusBadge({
+export default function RequestStatusBadge({
   status,
 }: {
-  status: Order["orderStatus"];
+  status: RequestType["requestStatus"];
 }) {
   return (
     <Badge className={`${classNames[status]} text-base`}>

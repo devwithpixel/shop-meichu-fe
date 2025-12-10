@@ -189,27 +189,3 @@ export async function createImage(data: {
 
   return { type: "success", data: null };
 }
-
-export async function deleteItem(
-  identifier: string,
-  documentId: string
-): Promise<ResultContract<null>> {
-  const response = await fetchAdmin(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/${identifier}/${documentId}`,
-    {
-      method: "DELETE",
-    }
-  );
-
-  if (!response.ok) {
-    if (response.status === 400) {
-      const { error } = await response.json();
-      return { type: "validation", validation: error };
-    }
-
-    return { type: "error", message: "An error occurred" };
-  }
-
-  refresh();
-  return { type: "success", data: null };
-}

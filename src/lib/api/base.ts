@@ -1,5 +1,5 @@
 import { getSession } from "../session";
-import { logout } from "./admin/auth";
+import { logout } from "./auth";
 import qs from "qs";
 
 interface StrapiPaginationOptions {

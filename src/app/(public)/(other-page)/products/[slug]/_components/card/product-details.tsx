@@ -60,7 +60,7 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
 
             <div className="mt-4 pb-3 md:pb-2 text-center">
               <Link
-                href={product.origin}
+                href={product.origin || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
               >

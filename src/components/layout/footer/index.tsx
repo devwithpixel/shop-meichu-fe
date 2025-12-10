@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,34 +10,63 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { useFooter } from "@/context/footer-provider";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { subscribeSchema } from "@/schema/subscribers";
 import { FooterLink } from "./footer-link";
+import { z } from "zod";
 import FooterRunningText from "./footer-running-text";
 
 import type { Footer } from "@/types/strapi/components/shared/footer";
+import { useCallback } from "react";
+import { createSubscriber } from "@/lib/api/subscribers";
+import toast from "react-hot-toast";
+import { Field, FieldError } from "@/components/ui/field";
 
 const columnClasses = ["lg:col-start-4", "lg:col-start-5", "lg:col-start-6"];
 
 interface FooterProps {
   data: Footer;
-  backgroundColor?: string;
 }
 
 export default function Footer({ data }: FooterProps) {
-  const { backgroundColor } = useFooter();
+  const form = useForm<z.infer<typeof subscribeSchema>>({
+    resolver: zodResolver(subscribeSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
 
-  const bgStyle = useMemo(
-    () => ({
-      backgroundColor: backgroundColor || "#1C1C1C",
-    }),
-    [backgroundColor]
+  const footer = useFooter();
+
+  const onSubmit = useCallback(
+    async (formData: z.infer<typeof subscribeSchema>) => {
+      const result = await createSubscriber(formData);
+
+      switch (result.type) {
+        case "success":
+          toast.success("Successfully subscribed!");
+          break;
+        case "validation":
+          toast.error("Validation error");
+          break;
+        case "error":
+          toast.error(result.message);
+          break;
+      }
+    },
+    [form]
   );
 
   return (
-    <div style={bgStyle} className="text-white">
+    <div
+      style={{ backgroundColor: footer?.backgroundColor || "#1C1C1C" }}
+      className="text-white"
+    >
       <div className="py-16 px-6 font-inter">
         {data.runningText && (
           <FooterRunningText
-            fadeColor={backgroundColor}
+            fadeColor={footer?.backgroundColor}
             data={data.runningText}
           />
         )}
@@ -48,15 +76,34 @@ export default function Footer({ data }: FooterProps) {
             <p>{data.description}</p>
 
             <div className="mt-8 w-full">
-              <div className="flex items-center border border-white/40 hover:border-white transition-colors p-1 rounded-full">
-                <Input
-                  placeholder="Email"
-                  className="rounded-full bg-transparent text-white border-none h-12 px-6 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-white/50"
+              <form onSubmit={form.handleSubmit(onSubmit)}>
+                <Controller
+                  name="email"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <div className="flex items-center border border-white/40 hover:border-white transition-colors p-1 rounded-full">
+                        <Input
+                          {...field}
+                          type="email"
+                          required
+                          placeholder="Email"
+                          className="rounded-full bg-transparent text-white border-none h-12 px-6 focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-white/50"
+                        />
+                        <Button
+                          type="submit"
+                          className="rounded-full bg-white h-12 px-10 text-lg text-gray-900 font-semibold hover:bg-white/90"
+                        >
+                          Subscribe
+                        </Button>
+                      </div>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
                 />
-                <Button className="rounded-full bg-white h-12 px-10 text-lg text-gray-900 font-semibold hover:bg-white/90">
-                  Subscribe
-                </Button>
-              </div>
+              </form>
             </div>
           </div>
 
@@ -154,7 +201,10 @@ export default function Footer({ data }: FooterProps) {
         </div>
       </div>
 
-      <div style={bgStyle} className="text-center py-4 text-white text-sm">
+      <div
+        style={{ backgroundColor: footer?.backgroundColor || "#1C1C1C" }}
+        className="text-center py-4 text-white text-sm"
+      >
         © {new Date().getFullYear()} Meichu. Powered by Pixel
       </div>
     </div>

@@ -8,7 +8,7 @@ export async function getAboutUsData(): Promise<StrapiResponse<AboutUs>> {
   const response = await extendedFetch("/about-us", {
     init: {
       next: {
-        revalidate: 60 * 15,
+        revalidate: 60,
       },
     },
   });
