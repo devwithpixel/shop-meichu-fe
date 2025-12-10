@@ -7,7 +7,6 @@ import type { Product } from "@/types/strapi/models/product";
 import VariantSelector from "./variant-selector";
 import QuantitySelector from "./quantity-selector";
 import SocialMediaLinks from "./social-media-links";
-import { useCart } from "@/context/cart-provider";
 import { formatCurrency } from "@/lib/utils";
 
 interface ProductDetailsProps {
@@ -33,7 +32,6 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
     },
     ref
   ) => {
-    const { addItem, setIsOpen } = useCart();
     const [isTermsAccepted, setIsTermsAccepted] = useState(false);
 
     useEffect(() => {
@@ -43,27 +41,6 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
         onQuantityChange(1);
       }
     }, [product.stock]);
-
-    const handleAddToCart = () => {
-      const cartItem = {
-        id: product.id,
-        name: product.name,
-        slug: product.slug,
-        price:
-          typeof product.price === "string"
-            ? parseFloat(product.price)
-            : product.price,
-        stock: product.stock,
-        quantity: quantity,
-        images: product.images,
-      };
-
-      addItem(cartItem);
-      setIsOpen(true);
-    };
-
-    const isButtonDisabled = product.stock === 0 || !isTermsAccepted;
-    const isOutOfStock = product.stock === 0;
 
     return (
       <div className="md:col-span-2 lg:col-span-1 overflow-hidden">

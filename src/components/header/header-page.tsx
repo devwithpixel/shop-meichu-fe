@@ -39,9 +39,9 @@ export default function HeaderPage({
         size="large"
       />
       <div
-        className={`top-1/2 left-1/2 -translate-1/2 absolute ${typeClass.text} ${typeClass.aligns} font-rubik px-5 text-white space-y-3`}
+        className={`top-1/2 left-1/2 -translate-1/2 absolute ${typeClass.text} ${typeClass.aligns} font-albert-sans px-5 text-white space-y-3`}
       >
-        <h1 className="text-3xl md:text-5xl font-semibold">{title}</h1>
+        <h1 className="text-3xl md:text-5xl font-bold">{title}</h1>
         <p className="md:max-w-2/3 lg:max-w-1/2">{desc}</p>
       </div>
     </section>

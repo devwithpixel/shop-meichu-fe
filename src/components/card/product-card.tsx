@@ -5,7 +5,6 @@ import { FaPlus } from "react-icons/fa6";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { cn, formatCurrency } from "@/lib/utils";
-import { useCart } from "@/context/cart-provider";
 import Link from "next/link";
 import Image from "@/components/global/image";
 
@@ -52,7 +51,6 @@ export default function ProductCard({
   className,
   size = "md",
 }: TrendingProductProps) {
-  const { addItem } = useCart();
   const images = useMemo(
     () =>
       (product?.images ?? []).map((image) => ({
@@ -78,22 +76,6 @@ export default function ProductCard({
     [images]
   );
 
-  const handleAddToCart = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      addItem({
-        id: product.id,
-        slug: product.slug,
-        name: product.name,
-        price: product.price,
-        images: product.images,
-        stock: product.stock,
-        quantity: 1,
-      });
-    },
-    [product, addItem]
-  );
 
   return (
     <div
@@ -121,13 +103,6 @@ export default function ProductCard({
             <div
               className={`${sizeClass.quickView} group/quickview transition-all duration-300 ease-out lg:group-hover/quickview:-translate-y-16`}
             >
-              <div
-                className="flex items-center justify-between gap-2 py-2 px-2 rounded-t-md rounded-b-md lg:rounded-b-none lg:rounded-t-xl bg-gray-100 cursor-pointer mb-1.5 lg:mb-0"
-                onClick={handleAddToCart}
-              >
-                <h1 className="lg:-mb-2">Add to Cart</h1>
-                <FaPlus className="lg:-mb-2" />
-              </div>
 
               <div className="hidden lg:block bg-gray-100 rounded-b-xl px-3 pb-2 max-h-0 transition-all duration-800 ease-out group-hover/quickview:max-h-20 group-hover/quickview:mb-2">
                 <div className="pt-2">

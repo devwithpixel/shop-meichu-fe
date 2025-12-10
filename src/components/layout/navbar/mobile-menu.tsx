@@ -14,21 +14,25 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import StrapiImage from "@/components/global/strapi-image";
 import type { Navigation } from "@/types/navigation";
 import type { Category } from "@/types/strapi/models/category";
+import type { Navbar } from "@/types/strapi/components/shared/navbar";
 
 export default function MobileMenu({
   navigations,
   categories,
+  brandData,
 }: {
   navigations: Navigation[];
   categories: Category[];
+  brandData: Navbar["brand"];
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenCatalog, setIsOpenCatalog] = useState(false);
 
   return (
-    <div className="lg:hidden ">
+    <div className="lg:hidden">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger asChild>
           <button className="text-white bg-transparent">
@@ -54,10 +58,11 @@ export default function MobileMenu({
                     <IoCloseCircleOutline className="h-8 w-8 md:h-10 md:w-10" />
                   </div>
                   <SheetTitle className="text-3xl md:text-4xl font-light tracking-wide text-white font-albert-sans">
-                    <img
-                      src="./assets/logo/meichu.png"
-                      alt="Meichu"
-                      className="w-auto h-8"
+                    <StrapiImage
+                      src={brandData?.icon}
+                      alt={brandData?.name}
+                      size="small"
+                      className="object-cover w-auto h-8"
                     />
                   </SheetTitle>
                 </div>

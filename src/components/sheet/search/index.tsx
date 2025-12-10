@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQueryState } from "nuqs";
+import { usePathname } from "next/navigation";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import {
   Sheet,
@@ -39,6 +40,8 @@ export default function Search({ categories }: { categories: Category[] }) {
   const [searchQuery, setSearchQuery] = useQueryState("search", {
     defaultValue: "",
   });
+  const pathname = usePathname();
+
   const { trigger } = useSWRMutation(
     `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/products`,
     searchProducts
@@ -47,6 +50,10 @@ export default function Search({ categories }: { categories: Category[] }) {
     const result = await trigger({ query: query || searchQuery });
     setProductsResult(result);
   }, 500);
+
+  useEffect(() => {
+    setIsSearchOpen(false);
+  }, [pathname]);
 
   const handleClearSearch = () => {
     setSearchQuery("");
@@ -72,7 +79,7 @@ export default function Search({ categories }: { categories: Category[] }) {
       <SheetTrigger asChild>
         <button
           onClick={() => setIsSearchOpen(true)}
-          className="text-white border-none hover:bg-gray-900 p-2 rounded-full flex items-center justify-center"
+          className="text-white border-none hover:bg-gray-900 cursor-pointer p-2 rounded-full flex items-center justify-center"
         >
           <SearchIcon className="h-5 w-5" />
         </button>

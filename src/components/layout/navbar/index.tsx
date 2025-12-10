@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import MobileMenu from "./mobile-menu";
-import NavbarActions from "./navbar-actions";
 import NavLink from "./nav-link";
-import Image from "@/components/global/image";
+import StrapiImage from "@/components/global/strapi-image";
 
 import type { Navbar } from "@/types/strapi/components/shared/navbar";
 import type { Category } from "@/types/strapi/models/category";
 import type { Navigation } from "@/types/navigation";
+import Search from "@/components/sheet/search";
 
 export default function Navbar({
   data,
@@ -86,14 +86,19 @@ export default function Navbar({
         <div className="mx-auto px-4 sm:px-6 lg:px-6 lg:py-1">
           <div className="flex justify-between items-center h-16">
             <div className="flex item-center">
-              <MobileMenu navigations={navigations} categories={categories} />
+              <MobileMenu
+                brandData={data.brand}
+                navigations={navigations}
+                categories={categories}
+              />
 
               <div className="shrink-0">
                 <Link href="/" className="text-3xl font-light tracking-wide">
-                  <Image
-                    src="/assets/logo/meichu.png"
-                    alt="Meichu"
-                    className="w-auto h-7"
+                  <StrapiImage
+                    src={data.brand?.icon}
+                    alt={data.brand?.name}
+                    size="small"
+                    className="object-cover w-auto h-10"
                   />
                 </Link>
               </div>
@@ -111,7 +116,7 @@ export default function Navbar({
             </div>
 
             <div className="flex items-center">
-              <NavbarActions categories={categories} />
+              <Search categories={categories} />
             </div>
           </div>
         </div>

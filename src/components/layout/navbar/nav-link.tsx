@@ -55,7 +55,7 @@ export default function NavLink({ title, url, subNavigation }: Navigation) {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="absolute min-w-72 bg-white text-black mt-4 rounded-2xl"
+        className="absolute min-w-72 bg-white text-black mt-4 rounded-2xl border-none!"
         onMouseEnter={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
       >
