@@ -1,5 +1,6 @@
 "use client";
 
+import { useAdminProvider } from "@/context/admin-provider";
 import { useLayout } from "@/context/layout-provider";
 import {
   Sidebar,
@@ -13,10 +14,9 @@ import { SidebarNavigationGroup } from "./nav-group";
 import { sidebarConfig } from "@/config/sidebar";
 import { NavUser } from "./nav-user";
 
-import type { User } from "@/types/strapi/user";
-
-export default function AdminSidebar({ user }: { user: User }) {
+export default function AdminSidebar() {
   const { collapsible, variant } = useLayout();
+  const { user } = useAdminProvider();
 
   return (
     <Sidebar

@@ -1,10 +1,9 @@
 "use client";
 
 import { useTableAction } from "@/context/table-action-provider";
-import { nextStepOrder, cancelOrder } from "@/lib/api/orders";
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, TextIcon } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,10 +18,11 @@ import StrapiImage from "@/components/global/strapi-image";
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Product } from "@/types/strapi/models/product";
 import type { Category } from "@/types/strapi/models/category";
+import type { Subscriber } from "@/types/strapi/models/subscriber";
+import type { Request } from "@/types/strapi/models/request";
 import type { StrapiImage as StrapiImageType } from "@/types/strapi/media/image";
-import type { Order } from "@/types/strapi/models/request";
 
-const orderStatus = {
+const readableRequestStatus = {
   pending: "Pending",
   confirmed: "Confirmed",
   in_progress: "In Progress",
@@ -53,6 +53,9 @@ export const categoriesColumn: ColumnDef<Category>[] = [
     enableColumnFilter: true,
     meta: {
       label: "Name",
+      placeholder: "Search name...",
+      variant: "text",
+      icon: TextIcon,
     },
   },
   {
@@ -157,7 +160,6 @@ export const productsColumn: ColumnDef<Product>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} label="ID" />
     ),
-    enableColumnFilter: true,
     meta: {
       label: "ID",
     },
@@ -172,6 +174,9 @@ export const productsColumn: ColumnDef<Product>[] = [
     enableColumnFilter: true,
     meta: {
       label: "Name",
+      placeholder: "Search name...",
+      variant: "text",
+      icon: TextIcon,
     },
   },
   {
@@ -181,35 +186,8 @@ export const productsColumn: ColumnDef<Product>[] = [
       <DataTableColumnHeader column={column} label="Price" />
     ),
     cell: ({ row }) => <div>{formatCurrency(row.getValue("price"))}</div>,
-    enableColumnFilter: true,
     meta: {
       label: "Price",
-    },
-  },
-  {
-    id: "sold",
-    accessorKey: "sold",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label="Sold" />
-    ),
-    cell: ({ row }) => <div>{row.getValue("sold") as number}</div>,
-    enableColumnFilter: true,
-    meta: {
-      label: "Sold",
-    },
-  },
-  {
-    id: "stock",
-    accessorKey: "stock",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label="Stock" />
-    ),
-    cell: ({ row }) => (
-      <div>{(row.getValue("stock") as number).toLocaleString()}</div>
-    ),
-    enableColumnFilter: true,
-    meta: {
-      label: "Stock",
     },
   },
   {
@@ -230,7 +208,6 @@ export const productsColumn: ColumnDef<Product>[] = [
       ) : null;
     },
     enableSorting: false,
-    enableColumnFilter: false,
     meta: {
       label: "Image",
     },
@@ -278,7 +255,7 @@ export const productsColumn: ColumnDef<Product>[] = [
   },
 ];
 
-export const orderColumn: ColumnDef<Order>[] = [
+export const requestsColumn: ColumnDef<Request>[] = [
   {
     id: "id",
     accessorKey: "id",
@@ -303,6 +280,18 @@ export const orderColumn: ColumnDef<Order>[] = [
     },
   },
   {
+    id: "contactPlatform",
+    accessorKey: "contactPlatform",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} label="Contact Platform" />
+    ),
+    cell: ({ row }) => <div>{row.getValue("contactPlatform")}</div>,
+    enableColumnFilter: true,
+    meta: {
+      label: "Contact Platform",
+    },
+  },
+  {
     id: "contact",
     accessorKey: "contact",
     header: ({ column }) => (
@@ -315,36 +304,28 @@ export const orderColumn: ColumnDef<Order>[] = [
     },
   },
   {
-    id: "totalPrice",
-    accessorKey: "totalPrice",
+    id: "requestStatus",
+    accessorKey: "requestStatus",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} label="Total Price" />
-    ),
-    cell: ({ row }) => <div>{formatCurrency(row.getValue("totalPrice"))}</div>,
-    enableColumnFilter: true,
-    meta: {
-      label: "Total Price",
-    },
-  },
-  {
-    id: "orderStatus",
-    accessorKey: "orderStatus",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} label="Order Status" />
+      <DataTableColumnHeader column={column} label="Request Status" />
     ),
     cell: ({ row }) => (
-      <div>{(orderStatus as any)[row.getValue("orderStatus") as any]}</div>
+      <div>
+        {
+          readableRequestStatus[
+            row.getValue("requestStatus") as keyof typeof readableRequestStatus
+          ]
+        }
+      </div>
     ),
     enableColumnFilter: true,
     meta: {
-      label: "Order Status",
+      label: "Request Status",
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      const { refresh } = useTableAction();
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -355,58 +336,10 @@ export const orderColumn: ColumnDef<Order>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
-              <Link href={`/admin/orders/show/${row.original.documentId}`}>
+              <Link href={`/admin/requests/show/${row.original.documentId}`}>
                 View Items
               </Link>
             </DropdownMenuItem>
-            {!["cancelled", "completed"].includes(
-              row.getValue("orderStatus")
-            ) && (
-              <DropdownMenuItem
-                onClick={async () => {
-                  const result = await nextStepOrder(row.original.documentId);
-
-                  switch (result.type) {
-                    case "success":
-                      toast.success("Order status updated successfully");
-                      refresh();
-                      break;
-                    case "validation":
-                      toast.error(result.validation.message);
-                      break;
-                    case "error":
-                      toast.error(result.message);
-                      break;
-                  }
-                }}
-              >
-                Next Step
-              </DropdownMenuItem>
-            )}
-
-            {row.getValue("orderStatus") === "pending" && (
-              <DropdownMenuItem
-                className="text-red-500"
-                onClick={async () => {
-                  const result = await cancelOrder(row.original.documentId);
-
-                  switch (result.type) {
-                    case "success":
-                      toast.success("Order sucessfully cancelled");
-                      refresh();
-                      break;
-                    case "validation":
-                      toast.error(result.validation.message);
-                      break;
-                    case "error":
-                      toast.error(result.message);
-                      break;
-                  }
-                }}
-              >
-                Cancel
-              </DropdownMenuItem>
-            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );
@@ -414,6 +347,35 @@ export const orderColumn: ColumnDef<Order>[] = [
     size: 32,
     meta: {
       label: "Actions",
+    },
+  },
+];
+
+export const subscribersColumn: ColumnDef<Subscriber>[] = [
+  {
+    id: "id",
+    accessorKey: "id",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} label="ID" />
+    ),
+    enableColumnFilter: true,
+    meta: {
+      label: "ID",
+    },
+  },
+  {
+    id: "email",
+    accessorKey: "email",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} label="Email" />
+    ),
+    cell: ({ getValue }) => <div>{getValue<string>()}</div>,
+    enableColumnFilter: true,
+    meta: {
+      label: "Email",
+      placeholder: "Search email...",
+      variant: "text",
+      icon: TextIcon,
     },
   },
 ];

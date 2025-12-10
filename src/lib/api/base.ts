@@ -48,7 +48,7 @@ export async function extendedFetch(
     params?.init
   );
 
-  if (!response.ok || params?.raiseError) {
+  if (!response.ok && params?.raiseError) {
     throw new Error("Failed to fetch data");
   }
 

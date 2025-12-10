@@ -20,7 +20,7 @@ interface TableProps<T> {
 
 export function AdminTable<T>({ routes, columns }: TableProps<T>) {
   "use no memo";
-  const { data, pagination, refresh, isLoading } = useTableAction<T>();
+  const { data, pagination, refresh, isLoaded } = useTableAction<T>();
 
   const { table } = useDataTable({
     data: data,
@@ -35,7 +35,7 @@ export function AdminTable<T>({ routes, columns }: TableProps<T>) {
     refresh();
   }, [refresh]);
 
-  return data.length !== 0 || !isLoading ? (
+  return data.length !== 0 || isLoaded ? (
     <DataTable table={table}>
       <DataTableToolbar table={table}>
         {routes?.create && (

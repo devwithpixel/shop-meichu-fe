@@ -1,11 +1,40 @@
 "use client";
 
-import { parseAsInteger, parseAsJson, useQueryStates } from "nuqs";
+import {
+  parseAsInteger,
+  parseAsJson,
+  parseAsString,
+  SingleParserBuilder,
+  useQueryStates,
+} from "nuqs";
 import { createContext, useContext, useState } from "react";
 
 import type { ExtendedParams } from "@/lib/api/base";
 import type { ResultContract } from "@/types/api-return";
 import type { StrapiResponse } from "@/types/strapi/response";
+import { useDebounceValue } from "@/hooks/use-debounced-value";
+
+function buildStrapiFilters(
+  filters: Record<string, string>,
+  filterConfig?: Record<string, string>
+) {
+  if (!filterConfig) return {};
+
+  const result: Record<string, any> = {};
+
+  for (const field in filterConfig) {
+    const operator = filterConfig[field];
+    const value = filters[field];
+
+    if (!value) continue;
+
+    result[field] = {
+      [operator]: value,
+    };
+  }
+
+  return result;
+}
 
 interface TableActionContext<T> {
   data: T[];
@@ -20,7 +49,7 @@ interface TableActionContext<T> {
     slug: string,
     params?: ExtendedParams
   ) => Promise<ResultContract<unknown>>;
-  isLoading: boolean;
+  isLoaded: boolean;
 }
 
 interface TableActionProviderProps<T> {
@@ -29,24 +58,38 @@ interface TableActionProviderProps<T> {
     slug: string,
     params?: ExtendedParams
   ) => Promise<ResultContract<unknown>>;
+  filters?: Record<string, string>;
   children?: React.ReactNode;
 }
 
 const TableActionContext = createContext<TableActionContext<any> | null>(null);
 
-export function TableActionProvider<T>({
-  getAction,
-  deleteAction,
-  children,
-}: TableActionProviderProps<T>) {
-  const [isLoading, setIsLoading] = useState(false);
+export function TableActionProvider<T>(props: TableActionProviderProps<T>) {
+  const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState<T[]>([]);
   const [pagination, setPagination] = useState({
     pageCount: -1,
     page: 1,
     pageSize: 1,
   });
-  const [{ sort, page, perPage }] = useQueryStates({
+
+  /**
+   * Build Nuqs filter parsers dynamically.
+   * props.filters = Record<string, string>
+   * Example:
+   *   { name: "$contains", category: "$eq" }
+   */
+  const filterQuery: Record<string, SingleParserBuilder<string>> = props.filters
+    ? Object.keys(props.filters).reduce(
+        (acc, field) => {
+          acc[field] = parseAsString.withDefault("");
+          return acc;
+        },
+        {} as Record<string, SingleParserBuilder<string>>
+      )
+    : {};
+
+  const [{ sort, page, perPage, ...realtimeFilters }] = useQueryStates({
     sort: parseAsJson<Array<{ id: string; desc: boolean }>>((value) => {
       if (
         Array.isArray(value) &&
@@ -64,21 +107,29 @@ export function TableActionProvider<T>({
     }).withDefault([]),
     page: parseAsInteger.withDefault(1),
     perPage: parseAsInteger.withDefault(20),
+    ...filterQuery,
   });
 
+  const debouncedFilters = useDebounceValue(realtimeFilters, 1000);
+
   const fetchData = async () => {
-    if (!getAction) return;
+    if (!props.getAction) return;
 
-    setIsLoading(true);
+    if (!isLoaded) {
+      setIsLoaded(true);
+    }
     const strapiSort = sort.map((s) => `${s.id}:${s.desc ? "desc" : "asc"}`);
+    const strapiFilters = buildStrapiFilters(debouncedFilters, props.filters);
 
-    const result = await getAction({
+    const result = await props.getAction({
       pagination: {
         page,
         pageSize: perPage,
         withCount: true,
       },
       sort: strapiSort.length > 0 ? strapiSort : undefined,
+      filters:
+        Object.keys(strapiFilters).length > 0 ? strapiFilters : undefined,
     });
 
     setData(result.data);
@@ -87,7 +138,6 @@ export function TableActionProvider<T>({
       page: result.meta?.pagination?.page || 1,
       pageSize: result.meta?.pagination?.pageSize || 1,
     });
-    setIsLoading(true);
   };
 
   const refresh = async () => {
@@ -98,14 +148,14 @@ export function TableActionProvider<T>({
     <TableActionContext
       value={{
         data,
-        getAction,
-        deleteAction,
+        getAction: props.getAction,
+        deleteAction: props.deleteAction,
         pagination,
         refresh,
-        isLoading,
+        isLoaded,
       }}
     >
-      {children}
+      {props.children}
     </TableActionContext>
   );
 }

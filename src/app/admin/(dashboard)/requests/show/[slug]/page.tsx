@@ -1,5 +1,5 @@
-import { getOrderData } from "@/lib/api/orders";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { getRequestData } from "@/lib/api/requests";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -11,9 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import OrderItemCard from "./_components/order-item-card";
 import OrderStatusBadge from "./_components/order-status-badge";
-import ActionButtons from "./_components/action-buttons";
 
 export default async function Page({
   params,
@@ -21,7 +19,7 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { data } = await getOrderData(slug);
+  const { data } = await getRequestData(slug);
 
   return (
     <>
@@ -60,27 +58,14 @@ export default async function Page({
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2">Status</h2>
-              <OrderStatusBadge status={data.orderStatus} />
+              <OrderStatusBadge status={data.requestStatus} />
             </div>
             <div>
               <h2 className="text-lg font-medium mb-2">Note</h2>
               <Textarea value={data.note || "No note specified"} readOnly />
             </div>
           </div>
-          <h2 className="text-lg font-medium mb-2">Items</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-            {data.items.map((item) => (
-              <OrderItemCard
-                key={item.id}
-                product={item.product}
-                quantity={item.quantity}
-              />
-            ))}
-          </div>
         </CardContent>
-        <CardFooter>
-          <ActionButtons order={data} />
-        </CardFooter>
       </Card>
     </>
   );

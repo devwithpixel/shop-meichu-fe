@@ -23,24 +23,20 @@ import { Eye, EyeClosed } from "lucide-react";
 import { login } from "@/actions/admin";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-
-const formSchema = z.object({
-  email: z.email().min(1, "The email field is required."),
-  password: z.string().min(1, "The password field is required."),
-});
+import { loginSchema } from "@/schema/auth";
 
 export default function LoginForm(props: React.ComponentProps<"div">) {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof loginSchema>) {
     if (isSubmitting) return;
 
     setIsSubmitting(true);

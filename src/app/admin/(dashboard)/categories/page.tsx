@@ -1,6 +1,6 @@
 import { categoriesColumn } from "@/config/table-column";
 import { TableActionProvider } from "@/context/table-action-provider";
-import { getAllCategories, deleteProduct } from "@/lib/api/categories";
+import { getAllCategories, deleteCategory } from "@/lib/api/categories";
 import { AdminTable } from "@/components/table/admin-table";
 
 import type { ExtendedParams } from "@/lib/api/base";
@@ -16,6 +16,11 @@ export async function getAllCategoriesWithProductCount(
         count: true,
       },
     },
+    init: {
+      next: {
+        revalidate: 0,
+      },
+    },
     ...params,
   });
 
@@ -26,7 +31,8 @@ export default async function Page() {
   return (
     <TableActionProvider
       getAction={getAllCategoriesWithProductCount}
-      deleteAction={deleteProduct}
+      deleteAction={deleteCategory}
+      filters={{ name: "$contains" }}
     >
       <AdminTable
         columns={categoriesColumn}

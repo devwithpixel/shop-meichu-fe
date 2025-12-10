@@ -1,3 +1,4 @@
+import { StrapiImage } from "@/types/strapi/media/image";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -60,22 +61,19 @@ export function formatCurrency(price: number) {
   }).format(price);
 }
 
-export async function fetchImageAsFile(
-  url: string,
-  filename?: string
-): Promise<File> {
-  const response = await fetch(url);
+export async function fetchImageAsFile(file: StrapiImage): Promise<File> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${file.url}`
+  );
   if (!response.ok)
     throw new Error(
       `Failed to fetch image: ${response.status} ${response.statusText}`
     );
 
   const blob = await response.blob();
-  const finalFilename = filename || url.split("/").pop() || "image";
+  const fileObj = new File([blob], file.name, { type: blob.type });
 
-  const file = new File([blob], finalFilename, { type: blob.type });
-
-  return file;
+  return fileObj;
 }
 
 export function bytesToMB(bytes: number) {

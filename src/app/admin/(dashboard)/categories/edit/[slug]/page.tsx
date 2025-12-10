@@ -1,7 +1,7 @@
-import { getSpecificItem } from "@/actions/admin";
-import { UpsertCategoryForm } from "@/components/form/admin/forms";
-
-import type { Category } from "@/types/strapi/models/category";
+import { getCategoryData } from "@/lib/api/categories";
+import { UpdateCategoryForm } from "./_components/form";
+import { Suspense } from "react";
+import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
 
 export default async function Page({
   params,
@@ -9,7 +9,20 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { data } = await getSpecificItem<Category>("categories", slug);
+  const { data } = await getCategoryData(slug);
 
-  return <UpsertCategoryForm type="update" data={data} />;
+  return (
+    <>
+      <AdminBreadcrumb
+        type="update"
+        modelRoute="/admin/categories"
+        modelName="Categories"
+        title={data.name}
+      />
+
+      <Suspense>
+        <UpdateCategoryForm data={data} />
+      </Suspense>
+    </>
+  );
 }

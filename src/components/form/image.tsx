@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   ImageCrop,
@@ -21,14 +21,15 @@ import {
   fetchImageAsFile,
   fileToBase64,
 } from "@/lib/utils";
+import { maxFileSize } from "@/config/form";
 
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from "react-hook-form";
-import type { ChangeEvent, Dispatch, SetStateAction } from "react";
-import { maxFileSize } from "@/config/form";
+import type { ChangeEvent } from "react";
+import { StrapiImage } from "@/types/strapi/media/image";
 
 export function ImageField<
   TFieldValues extends FieldValues = FieldValues,
@@ -36,15 +37,15 @@ export function ImageField<
 >({
   field,
   defaultValue,
-  setIsImageChanged,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>;
-  defaultValue?: string;
-  setIsImageChanged?: Dispatch<SetStateAction<boolean>>;
+  defaultValue?: StrapiImage;
 }) {
+  const defaultValueRef = useRef<File | undefined>(undefined);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string | undefined>(
+    undefined
+  );
   const maxImageSizeReadable = useMemo(
     () => bytesToMB(maxFileSize),
     [maxFileSize]
@@ -55,13 +56,14 @@ export function ImageField<
 
     async function fetchImage() {
       const file = await fetchImageAsFile(defaultValue!);
+      const base64Data = await fileToBase64(file);
+      setCurrentImage(base64Data);
+      defaultValueRef.current = file;
       field.onChange(file);
-      setSelectedFile(file);
-      setCurrentImage(defaultValue!);
     }
 
     fetchImage();
-  }, [defaultValue]);
+  }, []);
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
@@ -69,10 +71,10 @@ export function ImageField<
       if (!file) return;
 
       const base64Data = await fileToBase64(file);
-      setSelectedFile(file);
+      setDialogOpen(false);
       setCurrentImage(base64Data);
-      setIsImageChanged?.(true);
       field.onChange(file);
+      defaultValueRef.current = file;
     },
     [field]
   );
@@ -82,34 +84,35 @@ export function ImageField<
       const file = base64ToFile(data, "image.jpg");
       setDialogOpen(false);
       setCurrentImage(data);
-      setIsImageChanged?.(true);
       field.onChange(file);
     },
     [field]
   );
 
   const handleRemove = useCallback(() => {
-    setCurrentImage(null);
     setDialogOpen(false);
-    setIsImageChanged?.(true);
+    setCurrentImage(undefined);
     field.onChange(undefined);
+    defaultValueRef.current = undefined;
   }, [field]);
 
   const handleResetCrop = useCallback(async () => {
-    if (!selectedFile) return handleRemove();
-
-    const base64Data = await fileToBase64(selectedFile);
+    if (defaultValueRef.current) {
+      const base64Data = await fileToBase64(defaultValueRef.current);
+      setCurrentImage(base64Data);
+      field.onChange(defaultValueRef.current);
+    } else {
+      setCurrentImage(undefined);
+      field.onChange(undefined);
+    }
     setDialogOpen(false);
-    setCurrentImage(base64Data);
-    setIsImageChanged?.(true);
-    field.onChange(selectedFile);
   }, [field]);
 
-  return selectedFile && currentImage ? (
+  return defaultValueRef.current && currentImage ? (
     <>
       <ImageCrop
         aspect={1}
-        file={selectedFile}
+        file={defaultValueRef.current!}
         maxImageSize={1024 * 1024}
         onCrop={handleCropChange}
       >

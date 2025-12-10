@@ -1,5 +1,7 @@
 "use client";
 
+import { useAdminProvider } from "@/context/admin-provider";
+import { useMemo } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -12,11 +14,9 @@ import {
 import { logout } from "@/actions/admin";
 import { getAvatarInitials } from "@/lib/utils";
 import { LogOut, ChevronDown } from "lucide-react";
-import { useMemo } from "react";
 
-import type { User } from "@/types/strapi/user";
-
-export function ProfileDropdown({ user }: { user: User }) {
+export function ProfileDropdown() {
+  const { user } = useAdminProvider();
   const initial = useMemo(
     () => getAvatarInitials(user.username),
     [user.username]
@@ -48,11 +48,11 @@ export function ProfileDropdown({ user }: { user: User }) {
           <ChevronDown className="h-5 w-5 text-muted-foreground ml-2" />
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-72" align="end">
-        <DropdownMenuLabel className="p-5">
+      <DropdownMenuContent className="font-outfit text-base" align="end">
+        <DropdownMenuLabel className="px-4 py-2">
           <div className="flex items-center gap-4">
             <div className="flex flex-col space-y-2">
-              <p className="text-lg font-bold leading-none">{user.username}</p>
+              <p className="font-bold leading-none">{user.username}</p>
               <p className="text-muted-foreground text-sm leading-none">
                 {user.email}
               </p>
@@ -61,7 +61,7 @@ export function ProfileDropdown({ user }: { user: User }) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem
-          className="p-4 text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer text-base"
+          className="text-destructive focus:text-destructive focus:bg-destructive/10 cursor-pointer"
           onClick={handleLogout}
         >
           <LogOut className="mr-3 h-5 w-5" />

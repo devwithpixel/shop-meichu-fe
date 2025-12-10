@@ -15,7 +15,7 @@ export async function getProductData(
   const response = await extendedFetch(`/products/${slug}`, {
     init: {
       next: {
-        revalidate: 60,
+        revalidate: 0,
       },
     },
   });
@@ -65,6 +65,53 @@ export async function getProductsByCategory(
   });
 
   return await res.json();
+}
+
+export async function createProduct<T>(
+  data: T
+): Promise<ResultContract<StrapiResponse<Product>>> {
+  const response = await extendedFetchWithAuth("/products", {
+    init: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: await response.json() };
+}
+
+export async function updateProduct<T>(
+  slug: string,
+  data: T
+): Promise<ResultContract<StrapiResponse<Product>>> {
+  const response = await extendedFetchWithAuth(`/products/${slug}`, {
+    init: {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: await response.json() };
 }
 
 export async function deleteProduct(

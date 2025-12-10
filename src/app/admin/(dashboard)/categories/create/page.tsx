@@ -1,5 +1,19 @@
-import { UpsertCategoryForm } from "@/components/form/admin/forms";
+import { CreateCategoryForm } from "./_components/form";
+import { Suspense } from "react";
+import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
 
 export default async function Page() {
-  return <UpsertCategoryForm type="create" />;
+  return (
+    <>
+      <AdminBreadcrumb
+        type="create"
+        modelRoute="/admin/categories"
+        modelName="Categories"
+      />
+
+      <Suspense>
+        <CreateCategoryForm />
+      </Suspense>
+    </>
+  );
 }

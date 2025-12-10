@@ -15,7 +15,7 @@ export async function getAllCategories(
   const response = await extendedFetch("/categories", {
     init: {
       next: {
-        revalidate: 1,
+        revalidate: 60,
       },
     },
     ...params,
@@ -30,7 +30,7 @@ export async function getCategoryData(
   const response = await extendedFetch(`/categories/${slug}`, {
     init: {
       next: {
-        revalidate: 60,
+        revalidate: 0,
       },
     },
   });
@@ -38,7 +38,54 @@ export async function getCategoryData(
   return response.json();
 }
 
-export async function deleteProduct(
+export async function createCategory<T>(
+  data: T
+): Promise<ResultContract<StrapiResponse<Category>>> {
+  const response = await extendedFetchWithAuth("/categories", {
+    init: {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: await response.json() };
+}
+
+export async function updateCategory<T>(
+  slug: string,
+  data: T
+): Promise<ResultContract<StrapiResponse<Category>>> {
+  const response = await extendedFetchWithAuth(`/categories/${slug}`, {
+    init: {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ data }),
+    },
+  });
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: await response.json() };
+}
+
+export async function deleteCategory(
   slug: string,
   params?: ExtendedParams
 ): Promise<ResultContract<null>> {

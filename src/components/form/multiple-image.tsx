@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   ImageCrop,
@@ -30,14 +30,14 @@ import {
   fileToBase64,
 } from "@/lib/utils";
 import { maxFileSize } from "@/config/form";
-import { useMutative } from "use-mutative";
 
 import type {
   ControllerRenderProps,
   FieldPath,
   FieldValues,
 } from "react-hook-form";
-import type { ChangeEvent, Dispatch, SetStateAction } from "react";
+import type { ChangeEvent } from "react";
+import type { StrapiImage } from "@/types/strapi/media/image";
 
 export function MultipleImageField<
   TFieldValues extends FieldValues = FieldValues,
@@ -46,49 +46,46 @@ export function MultipleImageField<
   field,
   maximumImage,
   defaultValue,
-  setIsImageChanged,
 }: {
   field: ControllerRenderProps<TFieldValues, TName>;
   maximumImage?: number;
-  defaultValue?: string[];
-  setIsImageChanged?: Dispatch<SetStateAction<boolean>>;
+  defaultValue?: StrapiImage[];
 }) {
+  const defaultValueRef = useRef<File[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useMutative<File[]>([]);
   const [currentActiveImage, setCurrentActiveImage] = useState(0);
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const [currentImage, setCurrentImage] = useState<string | undefined>(
+    undefined
+  );
   const maxImageSizeReadable = useMemo(() => bytesToMB(maxFileSize), []);
 
   useEffect(() => {
     if (!defaultValue || defaultValue.length === 0) return;
 
     async function fetchImage() {
-      const files = await Promise.all(
-        defaultValue!.map((url) => fetchImageAsFile(url))
+      const results = await Promise.all(
+        defaultValue!.map((image) => fetchImageAsFile(image))
       );
-      setSelectedFiles(files);
-      setCurrentImage(defaultValue![0]);
+      const base64Data = await fileToBase64(results[0]);
+      setCurrentImage(base64Data);
+      defaultValueRef.current = results;
+      field.onChange(results);
     }
 
     fetchImage();
-  }, [defaultValue]);
-
-  useEffect(() => {
-    field.onChange(selectedFiles);
-  }, [selectedFiles]);
+  }, []);
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
       if (!files) return;
 
-      const base64Data = await Promise.all(
-        Array.from(files).map((file) => fileToBase64(file))
-      );
-      setSelectedFiles(Array.from(files));
+      const base64Data = await fileToBase64(files[0]);
+      setDialogOpen(false);
+      setCurrentImage(base64Data);
       setCurrentActiveImage(0);
-      setCurrentImage(base64Data[0]);
-      setIsImageChanged?.(true);
+      field.onChange(Array.from(files));
+      defaultValueRef.current = Array.from(files);
     },
     [field]
   );
@@ -97,56 +94,80 @@ export function MultipleImageField<
     async (data: string) => {
       const file = base64ToFile(data, "image.jpg");
       setDialogOpen(false);
-      setSelectedFiles((draft) => {
-        draft[currentActiveImage] = file;
-      });
       setCurrentImage(data);
-      setIsImageChanged?.(true);
+
+      const newValue = [...defaultValueRef.current];
+      newValue[currentActiveImage] = file;
+      field.onChange(newValue);
     },
     [field]
   );
 
   const handleRemove = useCallback(async () => {
-    setSelectedFiles((draft) => {
-      draft.splice(currentActiveImage, 1);
-    });
-    setCurrentActiveImage(Math.max(0, currentActiveImage - 1));
     setDialogOpen(false);
-    setIsImageChanged?.(true);
 
-    if (selectedFiles.length === 1) {
-      setCurrentImage(null);
-    } else {
-      setCurrentImage(await fileToBase64(selectedFiles[currentActiveImage]));
+    if (!defaultValueRef.current || defaultValueRef.current.length <= 1) {
+      setCurrentActiveImage(0);
+      setCurrentImage(undefined);
+      field.onChange([]);
+      defaultValueRef.current = [];
+      return;
     }
+
+    const newIndex = Math.max(currentActiveImage - 1, 0);
+    setCurrentActiveImage(newIndex);
+    const newFile = defaultValueRef.current[newIndex];
+    const base64Data = await fileToBase64(newFile);
+    setCurrentImage(base64Data);
+
+    const newValue = [...defaultValueRef.current];
+    newValue.splice(currentActiveImage, 1);
+    field.onChange(newValue);
+    defaultValueRef.current = newValue;
   }, [field]);
 
   const handleResetCrop = useCallback(async () => {
-    if (!selectedFiles[currentActiveImage]) return handleRemove();
-
-    const base64Data = await fileToBase64(selectedFiles[currentActiveImage]);
     setDialogOpen(false);
-    setCurrentImage(base64Data);
-    setIsImageChanged?.(true);
+
+    if (!defaultValueRef.current || defaultValueRef.current.length === 0) {
+      setCurrentImage(undefined);
+      field.onChange([]);
+      return;
+    } else {
+      const base64Data = await fileToBase64(
+        defaultValueRef.current[currentActiveImage]
+      );
+      setCurrentImage(base64Data);
+      field.onChange([
+        ...defaultValueRef.current.slice(0, currentActiveImage),
+        defaultValueRef.current[currentActiveImage],
+        ...defaultValueRef.current.slice(currentActiveImage + 1),
+      ]);
+    }
   }, [field]);
 
   const changeActiveImage = useCallback(
-    async (index: number) => {
-      setCurrentActiveImage(index);
+    async (newIndex: number) => {
+      if (
+        !defaultValueRef.current ||
+        defaultValueRef.current.length === 0 ||
+        defaultValueRef.current.length < newIndex ||
+        newIndex < 0
+      )
+        return;
 
-      if (selectedFiles[index]) {
-        const image = await fileToBase64(selectedFiles[index]);
-        setCurrentImage(image);
-      }
+      setCurrentActiveImage(newIndex);
+      const base64Data = await fileToBase64(defaultValueRef.current[newIndex]);
+      setCurrentImage(base64Data);
     },
-    [selectedFiles]
+    [defaultValueRef]
   );
 
-  return selectedFiles.length > 0 && currentImage ? (
+  return currentImage ? (
     <>
       <ImageCrop
         aspect={1}
-        file={selectedFiles[currentActiveImage]}
+        file={defaultValueRef.current[currentActiveImage]}
         maxImageSize={1024 * 1024}
         onCrop={handleCropChange}
       >
@@ -174,7 +195,7 @@ export function MultipleImageField<
             Note: Max file size is {maxImageSizeReadable} MB
           </p>
 
-          {selectedFiles.length > 1 && (
+          {defaultValueRef.current.length > 1 && (
             <>
               <Button
                 variant="outline"
@@ -190,9 +211,12 @@ export function MultipleImageField<
               </Button>
               <Button
                 variant="outline"
-                disabled={currentActiveImage + 1 >= selectedFiles.length}
+                disabled={
+                  currentActiveImage + 1 >= defaultValueRef.current.length
+                }
                 onClick={() => {
-                  if (currentActiveImage + 1 >= selectedFiles.length) return;
+                  if (currentActiveImage + 1 >= defaultValueRef.current.length)
+                    return;
                   changeActiveImage(currentActiveImage + 1);
                 }}
                 type="button"
