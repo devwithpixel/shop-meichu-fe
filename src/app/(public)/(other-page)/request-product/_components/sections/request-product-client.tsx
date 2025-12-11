@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react"; 
 import { useForm } from "react-hook-form";
 import { requestProductSchema } from "@/schema/request-product";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,7 +14,10 @@ import { createRequest } from "@/lib/api/requests";
 import { createImage } from "@/lib/api/strapi-image";
 import { displayValidationError } from "@/lib/validation-handler";
 
+type ReferenceImageType = File | string;
+
 export default function RequestProductClient() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const form = useForm<z.infer<typeof requestProductSchema>>({
     resolver: zodResolver(requestProductSchema),
     defaultValues: {
@@ -29,7 +33,7 @@ export default function RequestProductClient() {
   const prevFormValuesRef = useRef({
     buyerName: "",
     contact: "",
-    referenceImages: [] as any[],
+    referenceImages: [] as ReferenceImageType[],
     note: "",
   });
 
@@ -71,44 +75,52 @@ export default function RequestProductClient() {
 
   const onSubmit = useCallback(
     async (data: z.infer<typeof requestProductSchema>) => {
-      const { referenceImages, ...requestProductData } = data;
-      const imagesResult = await createImage(referenceImages);
-      switch (imagesResult.type) {
-        case "validation":
-        case "error":
-          toast.error("An error occured when uploading reference image!");
-          return;
-      }
+      setIsSubmitting(true); 
+      try {
+        const { referenceImages, ...requestProductData } = data;
+        const imagesResult = await createImage(referenceImages);
 
-      const result = await createRequest({
-        ...requestProductData,
-        referenceImages: imagesResult.data.map((image) => image.id),
-      });
+        switch (imagesResult.type) {
+          case "validation":
+          case "error":
+            toast.error("An error occured when uploading reference image!");
+            return;
+        }
 
-      switch (result.type) {
-        case "success":
-          toast.success("Request process submitted successfully.");
-          markAllCompleted();
+        const result = await createRequest({
+          ...requestProductData,
+          referenceImages: imagesResult.data.map((image) => image.id),
+        });
 
-          form.reset();
+        switch (result.type) {
+          case "success":
+            toast.success("Request process submitted successfully.");
+            markAllCompleted();
 
-          if (resetProgress) {
-            resetProgress();
-          }
+            form.reset();
 
-          prevFormValuesRef.current = {
-            buyerName: "",
-            contact: "",
-            referenceImages: [],
-            note: "",
-          };
-          break;
-        case "validation":
-          displayValidationError(form, result.validation);
-          break;
-        case "error":
-          toast.error(result.message);
-          break;
+            if (resetProgress) {
+              resetProgress();
+            }
+
+            prevFormValuesRef.current = {
+              buyerName: "",
+              contact: "",
+              referenceImages: [],
+              note: "",
+            };
+            break;
+          case "validation":
+            displayValidationError(form, result.validation);
+            break;
+          case "error":
+            toast.error(result.message);
+            break;
+        }
+      } catch (error) {
+        toast.error("An unexpected error occurred");
+      } finally {
+        setIsSubmitting(false);
       }
     },
     [form, markAllCompleted, resetProgress]
@@ -121,7 +133,11 @@ export default function RequestProductClient() {
       onSubmit={form.handleSubmit(onSubmit)}
     >
       <RequestProductProgress progressSteps={progressSteps} />
-      <CheckoutForm form={form} className="md:col-span-2" />
+      <CheckoutForm
+        form={form}
+        className="md:col-span-2"
+        isSubmitting={isSubmitting}
+      />
     </form>
   );
 }

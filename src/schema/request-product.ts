@@ -147,34 +147,10 @@ export const requestProductSchema = z
         }
 
         case "instagram": {
-          const instaRegex =
-            /^(https?:\/\/)?(www\.)?instagram\.com\/[a-zA-Z0-9._]+\/?$|^@?[a-zA-Z0-9._]{3,30}$/;
-          if (!instaRegex.test(contact)) {
-            throw new z.ZodError([
-              {
-                code: "custom",
-                message:
-                  "Please enter a valid Instagram username (e.g., @username) or profile URL",
-                path: ["contact"],
-              },
-            ]);
-          }
           return true;
         }
 
         case "facebook": {
-          const fbRegex =
-            /^(https?:\/\/)?(www\.)?facebook\.com\/[a-zA-Z0-9.]+\/?$|^[a-zA-Z0-9.]{3,}$/;
-          if (!fbRegex.test(contact)) {
-            throw new z.ZodError([
-              {
-                code: "custom",
-                message:
-                  "Please enter a valid Facebook username or profile URL",
-                path: ["contact"],
-              },
-            ]);
-          }
           return true;
         }
 
