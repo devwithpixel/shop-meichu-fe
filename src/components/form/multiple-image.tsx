@@ -230,7 +230,7 @@ export function MultipleImage({
       maxFiles={maximumFiles}
       maxSize={maxFileSize}
       multiple={(maximumFiles || 0) > 1}
-      className="w-full max-w-lg"
+      className="w-full"
     >
       <FileUploadDropzone className="min-h-32">
         <div className="flex flex-col items-center gap-2 text-center">
@@ -240,7 +240,7 @@ export function MultipleImage({
               Drop images here or click to upload
             </p>
             <p className="text-muted-foreground text-xs">
-              PNG, JPG, WebP up to {maxFileSize / 1024 / 1024} MB
+              PNG & JPG up to {maxFileSize / 1024 / 1024} MB
             </p>
             {maximumFiles && (
               <p className="text-muted-foreground text-xs">

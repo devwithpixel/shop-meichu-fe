@@ -8,13 +8,15 @@ export interface ProgressStep {
     status: StepStatus;
 }
 
+const initialSteps: ProgressStep[] = [
+    { id: 1, title: "Name", status: "active" },
+    { id: 2, title: "Contact", status: "upcoming" },
+    { id: 3, title: "Reference Image", status: "upcoming" },
+    { id: 4, title: "Note (Optional)", status: "upcoming" },
+];
+
 export const useStepProgress = () => {
-    const [progressSteps, setProgressSteps] = useState<ProgressStep[]>([
-        { id: 1, title: "Personal Details", status: "active" },
-        { id: 2, title: "Reference Image", status: "upcoming" },
-        { id: 3, title: "Additional Note", status: "upcoming" },
-        { id: 4, title: "Confirmation", status: "upcoming" },
-    ]);
+    const [progressSteps, setProgressSteps] = useState<ProgressStep[]>(initialSteps);
 
     const updateStepStatus = useCallback((formValues: {
         buyerName?: string;
@@ -26,59 +28,47 @@ export const useStepProgress = () => {
             const newSteps = [...prev];
             const { buyerName, contact, referenceImages, note } = formValues;
 
-            const currentData = {
-                buyerName: prev[0].status === "completed" ? "filled" : "empty",
-                contact: prev[0].status === "completed" ? "filled" : "empty",
-                hasImages: prev[1].status === "completed",
-                hasNote: prev[2].status === "completed",
-            };
-
-            const newData = {
-                buyerName: buyerName?.trim() && contact?.trim() ? "filled" : "empty",
-                contact: buyerName?.trim() && contact?.trim() ? "filled" : "empty",
-                hasImages: referenceImages && referenceImages.length > 0,
-                hasNote: note?.trim() ? true : false,
-            };
-
-            if (
-                currentData.buyerName === newData.buyerName &&
-                currentData.contact === newData.contact &&
-                currentData.hasImages === newData.hasImages &&
-                currentData.hasNote === newData.hasNote
-            ) {
-                return prev;
-            }
-
-            // Step 1: Personal Details
-            if (buyerName?.trim() && contact?.trim()) {
+            if (buyerName?.trim()) {
                 newSteps[0] = { ...newSteps[0], status: "completed" };
-                newSteps[1] = { ...newSteps[1], status: "active" };
+                if (newSteps[1].status !== "completed") {
+                    newSteps[1] = { ...newSteps[1], status: "active" };
+                }
             } else {
                 newSteps[0] = { ...newSteps[0], status: "active" };
                 newSteps[1] = { ...newSteps[1], status: "upcoming" };
+                newSteps[2] = { ...newSteps[2], status: "upcoming" };
+                newSteps[3] = { ...newSteps[3], status: "upcoming" };
+                return newSteps;
             }
 
-            // Step 2: Reference Image
-            if (referenceImages && referenceImages.length > 0) {
+            if (contact?.trim()) {
                 newSteps[1] = { ...newSteps[1], status: "completed" };
-                newSteps[2] = { ...newSteps[2], status: "active" };
-            } else if (newSteps[0].status === "completed") {
+                if (newSteps[2].status !== "completed") {
+                    newSteps[2] = { ...newSteps[2], status: "active" };
+                }
+            } else {
                 newSteps[1] = { ...newSteps[1], status: "active" };
                 newSteps[2] = { ...newSteps[2], status: "upcoming" };
-            } else {
-                newSteps[2] = { ...newSteps[2], status: "upcoming" };
+                newSteps[3] = { ...newSteps[3], status: "upcoming" };
+                return newSteps;
             }
 
-            // Step 3: Additional Note (optional)
-            if (newSteps[1].status === "completed") {
-                newSteps[2] = { ...newSteps[2], status: "active" };
-                if (note?.trim()) {
-                    newSteps[2] = { ...newSteps[2], status: "completed" };
+            if (referenceImages && referenceImages.length > 0) {
+                newSteps[2] = { ...newSteps[2], status: "completed" };
+                if (newSteps[3].status !== "completed") {
+                    newSteps[3] = { ...newSteps[3], status: "active" };
                 }
+            } else {
+                newSteps[2] = { ...newSteps[2], status: "active" };
+                newSteps[3] = { ...newSteps[3], status: "upcoming" };
+                return newSteps;
             }
 
-            // Step 4: Confirmation upcoming
-            newSteps[3] = { ...newSteps[3], status: "upcoming" };
+            if (note?.trim()) {
+                newSteps[3] = { ...newSteps[3], status: "completed" };
+            } else {
+                newSteps[3] = { ...newSteps[3], status: "active" };
+            }
 
             return newSteps;
         });
@@ -90,27 +80,14 @@ export const useStepProgress = () => {
         );
     }, []);
 
-    const setConfirmationActive = useCallback(() => {
-        setProgressSteps(prev => {
-            const newSteps = [...prev];
-            newSteps[3] = { ...newSteps[3], status: "active" };
-            return newSteps;
-        });
-    }, []);
-
-    const resetConfirmation = useCallback(() => {
-        setProgressSteps(prev => {
-            const newSteps = [...prev];
-            newSteps[3] = { ...newSteps[3], status: "upcoming" };
-            return newSteps;
-        });
+    const resetProgress = useCallback(() => {
+        setProgressSteps(initialSteps);
     }, []);
 
     return {
         progressSteps,
         updateStepStatus,
         markAllCompleted,
-        setConfirmationActive,
-        resetConfirmation,
+        resetProgress,
     };
 };

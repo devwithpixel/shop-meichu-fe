@@ -33,13 +33,8 @@ export default function RequestProductClient() {
     note: "",
   });
 
-  const {
-    progressSteps,
-    updateStepStatus,
-    markAllCompleted,
-    setConfirmationActive,
-    resetConfirmation,
-  } = useStepProgress();
+  const { progressSteps, updateStepStatus, markAllCompleted, resetProgress } =
+    useStepProgress();
 
   const watchAllFields = form.watch();
 
@@ -76,8 +71,6 @@ export default function RequestProductClient() {
 
   const onSubmit = useCallback(
     async (data: z.infer<typeof requestProductSchema>) => {
-      setConfirmationActive();
-
       const { referenceImages, ...requestProductData } = data;
       const imagesResult = await createImage(referenceImages);
       switch (imagesResult.type) {
@@ -96,18 +89,29 @@ export default function RequestProductClient() {
         case "success":
           toast.success("Request process submitted successfully.");
           markAllCompleted();
+
+          form.reset();
+
+          if (resetProgress) {
+            resetProgress();
+          }
+
+          prevFormValuesRef.current = {
+            buyerName: "",
+            contact: "",
+            referenceImages: [],
+            note: "",
+          };
           break;
         case "validation":
           displayValidationError(form, result.validation);
-          resetConfirmation();
           break;
         case "error":
           toast.error(result.message);
-          resetConfirmation();
           break;
       }
     },
-    [markAllCompleted, setConfirmationActive, resetConfirmation]
+    [form, markAllCompleted, resetProgress]
   );
 
   return (

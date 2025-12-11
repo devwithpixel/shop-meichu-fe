@@ -16,16 +16,13 @@ import {
 } from "@/components/ui/sheet";
 import StrapiImage from "@/components/global/strapi-image";
 import type { Navigation } from "@/types/navigation";
-import type { Category } from "@/types/strapi/models/category";
 import type { Navbar } from "@/types/strapi/components/shared/navbar";
 
 export default function MobileMenu({
   navigations,
-  categories,
   brandData,
 }: {
   navigations: Navigation[];
-  categories: Category[];
   brandData: Navbar["brand"];
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +74,7 @@ export default function MobileMenu({
               <div className="flex flex-col gap-6 text-lg">
                 {navigations.map((navigationItem, index) => (
                   <div key={index}>
-                    {navigationItem.title === "Catalog" ? (
+                    {navigationItem.subNavigation?.type === "single" ? (
                       <div>
                         <Sheet
                           open={isOpenCatalog}
@@ -116,21 +113,23 @@ export default function MobileMenu({
                               </div>
                             </SheetHeader>
                             <div className="flex flex-col px-6 gap-6 mt-6">
-                              {categories.map((category) => (
-                                <Link
-                                  key={category.slug}
-                                  href={`/collections/${category.slug}`}
-                                  className="w-full text-start"
-                                  onClick={() => {
-                                    setIsOpen(false);
-                                    setIsOpenCatalog(false);
-                                  }}
-                                >
-                                  <h1 className="font-semibold font-albert-sans text-lg hover:text-gray-500 transition-colors">
-                                    {category.name}
-                                  </h1>
-                                </Link>
-                              ))}
+                              {navigationItem.subNavigation?.items?.map(
+                                (item, idx) => (
+                                  <Link
+                                    key={idx}
+                                    href={item.url}
+                                    className="w-full text-start"
+                                    onClick={() => {
+                                      setIsOpen(false);
+                                      setIsOpenCatalog(false);
+                                    }}
+                                  >
+                                    <h1 className="font-semibold font-albert-sans text-lg hover:text-gray-500 transition-colors">
+                                      {item.title}
+                                    </h1>
+                                  </Link>
+                                )
+                              )}
                             </div>
                           </SheetContent>
                         </Sheet>
