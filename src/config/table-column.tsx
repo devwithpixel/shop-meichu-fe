@@ -131,11 +131,11 @@ export const categoriesColumn: ColumnDef<Category>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            {/* <DropdownMenuItem asChild>
+            <DropdownMenuItem asChild>
               <Link href={`/admin/categories/show/${row.original.slug}`}>
                 View
               </Link>
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link href={`/admin/categories/edit/${row.original.slug}`}>
                 Edit
