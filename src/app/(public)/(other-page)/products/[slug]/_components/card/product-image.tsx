@@ -20,7 +20,7 @@ export default function ProductImage({
   return (
     <div className="bg-gray-300 md:row-span-2 lg:row-span-1">
       <div
-        className="h-126 md:h-[91vh] relative cursor-pointer"
+        className="h-126 md:h-[94vh] lg:h-[91vh] relative cursor-pointer"
         onClick={handleClick}
       >
         {images.map((image, index) => (

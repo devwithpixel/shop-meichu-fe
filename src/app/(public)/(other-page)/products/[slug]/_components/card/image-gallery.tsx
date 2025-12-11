@@ -17,7 +17,7 @@ const ImageGallery = forwardRef<HTMLDivElement, ImageGalleryProps>(
       <div className="md:relative lg:row-span-1">
         <div
           ref={ref}
-          className="h-fit md:h-[91vh] lg:h-[91vh] flex flex-row md:flex-col gap-1 overflow-x-scroll md:overflow-y-scroll lg:overflow-y-scroll scrollbar-hide"
+          className="h-fit md:h-[94vh] lg:h-[91vh] flex flex-row md:flex-col gap-1 overflow-x-scroll md:overflow-y-scroll lg:overflow-y-scroll scrollbar-hide"
         >
           {images.map((image, index) => (
             <img

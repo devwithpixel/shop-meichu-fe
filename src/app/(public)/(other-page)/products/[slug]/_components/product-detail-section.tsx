@@ -190,8 +190,8 @@ export default function ProductDetailSection({
     gsap.to(indicatorRef.current, {
       x: btn.offsetLeft,
       width: btn.offsetWidth,
-      duration: 0.5,
-      ease: "sine.out",
+      duration: 0.1,
+      ease: "power2.out",
     });
   });
 
@@ -212,7 +212,7 @@ export default function ProductDetailSection({
 
   useEffect(() => {
     updateIndicator();
-  }, [active]);
+  }, [active, updateIndicator]);
 
   const background = useMemo(
     () => ({
@@ -259,13 +259,17 @@ export default function ProductDetailSection({
           <div className="relative flex gap-1">
             <div
               ref={indicatorRef}
-              className="absolute h-full bg-black rounded-full"
+              className="absolute h-full bg-black rounded-full transition-transform duration-500"
             />
             {(Object.values(sections) as SectionInfo[]).map((value, i) => (
               <button
                 key={value.label}
                 ref={(el) => {
                   buttonsRef.current[i] = el;
+                  if (i === 0 && el && indicatorRef.current) {
+                    indicatorRef.current.style.width = `${el.offsetWidth}px`;
+                    indicatorRef.current.style.transform = `translateX(${el.offsetLeft}px)`;
+                  }
                 }}
                 onClick={() => navigationScrollTo(value.ref)}
                 className={`relative z-10 px-5 lg:px-6 py-2.5 text-xs font-semibold rounded-full transition-colors ${

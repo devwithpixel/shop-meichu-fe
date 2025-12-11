@@ -9,6 +9,7 @@ import {
 import Markdown from "react-markdown";
 
 import type { Product } from "@/types/strapi/models/product";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DescriptionSectionProps {
   ref: React.RefObject<HTMLDivElement | null>;
@@ -40,7 +41,9 @@ export default function DescriptionSection({
                 </AccordionTrigger>
 
                 <AccordionContent className="text-balance">
-                  <Markdown>{field.content}</Markdown>
+                  <ScrollArea className="h-40 px-4">
+                    <Markdown>{field.content}</Markdown>
+                  </ScrollArea>
                 </AccordionContent>
               </AccordionItem>
             ))}
