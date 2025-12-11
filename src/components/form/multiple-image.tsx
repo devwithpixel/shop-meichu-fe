@@ -34,6 +34,7 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { maxFileSize } from "@/config/form";
 import toast from "react-hot-toast";
+import { cn } from "@/lib/utils";
 
 async function createCroppedImage(
   imageSrc: string,
@@ -97,12 +98,14 @@ export function MultipleImage({
   aspectRatio = 1,
   shape = "rectangle",
   maximumFiles,
+  className,
 }: {
   value: File[];
-  onChange: (value: File[]) => void;
+  onChange?: (value: File[]) => void;
   aspectRatio?: number;
   shape?: "circle" | "rectangle";
   maximumFiles?: number;
+  className?: string;
 }) {
   const [filesWithCrops, setFilesWithCrops] = useState<
     Map<string, FileWithCrop>
@@ -127,7 +130,7 @@ export function MultipleImage({
   }, [selectedImageUrl]);
 
   const onFilesChange = useCallback((newFiles: File[]) => {
-    onChange(newFiles);
+    onChange?.(newFiles);
 
     setFilesWithCrops((prevFilesWithCrops) => {
       const updatedFilesWithCrops = new Map(prevFilesWithCrops);
@@ -230,31 +233,33 @@ export function MultipleImage({
       maxFiles={maximumFiles}
       maxSize={maxFileSize}
       multiple={(maximumFiles || 0) > 1}
-      className="w-full"
+      className={cn("w-full", className)}
     >
-      <FileUploadDropzone className="min-h-32">
-        <div className="flex flex-col items-center gap-2 text-center">
-          <UploadIcon className="size-8 text-muted-foreground" />
-          <div className="space-y-2">
-            <p className="font-medium text-sm">
-              Drop images here or click to upload
-            </p>
-            <p className="text-muted-foreground text-xs">
-              PNG & JPG up to {maxFileSize / 1024 / 1024} MB
-            </p>
-            {maximumFiles && (
-              <p className="text-muted-foreground text-xs">
-                Maximum {maximumFiles} files allowed
+      {maximumFiles && value.length === maximumFiles ? null : (
+        <FileUploadDropzone className="min-h-32">
+          <div className="flex flex-col items-center gap-2 text-center">
+            <UploadIcon className="size-8 text-muted-foreground" />
+            <div className="space-y-2">
+              <p className="font-medium text-sm">
+                Drop images here or click to upload
               </p>
-            )}
+              <p className="text-muted-foreground text-xs">
+                PNG & JPG up to {maxFileSize / 1024 / 1024} MB
+              </p>
+              {maximumFiles && (
+                <p className="text-muted-foreground text-xs">
+                  Maximum {maximumFiles} files allowed
+                </p>
+              )}
+            </div>
+            <FileUploadTrigger asChild>
+              <Button variant="outline" size="sm">
+                Choose Files
+              </Button>
+            </FileUploadTrigger>
           </div>
-          <FileUploadTrigger asChild>
-            <Button variant="outline" size="sm">
-              Choose Files
-            </Button>
-          </FileUploadTrigger>
-        </div>
-      </FileUploadDropzone>
+        </FileUploadDropzone>
+      )}
       <FileUploadList className="max-h-96 overflow-y-auto">
         {value.map((file, index) => {
           const fileWithCrop = filesWithCrops.get(file.name);

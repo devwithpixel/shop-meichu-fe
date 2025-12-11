@@ -184,7 +184,7 @@ export default function CheckoutForm({
             name="referenceImages"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field className="max-w-80! md:max-w-full!">
+              <Field data-invalid={fieldState.invalid}>
                 <FieldLabel className="text-xs md:text-sm">
                   Upload product reference <MarkRequired />
                 </FieldLabel>

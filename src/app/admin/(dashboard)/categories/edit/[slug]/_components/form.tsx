@@ -167,7 +167,7 @@ export function UpdateCategoryForm({ data }: { data: Category }) {
                           <ColorPickerTrigger asChild>
                             <Button
                               variant="outline"
-                              className="flex items-center gap-2 px-3"
+                              className="justify-start w-full"
                             >
                               <ColorPickerSwatch className="size-4" />
                               {field.value}

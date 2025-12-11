@@ -5,6 +5,26 @@ import { notFound } from "next/navigation";
 import ProductDetailSection from "./_components/product-detail-section";
 import SetFooter from "./_components/set-footer";
 
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const { data: product } = await getProductData(slug);
+
+  if (!product)
+    return {
+      title: "Not Found",
+    };
+
+  return {
+    title: `${product.name} – Shop Meichu`,
+  };
+}
+
 export default async function ProductDetailPage({
   params,
 }: {

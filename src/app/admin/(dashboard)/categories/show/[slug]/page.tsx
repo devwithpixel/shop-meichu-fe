@@ -1,7 +1,8 @@
 import { getCategoryData } from "@/lib/api/categories";
-import { UpdateCategoryForm } from "./_components/form";
+import { ShowCategoryForm } from "./_components/section";
 import { Suspense } from "react";
 import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
+import { getProductsByCategory } from "@/lib/api/products";
 
 export default async function Page({
   params,
@@ -16,6 +17,14 @@ export default async function Page({
       },
     },
   });
+  const { data: products } = await getProductsByCategory(slug, {
+    init: {
+      next: {
+        revalidate: 0,
+      },
+    },
+    populate: "*",
+  });
 
   return (
     <>
@@ -27,7 +36,7 @@ export default async function Page({
       />
 
       <Suspense>
-        <UpdateCategoryForm data={data} />
+        <ShowCategoryForm data={data} products={products} />
       </Suspense>
     </>
   );
