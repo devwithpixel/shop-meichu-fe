@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { ChevronRight } from "lucide-react";
 import Link from "next/link";
+import { useMemo } from "react";
 
 interface BreadcrumbProps {
-  type: "create" | "update";
+  type: "create" | "update" | "show";
   modelRoute: string;
   modelName: string;
   title?: string;
@@ -22,6 +23,17 @@ export default function AdminBreadcrumb({
   modelName,
   title,
 }: BreadcrumbProps) {
+  const breadcrumbTitle = useMemo(() => {
+    switch (type) {
+      case "create":
+        return "Create";
+      case "update":
+        return "Edit";
+      case "show":
+        return "View";
+    }
+  }, [type]);
+
   return (
     <Breadcrumb className="mb-5">
       <BreadcrumbList>
@@ -33,7 +45,7 @@ export default function AdminBreadcrumb({
         <BreadcrumbSeparator>
           <ChevronRight />
         </BreadcrumbSeparator>
-        {type === "update" && (
+        {type !== "create" && (
           <>
             <BreadcrumbItem>
               <BreadcrumbLink>{title}</BreadcrumbLink>
@@ -44,9 +56,7 @@ export default function AdminBreadcrumb({
           </>
         )}
         <BreadcrumbItem>
-          <BreadcrumbPage>
-            {type === "create" ? "Create" : "Edit"}
-          </BreadcrumbPage>
+          <BreadcrumbPage>{breadcrumbTitle}</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>

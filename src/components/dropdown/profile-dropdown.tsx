@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { logout } from "@/actions/admin";
+import { logout } from "@/lib/api/auth";
 import { getAvatarInitials } from "@/lib/utils";
 import { LogOut, ChevronDown } from "lucide-react";
 

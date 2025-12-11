@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { logout } from "@/actions/admin";
+import { logout } from "@/lib/api/auth";
 import { getAvatarInitials } from "@/lib/utils";
 import { useMemo } from "react";
 

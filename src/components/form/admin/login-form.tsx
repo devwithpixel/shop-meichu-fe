@@ -20,13 +20,12 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import { Eye, EyeClosed } from "lucide-react";
-import { login } from "@/actions/admin";
+import { loginSchema } from "@/schema/auth";
+import { login } from "@/lib/api/auth";
 import { redirect } from "next/navigation";
 import * as z from "zod";
-import { loginSchema } from "@/schema/auth";
 
 export default function LoginForm(props: React.ComponentProps<"div">) {
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const form = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
@@ -37,9 +36,6 @@ export default function LoginForm(props: React.ComponentProps<"div">) {
   });
 
   async function onSubmit(data: z.infer<typeof loginSchema>) {
-    if (isSubmitting) return;
-
-    setIsSubmitting(true);
     const result = await login(data.email, data.password);
     if (result.success) {
       redirect("/admin");
@@ -48,7 +44,6 @@ export default function LoginForm(props: React.ComponentProps<"div">) {
     form.setError("email", {
       message: result.error,
     });
-    setIsSubmitting(false);
   }
 
   return (
@@ -123,8 +118,13 @@ export default function LoginForm(props: React.ComponentProps<"div">) {
         </form>
       </CardContent>
       <CardFooter>
-        <Button className="w-full" type="submit" form="form-admin-login">
-          {isSubmitting && <Spinner />}
+        <Button
+          className="w-full"
+          type="submit"
+          form="form-admin-login"
+          disabled={form.formState.isSubmitting}
+        >
+          {form.formState.isSubmitting && <Spinner />}
           Login
         </Button>
       </CardFooter>
