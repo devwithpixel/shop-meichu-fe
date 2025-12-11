@@ -12,7 +12,11 @@ export default function SetFooter({
 
   useEffect(() => {
     setBackgroundColor(backgroundColor);
-  }, [backgroundColor]);
+
+    return () => {
+      setBackgroundColor(undefined);
+    };
+  }, [backgroundColor, setBackgroundColor]);
 
   return null;
 }

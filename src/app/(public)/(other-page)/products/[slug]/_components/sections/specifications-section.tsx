@@ -8,6 +8,7 @@ import { useGSAP } from "@gsap/react";
 gsap.registerPlugin(ScrollTrigger);
 
 import type { Product } from "@/types/strapi/models/product";
+import { useMemo } from "react";
 
 export default function SpecificationsSection({
   ref,
@@ -95,11 +96,18 @@ export default function SpecificationsSection({
     };
   }, [featureImages.length]);
 
+  // const background = useMemo(
+  //   () => ({
+  //     backgroundColor: product.backgroundColor || "#1C1C1C",
+  //   }),
+  //   [product.backgroundColor]
+  // );
+
   return (
     <div
       ref={ref}
       className="text-white min-h-screen flex flex-col items-center justify-center space-y-8 relative px-4 md:px-4"
-      style={{ backgroundColor: product.backgroundColor || "#000000" }}
+      style={{ backgroundColor: product.backgroundColor || "#1C1C1C" }}
     >
       <h1 className="font-rubik text-4xl md:text-5xl lg:text-7xl font-bold text-center z-10">
         Product Highlights
