@@ -31,6 +31,7 @@ import type { Subscriber } from "@/types/strapi/models/subscriber";
 import type { Request } from "@/types/strapi/models/request";
 import type { StrapiImage as StrapiImageType } from "@/types/strapi/media/image";
 import type { StrapiRelationCount } from "@/types/strapi/count-relation";
+import { cancelRequest, nextStepRequest } from "@/lib/api/requests";
 
 const readableRequestStatus = {
   pending: "Pending",
@@ -142,7 +143,7 @@ export const categoriesColumn: ColumnDef<Category>[] = [
                 }
                 variant="destructive"
                 onClick={async () => {
-                  const result = await deleteAction(row.original.documentId);
+                  const result = await deleteAction(row.original.slug);
 
                   switch (result.type) {
                     case "success":
@@ -356,6 +357,8 @@ export const requestsColumn: ColumnDef<Request>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      const { refresh } = useTableAction();
+
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -370,6 +373,54 @@ export const requestsColumn: ColumnDef<Request>[] = [
                 View Items
               </Link>
             </DropdownMenuItem>
+            {!["cancelled", "completed"].includes(
+              row.getValue("requestStatus")
+            ) && (
+              <DropdownMenuItem
+                onClick={async () => {
+                  const result = await nextStepRequest(row.original.documentId);
+
+                  switch (result.type) {
+                    case "success":
+                      toast.success("Request status updated successfully");
+                      refresh();
+                      break;
+                    case "validation":
+                      toast.error(result.validation.message);
+                      break;
+                    case "error":
+                      toast.error(result.message);
+                      break;
+                  }
+                }}
+              >
+                Next Step
+              </DropdownMenuItem>
+            )}
+
+            {row.getValue("requestStatus") === "pending" && (
+              <DropdownMenuItem
+                className="text-red-500"
+                onClick={async () => {
+                  const result = await cancelRequest(row.original.documentId);
+
+                  switch (result.type) {
+                    case "success":
+                      toast.success("Request sucessfully cancelled");
+                      refresh();
+                      break;
+                    case "validation":
+                      toast.error(result.validation.message);
+                      break;
+                    case "error":
+                      toast.error(result.message);
+                      break;
+                  }
+                }}
+              >
+                Cancel
+              </DropdownMenuItem>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       );

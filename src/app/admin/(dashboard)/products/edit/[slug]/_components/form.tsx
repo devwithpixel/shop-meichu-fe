@@ -131,7 +131,7 @@ export default function UpdateProductForm({
 
       switch (result.type) {
         case "success":
-          toast.success("Product successfully created!");
+          toast.success("Product successfully updated!");
           redirect("/admin/products");
         case "validation":
           toast.error("Validation error");
@@ -232,8 +232,7 @@ export default function UpdateProductForm({
                       </FieldLabel>
                       <Input
                         {...field}
-                        type="number"
-                        step={1000}
+                        type="text"
                         required
                         aria-invalid={fieldState.invalid}
                       />

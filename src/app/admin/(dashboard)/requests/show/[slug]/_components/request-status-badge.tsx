@@ -23,8 +23,6 @@ export default function RequestStatusBadge({
   status: RequestType["requestStatus"];
 }) {
   return (
-    <Badge className={`${classNames[status]} text-base`}>
-      {statusReadable[status]}
-    </Badge>
+    <Badge className={`${classNames[status]}`}>{statusReadable[status]}</Badge>
   );
 }

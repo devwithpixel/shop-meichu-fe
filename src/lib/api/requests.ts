@@ -18,6 +18,7 @@ export async function getRequestData(
         revalidate: 0,
       },
     },
+    populate: "*",
   });
 
   return await response.json();
@@ -58,6 +59,54 @@ export async function createRequest<T>(
       const { error } = await response.json();
       return { type: "validation", validation: error };
     }
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: null };
+}
+
+export async function nextStepRequest(
+  requestId: string
+): Promise<ResultContract<null>> {
+  const response = await extendedFetchWithAuth(
+    `/requests/${requestId}/next-action`,
+    {
+      init: {
+        method: "POST",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
+    return { type: "error", message: "An error occurred" };
+  }
+
+  return { type: "success", data: null };
+}
+
+export async function cancelRequest(
+  requestId: string
+): Promise<ResultContract<null>> {
+  const response = await extendedFetchWithAuth(
+    `/requests/${requestId}/cancel`,
+    {
+      init: {
+        method: "POST",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    if (response.status === 400) {
+      const { error } = await response.json();
+      return { type: "validation", validation: error };
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 

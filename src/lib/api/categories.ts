@@ -91,12 +91,15 @@ export async function deleteCategory(
   slug: string,
   params?: ExtendedParams
 ): Promise<ResultContract<null>> {
-  const response = await extendedFetchWithAuth(`/categories/${slug}`, {
-    init: {
-      method: "DELETE",
-    },
-    ...params,
-  });
+  const response = await extendedFetchWithAuth(
+    `/categories/${slug}/soft-delete`,
+    {
+      init: {
+        method: "DELETE",
+      },
+      ...params,
+    }
+  );
 
   if (!response.ok) {
     if (response.status === 400) {

@@ -12,10 +12,10 @@ export const imageValidation = z
   })
   .refine(
     (file) => {
-      const validTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+      const validTypes = ["image/jpeg", "image/jpg", "image/png"];
       return validTypes.includes(file.type);
     },
     {
-      message: "Only JPEG, PNG, WebP images are allowed.",
+      message: "Only JPEG, PNG images are allowed.",
     }
   );

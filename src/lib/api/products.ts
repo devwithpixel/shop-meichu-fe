@@ -120,12 +120,15 @@ export async function deleteProduct(
   slug: string,
   params?: ExtendedParams
 ): Promise<ResultContract<null>> {
-  const response = await extendedFetchWithAuth(`/products/${slug}`, {
-    init: {
-      method: "DELETE",
-    },
-    ...params,
-  });
+  const response = await extendedFetchWithAuth(
+    `/products/${slug}/soft-delete`,
+    {
+      init: {
+        method: "DELETE",
+      },
+      ...params,
+    }
+  );
 
   if (!response.ok) {
     if (response.status === 400) {

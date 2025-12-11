@@ -210,8 +210,7 @@ export default function CreateProductForm({
                       </FieldLabel>
                       <Input
                         {...field}
-                        type="number"
-                        step={1000}
+                        type="text"
                         required
                         aria-invalid={fieldState.invalid}
                       />
