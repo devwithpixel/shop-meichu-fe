@@ -233,7 +233,7 @@ export default function ProductDetailSection({
 
   const background = useMemo(
     () => ({
-      backgroundColor: product.backgroundColor || "#000000",
+      backgroundColor: product.backgroundColor || "#1C1C1C",
     }),
     [product.backgroundColor]
   );

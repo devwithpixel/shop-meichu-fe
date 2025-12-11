@@ -16,7 +16,6 @@ export default function FooterRunningText({
   fadeColor,
 }: FooterRunningTextProps) {
   const footerRunningTextRef = useRef<HTMLDivElement>(null);
-  const color = fadeColor || "#1C1C1C";
 
   useGSAP(() => {
     gsap.to(footerRunningTextRef.current, {
@@ -29,16 +28,16 @@ export default function FooterRunningText({
 
   const leftFade = useMemo(
     () => ({
-      background: `linear-gradient(to right, ${fadeColor} ?? bg-carbon, transparent)`,
+      background: `linear-gradient(to right, ${fadeColor || "#1C1C1C"}, transparent)`,
     }),
-    [color]
+    [fadeColor]
   );
 
   const rightFade = useMemo(
     () => ({
-      background: `linear-gradient(to left, ${fadeColor}, transparent)`,
+      background: `linear-gradient(to left, ${fadeColor || "#1C1C1C"}, transparent)`,
     }),
-    [color]
+    [fadeColor]
   );
 
   return (
