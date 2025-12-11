@@ -178,7 +178,6 @@ export default function CheckoutForm({
           >
             Reference Image
           </FieldLegend>
-          <TooltipProvider>
             <Controller
               name="referenceImages"
               control={form.control}
@@ -198,7 +197,6 @@ export default function CheckoutForm({
                 </Field>
               )}
             />
-          </TooltipProvider>
         </FieldSet>
 
         <FieldSet>

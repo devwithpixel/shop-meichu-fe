@@ -39,6 +39,21 @@ export default function RequestProductProgress({
     }
   };
 
+  const findActiveStepIndex = () => {
+    const activeIndex = progressSteps.findIndex((s) => s.status === "active");
+    if (activeIndex >= 0) return activeIndex;
+
+    const allCompleted = progressSteps.every((s) => s.status === "completed");
+    if (allCompleted) return progressSteps.length - 1; 
+
+    const notCompletedIndex = progressSteps.findIndex(
+      (s) => s.status !== "completed"
+    );
+    return notCompletedIndex >= 0 ? notCompletedIndex : 0;
+  };
+
+  const currentStepIndex = findActiveStepIndex();
+
   return (
     <>
       {/* Desktop */}
@@ -141,9 +156,7 @@ export default function RequestProductProgress({
               <div className="flex items-center gap-2 text-gray-600">
                 <div className="w-2.5 h-2.5 rounded-full bg-[#E91E63]"></div>
                 <span className="text-sm">
-                  Step{" "}
-                  {progressSteps.findIndex((s) => s.status === "active") + 1} of{" "}
-                  {progressSteps.length}
+                  Step {currentStepIndex + 1} of {progressSteps.length}
                 </span>
               </div>
               <span className="text-sm font-medium text-[#E91E63]">
@@ -220,8 +233,7 @@ export default function RequestProductProgress({
 
             <div className="mt-8 text-center">
               <span className="text-sm font-medium text-[#E91E63]">
-                Step {progressSteps.findIndex((s) => s.status === "active") + 1}{" "}
-                of {progressSteps.length}
+                Step {currentStepIndex + 1} of {progressSteps.length}
               </span>
 
               <div className="mt-1">

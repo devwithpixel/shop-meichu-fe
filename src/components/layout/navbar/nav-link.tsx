@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import type { Navigation } from "@/types/navigation";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AnimatedText = ({
   text,
@@ -101,17 +102,19 @@ export default function NavLink({ title, url, subNavigation }: Navigation) {
               </div>
             ) : (
               <div className="p-2">
-                <div className="flex flex-col gap-1">
-                  {subNavigation.items?.map((navigationItem, index) => (
-                    <Link
-                      key={index}
-                      href={navigationItem.url}
-                      className="group font-albert-sans text-base font-bold text-black hover:text-white hover:bg-black transition-colors px-4 py-2 rounded-lg"
-                    >
-                      {navigationItem.title}
-                    </Link>
-                  ))}
-                </div>
+                <ScrollArea className="h-90 w-full">
+                  <div className="flex flex-col gap-1">
+                    {subNavigation.items?.map((navigationItem, index) => (
+                      <Link
+                        key={index}
+                        href={navigationItem.url}
+                        className="group font-albert-sans text-base font-bold text-black hover:text-white hover:bg-black transition-colors px-4 py-2 rounded-lg"
+                      >
+                        {navigationItem.title}
+                      </Link>
+                    ))}
+                  </div>
+                </ScrollArea>
               </div>
             )}
           </DropdownMenuContent>
