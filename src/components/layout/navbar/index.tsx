@@ -84,7 +84,7 @@ export default function Navbar({
           hasScrollEffect && !isVisible ? "-translate-y-full" : "translate-y-0",
           isHomePage
             ? isScrolled
-              ? "bg-black border-b border-[#7e2f2f]"
+              ? "bg-black border-b border-[#222121]"
               : "bg-transparent border-b border-[#222121]/20"
             : "bg-black border-b border-[#222121]"
         )}
@@ -92,10 +92,7 @@ export default function Navbar({
         <div className="mx-auto px-4 sm:px-6 lg:px-6 lg:py-1">
           <div className="flex justify-between items-center h-16">
             <div className="flex item-center">
-              <MobileMenu
-                brandData={data.brand}
-                navigations={navigations}
-              />
+              <MobileMenu brandData={data.brand} navigations={navigations} />
 
               <div className="shrink-0">
                 <Link href="/" className="text-3xl font-light tracking-wide">

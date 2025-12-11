@@ -45,9 +45,9 @@ export default function TrendingStyleSection({
       gsap.set(cardTexts, { fontSize: "60px", textAlign: "center" });
 
       const getTextX = () => {
-        if (window.innerWidth >= 1300) return 48;
-        if (window.innerWidth >= 1020) return 40;
-        return 80;
+        if (window.innerWidth >= 901) return -85;
+        if (window.innerWidth <= 900) return 67;
+        return 0;
       };
 
       const favoriteTimeline = gsap.timeline({
@@ -89,7 +89,7 @@ export default function TrendingStyleSection({
             fontSize: "24px",
             x: getTextX(),
             textAlign: "left",
-            duration: 0.8,
+            duration: 1,
             ease: "power2.inOut",
           },
           "<"
@@ -169,7 +169,7 @@ export default function TrendingStyleSection({
                       key={product.id}
                       className={`card-color ${bgColors[index]} flex items-center justify-center rounded-xl text-center`}
                     >
-                      <h1 className="text-color text-2xl text-gray-900 font-albert-sans font-bold whitespace-nowrap text-left truncate w-[95%]">
+                      <h1 className="text-color text-2xl text-gray-900 font-albert-sans font-bold whitespace-nowrap lg:mx-37 truncate w-[95%] md:w-[80%] lg:w-[95%]">
                         {product.name}
                       </h1>
                     </div>
@@ -197,7 +197,7 @@ export default function TrendingStyleSection({
                         />
                         <div className="flex items-center justify-between w-full">
                           <div className="grid grid-cols-1 gap-3">
-                            <h1 className="text-base text-gray-900 font-albert-sans font-bold">
+                            <h1 className="text-base text-gray-900 font-albert-sans font-bold truncate w-[99%]">
                               {product.name}
                             </h1>
                             <p className="text-xs text-gray-900 font-albert-sans font-bold">

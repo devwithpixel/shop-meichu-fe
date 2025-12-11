@@ -368,7 +368,7 @@ export default function CollectionSection({
       </div>
 
       {/* Mobile */}
-      <div className="md:hidden bg-white text-black min-h-screen px-4 py-12 font-albert-sans -mt-1">
+      <div className="md:hidden bg-white text-black min-h-screen px-4 py-12 font-albert-sans">
         <div className="w-full">
           <div className="w-full flex justify-center mb-8">
             <div className="max-w-6xl w-full">
