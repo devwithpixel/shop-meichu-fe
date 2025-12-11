@@ -96,7 +96,7 @@ export default function CheckoutForm({
                 </FieldLabel>
               </div>
 
-              <div className="grid grid-cols-5 md:grid-cols-3 lg:grid-cols-5 gap-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-2">
                 <div>
                   <Controller
                     name="contactPlatform"
@@ -145,7 +145,7 @@ export default function CheckoutForm({
                   />
                 </div>
 
-                <div className="col-span-4 md:col-span-2 lg:col-span-4">
+                <div className="col-span-1 md:col-span-2 lg:col-span-4">
                   <Controller
                     name="contact"
                     control={form.control}
@@ -184,7 +184,7 @@ export default function CheckoutForm({
             name="referenceImages"
             control={form.control}
             render={({ field, fieldState }) => (
-              <Field className="max-w-80! md:max-w-full!">
+              <Field>
                 <FieldLabel className="text-xs md:text-sm">
                   Upload product reference <MarkRequired />
                 </FieldLabel>

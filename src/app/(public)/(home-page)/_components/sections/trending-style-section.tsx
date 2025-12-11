@@ -169,7 +169,7 @@ export default function TrendingStyleSection({
                       key={product.id}
                       className={`card-color ${bgColors[index]} flex items-center justify-center rounded-xl text-center`}
                     >
-                      <h1 className="text-color text-2xl text-gray-900 font-albert-sans font-bold whitespace-nowrap lg:mx-37 truncate w-[95%] md:w-[80%] lg:w-[95%]">
+                      <h1 className="text-color text-2xl text-gray-900 font-albert-sans font-bold whitespace-nowrap xl:mx-28 2xl:mx-37 truncate w-[95%] md:w-[80%] lg:w-[95%]">
                         {product.name}
                       </h1>
                     </div>
@@ -197,7 +197,7 @@ export default function TrendingStyleSection({
                         />
                         <div className="flex items-center justify-between w-full">
                           <div className="grid grid-cols-1 gap-3">
-                            <h1 className="text-base text-gray-900 font-albert-sans font-bold truncate w-[99%]">
+                            <h1 className="text-base text-gray-900 font-albert-sans font-bold ">
                               {product.name}
                             </h1>
                             <p className="text-xs text-gray-900 font-albert-sans font-bold">
