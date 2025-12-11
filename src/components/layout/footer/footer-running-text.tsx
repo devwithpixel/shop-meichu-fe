@@ -1,8 +1,11 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
-import { useMemo, useRef } from "react";
-import gsap from "gsap";
+import {
+  Marquee,
+  MarqueeContent,
+  MarqueeItem,
+  MarqueeEdge,
+} from "@/components/ui/marquee";
 
 import type { RunningText } from "@/types/strapi/components/shared/running-text";
 
@@ -15,65 +18,47 @@ export default function FooterRunningText({
   data,
   fadeColor,
 }: FooterRunningTextProps) {
-  const footerRunningTextRef = useRef<HTMLDivElement>(null);
+  const defaultColor = "#1C1C1C";
+  const bgColor = fadeColor || defaultColor;
 
-  useGSAP(() => {
-    gsap.to(footerRunningTextRef.current, {
-      xPercent: -100,
-      repeat: -1,
-      ease: "none",
-      duration: 22,
-    });
-  });
-
-  const leftFade = useMemo(
-    () => ({
-      background: `linear-gradient(to right, ${fadeColor || "#1C1C1C"}, transparent)`,
-    }),
-    [fadeColor]
-  );
-
-  const rightFade = useMemo(
-    () => ({
-      background: `linear-gradient(to left, ${fadeColor || "#1C1C1C"}, transparent)`,
-    }),
-    [fadeColor]
-  );
+  const textItems = [
+    { text: data.firstText, outlined: false },
+    ...(data.secondText ? [{ text: data.secondText, outlined: true }] : []),
+  ];
 
   return (
-    <div className="relative w-full overflow-hidden mb-16">
-      <div
-        className="pointer-events-none absolute left-0 top-0 h-full w-24 z-20"
-        style={leftFade}
-      />
-      <div
-        className="pointer-events-none absolute right-0 top-0 h-full w-24 z-20"
-        style={rightFade}
-      />
-
-      <div
-        ref={footerRunningTextRef}
-        className="flex whitespace-nowrap font-jogging"
-      >
-        <p className="text-7xl md:text-8xl font-medium">
-          {data.firstText} &nbsp;
-        </p>
-
-        {data.secondText && (
-          <p className="text-7xl md:text-8xl font-medium text-transparent text-outline-white">
-            {data.secondText} &nbsp;
-          </p>
-        )}
-
-        <p className="text-7xl md:text-8xl font-medium">
-          {data.firstText} &nbsp;
-        </p>
-        {data.secondText && (
-          <p className="text-7xl md:text-8xl font-medium text-transparent text-outline-white">
-            {data.secondText} &nbsp;
-          </p>
-        )}
-      </div>
+    <div className="relative w-full mb-16">
+      <Marquee speed={100}>
+        <MarqueeContent className="pb-4">
+          {[...Array(4)].map((_, groupIndex) => (
+            <div key={groupIndex} className="flex font-jogging">
+              {textItems.map((item, index) => (
+                <MarqueeItem key={`${groupIndex}-${index}`} asChild>
+                  <p
+                    className={`text-7xl md:text-8xl font-medium ${
+                      item.outlined ? "text-transparent text-outline-white" : ""
+                    }`}
+                  >
+                    {item.text}&nbsp;
+                  </p>
+                </MarqueeItem>
+              ))}
+            </div>
+          ))}
+        </MarqueeContent>
+        <MarqueeEdge
+          side="left"
+          style={{
+            background: `linear-gradient(to right, ${bgColor}, transparent)`,
+          }}
+        />
+        <MarqueeEdge
+          side="right"
+          style={{
+            background: `linear-gradient(to left, ${bgColor}, transparent)`,
+          }}
+        />
+      </Marquee>
     </div>
   );
 }
