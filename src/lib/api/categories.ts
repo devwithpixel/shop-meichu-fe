@@ -5,6 +5,9 @@ import {
   extendedFetchWithAuth,
   type ExtendedParams,
 } from "./base";
+import { logout } from "./auth";
+import { redirect } from "next/navigation";
+import { updateTag } from "next/cache";
 import type { StrapiResponse } from "@/types/strapi/response";
 import type { Category } from "@/types/strapi/models/category";
 import type { ResultContract } from "@/types/api-return";
@@ -16,6 +19,7 @@ export async function getAllCategories(
     init: {
       next: {
         revalidate: 10,
+        tags: ["categories"],
       },
     },
     ...params,
@@ -32,6 +36,7 @@ export async function getCategoryData(
     init: {
       next: {
         revalidate: 10,
+        tags: ["categories"],
       },
     },
     ...params,
@@ -57,9 +62,15 @@ export async function createCategory<T>(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("categories");
   return { type: "success", data: await response.json() };
 }
 
@@ -81,9 +92,15 @@ export async function updateCategory<T>(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("categories");
   return { type: "success", data: await response.json() };
 }
 
@@ -107,8 +124,14 @@ export async function deleteCategory(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("categories");
   return { type: "success", data: null };
 }

@@ -20,6 +20,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { formatCurrency } from "@/lib/utils";
+import { cancelRequest, nextStepRequest } from "@/lib/api/requests";
+import { RequestStatusBadge } from "@/components/badge/request-status-badge";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import StrapiImage from "@/components/global/strapi-image";
@@ -31,15 +33,6 @@ import type { Subscriber } from "@/types/strapi/models/subscriber";
 import type { Request } from "@/types/strapi/models/request";
 import type { StrapiImage as StrapiImageType } from "@/types/strapi/media/image";
 import type { StrapiRelationCount } from "@/types/strapi/count-relation";
-import { cancelRequest, nextStepRequest } from "@/lib/api/requests";
-
-const readableRequestStatus = {
-  pending: "Pending",
-  confirmed: "Confirmed",
-  in_progress: "In Progress",
-  completed: "Completed",
-  cancelled: "Cancelled",
-};
 
 export const categoriesColumn: ColumnDef<Category>[] = [
   {
@@ -115,6 +108,18 @@ export const categoriesColumn: ColumnDef<Category>[] = [
     enableColumnFilter: false,
     meta: {
       label: "Thumbnail",
+    },
+  },
+  {
+    id: "createdAt",
+    accessorKey: "createdAt",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} label="Created At" />
+    ),
+    enableSorting: true,
+    enableColumnFilter: false,
+    meta: {
+      label: "Created At",
     },
   },
   {
@@ -322,7 +327,7 @@ export const requestsColumn: ColumnDef<Request>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} label="Contact" />
     ),
-    cell: ({ row }) => <div>{row.getValue("contact")}</div>,
+    cell: ({ row }) => <p className="truncate">{row.getValue("contact")}</p>,
     enableColumnFilter: true,
     meta: {
       label: "Contact",
@@ -338,13 +343,9 @@ export const requestsColumn: ColumnDef<Request>[] = [
       <DataTableColumnHeader column={column} label="Request Status" />
     ),
     cell: ({ row }) => (
-      <div>
-        {
-          readableRequestStatus[
-            row.getValue("requestStatus") as keyof typeof readableRequestStatus
-          ]
-        }
-      </div>
+      <RequestStatusBadge
+        status={row.getValue("requestStatus") as Request["requestStatus"]}
+      />
     ),
     enableColumnFilter: true,
     meta: {

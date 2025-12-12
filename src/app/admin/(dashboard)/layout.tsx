@@ -1,20 +1,24 @@
-import AdminOnly from "@/components/middleware/admin-only";
 import AdminLayout from "@/components/layout/admin-layout";
 import { AdminProvider } from "@/context/admin-provider";
-import { getSession } from "@/lib/session";
+import { getCurrentUser } from "@/lib/api/user";
+import { redirect } from "next/navigation";
 
-export default async function DashboardLayout({
+export default async function AdminAuthLayout({
   children,
 }: {
   children?: React.ReactNode;
 }) {
-  const session = await getSession();
+  const user = await getCurrentUser();
+
+  if (!user) return redirect("/logout?redirect=/admin/login");
+
+  if (user.role?.name !== "Admin") {
+    return redirect("/logout?redirect=/admin/login");
+  }
 
   return (
-    <AdminOnly fallback="/admin/login">
-      <AdminProvider user={session.user!}>
-        <AdminLayout>{children}</AdminLayout>
-      </AdminProvider>
-    </AdminOnly>
+    <AdminProvider user={user}>
+      <AdminLayout>{children}</AdminLayout>
+    </AdminProvider>
   );
 }

@@ -68,7 +68,7 @@ export function TableActionProvider<T>(props: TableActionProviderProps<T>) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setData] = useState<T[]>([]);
   const [pagination, setPagination] = useState({
-    pageCount: -1,
+    pageCount: 1,
     page: 1,
     pageSize: 1,
   });

@@ -1,4 +1,4 @@
-import { Inter, Rubik, Outfit, Albert_Sans } from "next/font/google";
+import { Inter, Rubik, Albert_Sans, Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { FooterProvider } from "@/context/footer-provider";
@@ -17,9 +17,9 @@ const inter = Inter({
   fallback: ["sans-serif"],
 });
 
-const outfit = Outfit({
-  variable: "--font-outfit",
-  preload: true,
+const poppins = Poppins({
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-poppins",
   fallback: ["sans-serif"],
   subsets: ["latin"],
 });
@@ -57,7 +57,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${rubik.variable} ${inter.variable} ${outfit.variable} ${albertSans.variable} ${jogging.variable} antialiased`}
+        className={`${rubik.variable} ${inter.variable} ${albertSans.variable} ${jogging.variable} ${poppins.variable} antialiased`}
         suppressHydrationWarning
       >
         <NuqsAdapter>

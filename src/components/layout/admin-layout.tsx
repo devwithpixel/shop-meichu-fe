@@ -7,6 +7,7 @@ import { LayoutProvider } from "@/context/layout-provider";
 import { ProfileDropdown } from "@/components/dropdown/profile-dropdown";
 import { ThemeToggle } from "@/components/theme-toggle";
 import AdminSidebar from "@/components/sidebar/admin-sidebar";
+import { Separator } from "../ui/separator";
 
 export default function AdminLayout({
   children,
@@ -16,23 +17,19 @@ export default function AdminLayout({
   return (
     <LayoutProvider>
       <SidebarProvider>
-        <div className="relative flex min-h-screen w-full font-outfit">
-          <AdminSidebar />
-          <SidebarInset className="flex flex-col px-4 py-2">
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <SidebarTrigger />
-                <h1 className="text-2xl font-bold">Dashboard</h1>
-              </div>
+        <AdminSidebar />
+        <SidebarInset className="px-4 py-2 space-y-3 @container/main">
+          <div className="flex items-center justify-between">
+            <SidebarTrigger />
 
-              <div className="flex items-center gap-3">
-                <ThemeToggle />
-                <ProfileDropdown />
-              </div>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              <ProfileDropdown />
             </div>
-            {children}
-          </SidebarInset>
-        </div>
+          </div>
+          <Separator />
+          {children}
+        </SidebarInset>
       </SidebarProvider>
     </LayoutProvider>
   );

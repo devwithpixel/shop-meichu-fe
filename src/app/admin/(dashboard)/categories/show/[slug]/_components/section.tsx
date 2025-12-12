@@ -16,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { MultipleImageView } from "@/components/form/multiple-image-view";
+import { LinkIcon } from "lucide-react";
 import StrapiImage from "@/components/global/strapi-image";
 import Link from "next/link";
 
@@ -71,19 +72,28 @@ export function ShowCategoryForm({
                 <ScrollArea className="h-64">
                   <div className="space-y-3">
                     {products.map((product) => (
-                      <Link
-                        href={`/products/${product.slug}`}
+                      <div
                         key={product.id}
-                        className="flex items-center gap-3 border p-2 rounded-lg bg-card text-sm font-medium"
+                        className="flex justify-between border p-2 rounded-lg bg-card text-sm font-medium"
                       >
-                        <StrapiImage
-                          src={product.images?.[0]}
-                          alt={product.name}
-                          size="thumbnail"
-                          className="w-8 h-8 object-cover rounded-lg"
-                        />
-                        {product.name}
-                      </Link>
+                        <Link
+                          href={`/products/${product.slug}`}
+                          className="w-full flex items-center gap-3 "
+                        >
+                          <StrapiImage
+                            src={product.images?.[0]}
+                            alt={product.name}
+                            size="thumbnail"
+                            className="w-8 h-8 object-cover rounded-lg"
+                          />
+                          {product.name}
+                        </Link>
+                        <Button variant="outline" asChild>
+                          <Link href={`/admin/products/edit/${product.slug}`}>
+                            <LinkIcon />
+                          </Link>
+                        </Button>
+                      </div>
                     ))}
                   </div>
                 </ScrollArea>

@@ -5,6 +5,9 @@ import {
   extendedFetchWithAuth,
   type ExtendedParams,
 } from "./base";
+import { logout } from "./auth";
+import { redirect } from "next/navigation";
+import { updateTag } from "next/cache";
 import type { StrapiResponse } from "@/types/strapi/response";
 import type { Product } from "@/types/strapi/models/product";
 import type { ResultContract } from "@/types/api-return";
@@ -17,6 +20,7 @@ export async function getProductData(
     init: {
       next: {
         revalidate: 10,
+        tags: ["products"],
       },
     },
     ...params,
@@ -31,7 +35,8 @@ export async function getAllProducts(
   const res = await extendedFetch("/products", {
     init: {
       next: {
-        revalidate: 10,
+        revalidate: 60,
+        tags: ["products"],
       },
     },
     ...params,
@@ -46,6 +51,7 @@ export async function getRecommendedProducts(): Promise<
     init: {
       next: {
         revalidate: 60 * 15,
+        tags: ["products"],
       },
     },
   });
@@ -61,6 +67,7 @@ export async function getProductsByCategory(
     init: {
       next: {
         revalidate: 60,
+        tags: ["products"],
       },
     },
     ...params,
@@ -86,9 +93,15 @@ export async function createProduct<T>(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("products");
   return { type: "success", data: await response.json() };
 }
 
@@ -110,9 +123,15 @@ export async function updateProduct<T>(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("products");
   return { type: "success", data: await response.json() };
 }
 
@@ -136,8 +155,14 @@ export async function deleteProduct(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("products");
   return { type: "success", data: null };
 }

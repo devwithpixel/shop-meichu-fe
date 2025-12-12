@@ -10,6 +10,7 @@ export async function getCurrentUser(): Promise<User> {
         revalidate: 0,
       },
     },
+    populate: "role",
   });
 
   return await response.json();

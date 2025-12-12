@@ -2,7 +2,6 @@
 
 import { extendedFetch } from "./base";
 import { getSession } from "@/lib/session";
-import { redirect } from "next/navigation";
 
 import type { LoginResponse } from "@/types/admin/login";
 
@@ -40,6 +39,4 @@ export async function login(email: string, password: string) {
 export async function logout() {
   const session = await getSession();
   session.destroy();
-
-  redirect("/admin/login");
 }

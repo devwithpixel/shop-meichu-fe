@@ -1,6 +1,7 @@
 import { categoriesColumn } from "@/config/table-column";
-import { TableActionProvider } from "@/context/table-action-provider";
 import { getAllCategories, deleteCategory } from "@/lib/api/categories";
+import { TableActionProvider } from "@/context/table-action-provider";
+import { AdminHeader } from "@/components/layout/header/admin-header";
 import { AdminTable } from "@/components/table/admin-table";
 
 import type { ExtendedParams } from "@/lib/api/base";
@@ -29,15 +30,18 @@ export async function getAllCategoriesWithProductCount(
 
 export default async function Page() {
   return (
-    <TableActionProvider
-      getAction={getAllCategoriesWithProductCount}
-      deleteAction={deleteCategory}
-      filters={{ name: "$contains" }}
-    >
-      <AdminTable
-        columns={categoriesColumn}
-        routes={{ create: "/admin/categories/create" }}
-      />
-    </TableActionProvider>
+    <>
+      <AdminHeader title="Categories" />
+      <TableActionProvider
+        getAction={getAllCategoriesWithProductCount}
+        deleteAction={deleteCategory}
+        filters={{ name: "$contains" }}
+      >
+        <AdminTable
+          columns={categoriesColumn}
+          routes={{ create: "/admin/categories/create" }}
+        />
+      </TableActionProvider>
+    </>
   );
 }

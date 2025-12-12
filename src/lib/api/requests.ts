@@ -5,9 +5,12 @@ import {
   extendedFetchWithAuth,
   type ExtendedParams,
 } from "./base";
+import { logout } from "./auth";
+import { redirect } from "next/navigation";
+import { updateTag } from "next/cache";
 import type { StrapiResponse } from "@/types/strapi/response";
 import type { Request } from "@/types/strapi/models/request";
-import { ResultContract } from "@/types/api-return";
+import type { ResultContract } from "@/types/api-return";
 
 export async function getRequestData(
   documentId: string
@@ -16,6 +19,7 @@ export async function getRequestData(
     init: {
       next: {
         revalidate: 0,
+        tags: ["requests"],
       },
     },
     populate: "*",
@@ -31,6 +35,7 @@ export async function getAllRequests(
     init: {
       next: {
         revalidate: 0,
+        tags: ["requests"],
       },
     },
     ...params,
@@ -59,9 +64,16 @@ export async function createRequest<T>(
       const { error } = await response.json();
       return { type: "validation", validation: error };
     }
+
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("requests");
   return { type: "success", data: null };
 }
 
@@ -83,9 +95,15 @@ export async function nextStepRequest(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("requests");
   return { type: "success", data: null };
 }
 
@@ -107,8 +125,14 @@ export async function cancelRequest(
       return { type: "validation", validation: error };
     }
 
+    if (response.status === 401) {
+      await logout();
+      redirect("/admin/login");
+    }
+
     return { type: "error", message: "An error occurred" };
   }
 
+  updateTag("requests");
   return { type: "success", data: null };
 }

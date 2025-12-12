@@ -1,7 +1,7 @@
 import "@/styles/admin.css";
+import { ThemeProvider } from "next-themes";
 
 import type { Metadata } from "next";
-import { ThemeProvider } from "next-themes";
 
 export const metadata: Metadata = {
   title: "Shop Meichu - Admin",
@@ -21,7 +21,7 @@ export default function AdminLayout({
       enableSystem
       disableTransitionOnChange
     >
-      <main className="font-outfit">{children}</main>
+      <div className="font-poppins">{children}</div>
     </ThemeProvider>
   );
 }

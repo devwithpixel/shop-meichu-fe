@@ -1,5 +1,4 @@
 import { getSession } from "../session";
-import { logout } from "./auth";
 import qs from "qs";
 
 interface StrapiPaginationOptions {
@@ -72,11 +71,5 @@ export async function extendedFetchWithAuth(
     init: mergedInit,
   };
 
-  const response = await extendedFetch(input, params);
-
-  if (!response.ok && response.status === 401) {
-    await logout();
-  }
-
-  return response;
+  return await extendedFetch(input, params);
 }

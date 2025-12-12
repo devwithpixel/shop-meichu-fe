@@ -35,6 +35,7 @@ export async function createSubscriber<T>(
       const { error } = await response.json();
       return { type: "validation", validation: error };
     }
+
     return { type: "error", message: "An error occurred" };
   }
 

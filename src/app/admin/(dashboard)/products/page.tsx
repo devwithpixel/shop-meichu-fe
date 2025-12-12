@@ -1,7 +1,8 @@
 import { productsColumn } from "@/config/table-column";
-import { TableActionProvider } from "@/context/table-action-provider";
-import { AdminTable } from "@/components/table/admin-table";
 import { deleteProduct, getAllProducts } from "@/lib/api/products";
+import { TableActionProvider } from "@/context/table-action-provider";
+import { AdminHeader } from "@/components/layout/header/admin-header";
+import { AdminTable } from "@/components/table/admin-table";
 
 import type { ExtendedParams } from "@/lib/api/base";
 
@@ -19,15 +20,18 @@ async function extendedGetAllProducts(params?: ExtendedParams) {
 
 export default async function Page() {
   return (
-    <TableActionProvider
-      getAction={extendedGetAllProducts}
-      deleteAction={deleteProduct}
-      filters={{ name: "$contains" }}
-    >
-      <AdminTable
-        columns={productsColumn}
-        routes={{ create: "/admin/products/create" }}
-      />
-    </TableActionProvider>
+    <>
+      <AdminHeader title="Products" />
+      <TableActionProvider
+        getAction={extendedGetAllProducts}
+        deleteAction={deleteProduct}
+        filters={{ name: "$contains" }}
+      >
+        <AdminTable
+          columns={productsColumn}
+          routes={{ create: "/admin/products/create" }}
+        />
+      </TableActionProvider>
+    </>
   );
 }

@@ -48,7 +48,7 @@ export default function Footer({ data }: FooterProps) {
           toast.success("Successfully subscribed!");
           break;
         case "validation":
-          toast.error("Validation error");
+          toast.error("Email already subscribed!");
           break;
         case "error":
           toast.error(result.message);
