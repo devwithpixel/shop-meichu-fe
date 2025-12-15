@@ -271,8 +271,8 @@ export default function CollectionSection({
                       />
 
                       {isActive && (
-                        <h1 className="text-xl md:text-2xl font-albert-sans font-medium text-center truncate px-20">
-                          {collection.category?.name}
+                        <h1 className="text-xl md:text-2xl font-albert-sans font-medium text-center truncate md:w-80 lg:w-auto pl-20">
+                          {collection.category.name}
                         </h1>
                       )}
                     </div>

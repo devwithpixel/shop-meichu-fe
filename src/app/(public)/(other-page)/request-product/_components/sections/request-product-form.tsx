@@ -218,7 +218,7 @@ export default function CheckoutForm({
                     htmlFor="form-note"
                     className="text-xs md:text-sm"
                   >
-                    Extra request (optional) <MarkRequired />
+                    Extra request (optional) 
                   </FieldLabel>
                   <Textarea
                     {...field}

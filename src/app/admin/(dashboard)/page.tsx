@@ -40,9 +40,9 @@ export default async function Page() {
               </span>
             </div>
 
-            <div>
+            <div className="md:max-w-400 lg:max-w-110">
               <Suspense>
-                <h2 className="text-2xl font-bold text-white mb-1 truncate max-w-110">
+                <h2 className="md:text-xl lg:text-2xl font-bold text-white mb-1 truncate ">
                   {greeting}, {user.username}
                 </h2>
               </Suspense>
@@ -50,7 +50,7 @@ export default async function Page() {
             </div>
           </div>
 
-          <div className="w-62 h-62 flex items-center justify-center shrink-0">
+          <div className="hidden w-45 h-45 lg:w-62 lg:h-62 md:flex items-center justify-center shrink-0">
             <img
               src="/assets/illustration/design.png"
               alt="Design Illustration"
