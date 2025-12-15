@@ -74,7 +74,7 @@ async function createCroppedImage(
           return;
         }
 
-        const croppedFile = new File([blob], `cropped-${fileName}`, {
+        const croppedFile = new File([blob], fileName, {
           type: "image/png",
         });
         resolve(croppedFile);
@@ -109,70 +109,78 @@ export function MultipleImage({
   const [filesWithCrops, setFilesWithCrops] = useState<
     Map<string, FileWithCrop>
   >(new Map());
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFileKey, setSelectedFileKey] = useState<string | null>(null);
   const [crop, setCrop] = useState<CropperPoint>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<CropperAreaData | null>(null);
   const [showCropDialog, setShowCropDialog] = useState(false);
   const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+
+  const selectedFile = useMemo(() => {
+    if (!selectedFileKey) return null;
+    return filesWithCrops.get(selectedFileKey)?.original ?? null;
+  }, [selectedFileKey, filesWithCrops]);
 
   const selectedImageUrl = useMemo(() => {
     if (!selectedFile) return null;
     return URL.createObjectURL(selectedFile);
   }, [selectedFile]);
 
+  const previewImageUrl = useMemo(() => {
+    if (!previewFile) return null;
+    return URL.createObjectURL(previewFile);
+  }, [previewFile]);
+
   useEffect(() => {
     return () => {
       if (selectedImageUrl) {
         URL.revokeObjectURL(selectedImageUrl);
       }
+      if (previewImageUrl) {
+        URL.revokeObjectURL(previewImageUrl);
+      }
     };
-  }, [selectedImageUrl]);
+  }, [selectedImageUrl, previewImageUrl]);
 
-  const onFilesChange = useCallback((newFiles: File[]) => {
-    onChange?.(newFiles);
+  const onFilesChange = useCallback(
+    (newFiles: File[]) => {
+      onChange?.(newFiles);
 
-    setFilesWithCrops((prevFilesWithCrops) => {
-      const updatedFilesWithCrops = new Map(prevFilesWithCrops);
+      setFilesWithCrops((prevFilesWithCrops) => {
+        const updatedFilesWithCrops = new Map(prevFilesWithCrops);
 
-      for (const file of newFiles) {
-        if (!updatedFilesWithCrops.has(file.name)) {
-          updatedFilesWithCrops.set(file.name, { original: file });
+        for (const file of newFiles) {
+          if (!updatedFilesWithCrops.has(file.name)) {
+            updatedFilesWithCrops.set(file.name, { original: file });
+          }
         }
-      }
 
-      const fileNames = new Set(newFiles.map((f) => f.name));
-      for (const [fileName] of updatedFilesWithCrops) {
-        if (!fileNames.has(fileName)) {
-          updatedFilesWithCrops.delete(fileName);
+        const fileNames = new Set(newFiles.map((f) => f.name));
+        for (const [fileName] of updatedFilesWithCrops) {
+          if (!fileNames.has(fileName)) {
+            updatedFilesWithCrops.delete(fileName);
+          }
         }
-      }
 
-      return updatedFilesWithCrops;
-    });
+        return updatedFilesWithCrops;
+      });
+    },
+    [onChange]
+  );
+
+  const onFileSelect = useCallback((fileKey: string) => {
+    setSelectedFileKey(fileKey);
+    setCrop({ x: 0, y: 0 });
+    setZoom(1);
+    setCroppedArea(null);
+    setShowCropDialog(true);
   }, []);
 
-  const onFileSelect = useCallback(
-    (file: File) => {
-      const fileWithCrop = filesWithCrops.get(file.name);
-      const originalFile = fileWithCrop?.original ?? file;
-
-      setSelectedFile(originalFile);
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setCroppedArea(null);
-      setShowCropDialog(true);
-    },
-    [filesWithCrops]
-  );
-
-  const onOpenPreview = useCallback(
-    (file: File) => {
-      setSelectedFile(file);
-      setShowPreviewDialog(true);
-    },
-    [filesWithCrops]
-  );
+  const onOpenPreview = useCallback((file: File) => {
+    setPreviewFile(file);
+    setShowPreviewDialog(true);
+  }, []);
 
   const onCropAreaChange: NonNullable<CropperProps["onCropAreaChange"]> =
     useCallback((_, croppedAreaPixels) => {
@@ -193,6 +201,7 @@ export function MultipleImage({
   const onCropDialogOpenChange = useCallback((open: boolean) => {
     if (!open) {
       setShowCropDialog(false);
+      setSelectedFileKey(null);
       setCrop({ x: 0, y: 0 });
       setZoom(1);
       setCroppedArea(null);
@@ -200,26 +209,27 @@ export function MultipleImage({
   }, []);
 
   const onCropApply = useCallback(async () => {
-    if (!selectedFile || !croppedArea || !selectedImageUrl) return;
+    if (!selectedFile || !croppedArea || !selectedImageUrl || !selectedFileKey)
+      return;
 
     try {
       const croppedFile = await createCroppedImage(
         selectedImageUrl,
         croppedArea,
-        selectedFile.name
+        selectedFileKey
       );
 
       const newFilesWithCrops = new Map(filesWithCrops);
-      const existing = newFilesWithCrops.get(selectedFile.name);
+      const existing = newFilesWithCrops.get(selectedFileKey);
       if (existing) {
-        newFilesWithCrops.set(selectedFile.name, {
+        newFilesWithCrops.set(selectedFileKey, {
           ...existing,
           cropped: croppedFile,
         });
         setFilesWithCrops(newFilesWithCrops);
 
         const updatedFiles = value.map((file) =>
-          file.name === selectedFile.name ? croppedFile : file
+          file.name === selectedFileKey ? croppedFile : file
         );
         onChange?.(updatedFiles);
       }
@@ -234,6 +244,7 @@ export function MultipleImage({
     selectedFile,
     croppedArea,
     selectedImageUrl,
+    selectedFileKey,
     filesWithCrops,
     onCropDialogOpenChange,
     value,
@@ -318,7 +329,7 @@ export function MultipleImage({
                     variant="ghost"
                     size="icon"
                     className="size-8"
-                    onClick={() => onFileSelect(fileWithCrop?.cropped ?? file)}
+                    onClick={() => onFileSelect(file.name)}
                   >
                     <CropIcon />
                   </Button>
@@ -393,15 +404,15 @@ export function MultipleImage({
           <DialogHeader>
             <DialogTitle>Preview Image</DialogTitle>
             <DialogDescription>
-              Preview the image for {selectedFile?.name}
+              Preview the image for {previewFile?.name}
             </DialogDescription>
           </DialogHeader>
-          {selectedFile && selectedImageUrl && (
+          {previewFile && previewImageUrl && (
             <div className="w-full h-96 dark:bg-gray-900 bg-gray-50 border rounded-lg">
               <img
                 className="w-full h-full object-contain mx-auto"
-                src={selectedImageUrl}
-                alt={selectedFile.name}
+                src={previewImageUrl}
+                alt={previewFile.name}
               />
             </div>
           )}
