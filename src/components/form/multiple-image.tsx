@@ -30,10 +30,11 @@ import {
   type CropperPoint,
   type CropperProps,
 } from "@/components/ui/cropper";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { maxFileSize } from "@/config/form";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
+import NoScrollSmootherContent from "../no-scroll-smoother-content";
 
 async function createCroppedImage(
   imageSrc: string,
@@ -88,7 +89,7 @@ async function createCroppedImage(
 
 interface FileWithCrop {
   original: File;
-  cropped?: File;
+  current: File;
 }
 
 export function MultipleImage({
@@ -107,9 +108,9 @@ export function MultipleImage({
   className?: string;
 }) {
   const [filesWithCrops, setFilesWithCrops] = useState<
-    Map<string, FileWithCrop>
+    Map<number, FileWithCrop>
   >(new Map());
-  const [selectedFileKey, setSelectedFileKey] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [crop, setCrop] = useState<CropperPoint>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedArea, setCroppedArea] = useState<CropperAreaData | null>(null);
@@ -118,9 +119,10 @@ export function MultipleImage({
   const [previewFile, setPreviewFile] = useState<File | null>(null);
 
   const selectedFile = useMemo(() => {
-    if (!selectedFileKey) return null;
-    return filesWithCrops.get(selectedFileKey)?.original ?? null;
-  }, [selectedFileKey, filesWithCrops]);
+    if (selectedIndex === null) return null;
+    const fileData = filesWithCrops.get(selectedIndex);
+    return fileData?.current ?? null;
+  }, [selectedIndex, filesWithCrops]);
 
   const selectedImageUrl = useMemo(() => {
     if (!selectedFile) return null;
@@ -132,17 +134,6 @@ export function MultipleImage({
     return URL.createObjectURL(previewFile);
   }, [previewFile]);
 
-  useEffect(() => {
-    return () => {
-      if (selectedImageUrl) {
-        URL.revokeObjectURL(selectedImageUrl);
-      }
-      if (previewImageUrl) {
-        URL.revokeObjectURL(previewImageUrl);
-      }
-    };
-  }, [selectedImageUrl, previewImageUrl]);
-
   const onFilesChange = useCallback(
     (newFiles: File[]) => {
       onChange?.(newFiles);
@@ -150,16 +141,22 @@ export function MultipleImage({
       setFilesWithCrops((prevFilesWithCrops) => {
         const updatedFilesWithCrops = new Map(prevFilesWithCrops);
 
-        for (const file of newFiles) {
-          if (!updatedFilesWithCrops.has(file.name)) {
-            updatedFilesWithCrops.set(file.name, { original: file });
+        for (let i = 0; i < newFiles.length; i++) {
+          const file = newFiles[i];
+          const existing = updatedFilesWithCrops.get(i);
+
+          if (!existing || existing.original.name !== file.name) {
+            updatedFilesWithCrops.set(i, {
+              original: file,
+              current: file,
+            });
           }
         }
 
-        const fileNames = new Set(newFiles.map((f) => f.name));
-        for (const [fileName] of updatedFilesWithCrops) {
-          if (!fileNames.has(fileName)) {
-            updatedFilesWithCrops.delete(fileName);
+        const indicesToKeep = new Set(newFiles.map((_, i) => i));
+        for (const [index] of updatedFilesWithCrops) {
+          if (!indicesToKeep.has(index)) {
+            updatedFilesWithCrops.delete(index);
           }
         }
 
@@ -169,8 +166,8 @@ export function MultipleImage({
     [onChange]
   );
 
-  const onFileSelect = useCallback((fileKey: string) => {
-    setSelectedFileKey(fileKey);
+  const onFileSelect = useCallback((index: number) => {
+    setSelectedIndex(index);
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setCroppedArea(null);
@@ -193,46 +190,69 @@ export function MultipleImage({
     }, []);
 
   const onCropReset = useCallback(() => {
+    if (selectedIndex === null) return;
+
+    const fileData = filesWithCrops.get(selectedIndex);
+    if (!fileData) return;
+
+    const newFilesWithCrops = new Map(filesWithCrops);
+    newFilesWithCrops.set(selectedIndex, {
+      ...fileData,
+      current: fileData.original,
+    });
+    setFilesWithCrops(newFilesWithCrops);
+
+    const updatedFiles = [...value];
+    updatedFiles[selectedIndex] = fileData.original;
+    onChange?.(updatedFiles);
+
     setCrop({ x: 0, y: 0 });
     setZoom(1);
     setCroppedArea(null);
-  }, []);
+  }, [selectedIndex, filesWithCrops, value, onChange]);
 
   const onCropDialogOpenChange = useCallback((open: boolean) => {
     if (!open) {
       setShowCropDialog(false);
-      setSelectedFileKey(null);
-      setCrop({ x: 0, y: 0 });
-      setZoom(1);
-      setCroppedArea(null);
+
+      setTimeout(() => {
+        setSelectedIndex(null);
+        setCrop({ x: 0, y: 0 });
+        setZoom(1);
+        setCroppedArea(null);
+      }, 200);
     }
   }, []);
 
   const onCropApply = useCallback(async () => {
-    if (!selectedFile || !croppedArea || !selectedImageUrl || !selectedFileKey)
+    if (
+      !selectedFile ||
+      !croppedArea ||
+      !selectedImageUrl ||
+      selectedIndex === null
+    )
       return;
 
     try {
+      const fileData = filesWithCrops.get(selectedIndex);
+      if (!fileData) return;
+
       const croppedFile = await createCroppedImage(
         selectedImageUrl,
         croppedArea,
-        selectedFileKey
+        fileData.original.name
       );
 
       const newFilesWithCrops = new Map(filesWithCrops);
-      const existing = newFilesWithCrops.get(selectedFileKey);
-      if (existing) {
-        newFilesWithCrops.set(selectedFileKey, {
-          ...existing,
-          cropped: croppedFile,
-        });
-        setFilesWithCrops(newFilesWithCrops);
+      newFilesWithCrops.set(selectedIndex, {
+        ...fileData,
+        current: croppedFile,
+      });
+      setFilesWithCrops(newFilesWithCrops);
 
-        const updatedFiles = value.map((file) =>
-          file.name === selectedFileKey ? croppedFile : file
-        );
-        onChange?.(updatedFiles);
-      }
+      const updatedFiles = [...value];
+      updatedFiles[selectedIndex] = croppedFile;
+      onChange?.(updatedFiles);
 
       onCropDialogOpenChange(false);
     } catch (error) {
@@ -244,7 +264,7 @@ export function MultipleImage({
     selectedFile,
     croppedArea,
     selectedImageUrl,
-    selectedFileKey,
+    selectedIndex,
     filesWithCrops,
     onCropDialogOpenChange,
     value,
@@ -289,19 +309,19 @@ export function MultipleImage({
         )}
         <FileUploadList className="max-h-96 overflow-y-auto">
           {value.map((file, index) => {
-            const fileWithCrop = filesWithCrops.get(file.name);
+            const fileData = filesWithCrops.get(index);
+            const displayFile = fileData?.current ?? file;
 
             return (
               <FileUploadItem key={index} value={file}>
                 <FileUploadItemPreview
                   render={(originalFile, fallback) => {
                     if (
-                      fileWithCrop?.cropped &&
+                      fileData?.current &&
                       originalFile.type.startsWith("image/")
                     ) {
-                      const url = URL.createObjectURL(fileWithCrop.cropped);
+                      const url = URL.createObjectURL(fileData.current);
                       return (
-                        // biome-ignore lint/performance/noImgElement: dynamic cropped file URLs from user uploads don't work well with Next.js Image optimization
                         <img
                           src={url}
                           alt={originalFile.name}
@@ -320,7 +340,7 @@ export function MultipleImage({
                     variant="ghost"
                     size="icon"
                     className="size-8"
-                    onClick={() => onOpenPreview(fileWithCrop?.cropped ?? file)}
+                    onClick={() => onOpenPreview(displayFile)}
                   >
                     <EyeIcon />
                   </Button>
@@ -329,7 +349,7 @@ export function MultipleImage({
                     variant="ghost"
                     size="icon"
                     className="size-8"
-                    onClick={() => onFileSelect(file.name)}
+                    onClick={() => onFileSelect(index)}
                   >
                     <CropIcon />
                   </Button>
@@ -348,84 +368,86 @@ export function MultipleImage({
           })}
         </FileUploadList>
       </FileUpload>
-      <Dialog open={showCropDialog} onOpenChange={onCropDialogOpenChange}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Crop Image</DialogTitle>
-            <DialogDescription>
-              Adjust the crop area and zoom level for {selectedFile?.name}
-            </DialogDescription>
-          </DialogHeader>
-          {selectedFile && selectedImageUrl && (
-            <div className="flex flex-col gap-4">
-              <Cropper
-                aspectRatio={aspectRatio}
-                shape={shape}
-                crop={crop}
-                onCropChange={setCrop}
-                zoom={zoom}
-                onZoomChange={setZoom}
-                onCropAreaChange={onCropAreaChange}
-                onCropComplete={onCropComplete}
-                className="h-96"
-              >
-                <CropperImage
-                  src={selectedImageUrl}
-                  alt={selectedFile.name}
-                  crossOrigin="anonymous"
-                />
-                <CropperArea />
-              </Cropper>
-              <div className="flex flex-col gap-2">
-                <Label className="text-sm">Zoom: {zoom.toFixed(2)}</Label>
-                <Slider
-                  value={[zoom]}
-                  onValueChange={(value) => setZoom(value[0] ?? 1)}
-                  min={1}
-                  max={3}
-                  step={0.1}
-                  className="w-full"
+      <NoScrollSmootherContent>
+        <Dialog open={showCropDialog} onOpenChange={onCropDialogOpenChange}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Crop Image</DialogTitle>
+              <DialogDescription>
+                Adjust the crop area and zoom level for {selectedFile?.name}
+              </DialogDescription>
+            </DialogHeader>
+            {selectedFile && selectedImageUrl && (
+              <div className="flex flex-col gap-4">
+                <Cropper
+                  aspectRatio={aspectRatio}
+                  shape={shape}
+                  crop={crop}
+                  onCropChange={setCrop}
+                  zoom={zoom}
+                  onZoomChange={setZoom}
+                  onCropAreaChange={onCropAreaChange}
+                  onCropComplete={onCropComplete}
+                  className="h-96"
+                >
+                  <CropperImage
+                    src={selectedImageUrl}
+                    alt={selectedFile.name}
+                    crossOrigin="anonymous"
+                  />
+                  <CropperArea />
+                </Cropper>
+                <div className="flex flex-col gap-2">
+                  <Label className="text-sm">Zoom: {zoom.toFixed(2)}</Label>
+                  <Slider
+                    value={[zoom]}
+                    onValueChange={(value) => setZoom(value[0] ?? 1)}
+                    min={1}
+                    max={3}
+                    step={0.1}
+                    className="w-full"
+                  />
+                </div>
+              </div>
+            )}
+            <DialogFooter>
+              <Button onClick={onCropReset} variant="outline">
+                Reset
+              </Button>
+              <Button onClick={onCropApply} disabled={!croppedArea}>
+                Crop
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+        <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
+          <DialogContent className="max-w-4xl">
+            <DialogHeader>
+              <DialogTitle>Preview Image</DialogTitle>
+              <DialogDescription>
+                Preview the image for {previewFile?.name}
+              </DialogDescription>
+            </DialogHeader>
+            {previewFile && previewImageUrl && (
+              <div className="w-full h-96 dark:bg-gray-900 bg-gray-50 border rounded-lg">
+                <img
+                  className="w-full h-full object-contain mx-auto"
+                  src={previewImageUrl}
+                  alt={previewFile.name}
                 />
               </div>
-            </div>
-          )}
-          <DialogFooter>
-            <Button onClick={onCropReset} variant="outline">
-              Reset
-            </Button>
-            <Button onClick={onCropApply} disabled={!croppedArea}>
-              Crop
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
-        <DialogContent className="max-w-4xl">
-          <DialogHeader>
-            <DialogTitle>Preview Image</DialogTitle>
-            <DialogDescription>
-              Preview the image for {previewFile?.name}
-            </DialogDescription>
-          </DialogHeader>
-          {previewFile && previewImageUrl && (
-            <div className="w-full h-96 dark:bg-gray-900 bg-gray-50 border rounded-lg">
-              <img
-                className="w-full h-full object-contain mx-auto"
-                src={previewImageUrl}
-                alt={previewFile.name}
-              />
-            </div>
-          )}
-          <DialogFooter>
-            <Button
-              onClick={() => setShowPreviewDialog(false)}
-              variant="outline"
-            >
-              Close
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+            )}
+            <DialogFooter>
+              <Button
+                onClick={() => setShowPreviewDialog(false)}
+                variant="outline"
+              >
+                Close
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </NoScrollSmootherContent>
     </>
   );
 }
