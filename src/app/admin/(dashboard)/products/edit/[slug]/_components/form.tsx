@@ -77,7 +77,7 @@ export default function UpdateProductForm({
       backgroundColor: data.backgroundColor || "#FFFFFF",
       price: data.price || undefined,
       origin: data.origin || undefined,
-      category: String(data.category!.id) || undefined,
+      category: String(data.category?.id) || undefined,
       images: [],
     },
   });
