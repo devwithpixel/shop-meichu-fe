@@ -409,8 +409,8 @@ export default function CollectionSection({
                     />
 
                     {isActive && (
-                      <h1 className="text-lg font-arial font-mod flex-1 text-center pl-10">
-                        {collection.category?.name}
+                      <h1 className="text-lg font-arial font-md flex-1 text-center ml-4 pl-10 truncate w-10">
+                        {collection.category.name}
                       </h1>
                     )}
                   </div>
