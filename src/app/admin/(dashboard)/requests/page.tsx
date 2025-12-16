@@ -13,6 +13,7 @@ export default async function Page() {
         filters={{
           buyerName: "$contains",
           contact: "$contains",
+          contactPlatform: "$eq",
           requestStatus: "$eq",
         }}
       >

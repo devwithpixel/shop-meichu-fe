@@ -1,19 +1,27 @@
 import { CreateCategoryForm } from "./_components/form";
-import { Suspense } from "react";
-import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
+import {
+  UpsertBreadcrumb,
+  UpsertHeader,
+  UpsertProvider,
+  UpsertToolbar,
+} from "@/components/resource/upsert";
 
 export default async function Page() {
   return (
-    <>
-      <AdminBreadcrumb
-        type="create"
-        modelRoute="/admin/categories"
-        modelName="Categories"
-      />
+    <UpsertProvider
+      type="create"
+      resourceUrl="/admin/categories"
+      model={{
+        plural: "Categories",
+        singular: "Category",
+      }}
+    >
+      <UpsertBreadcrumb />
+      <UpsertToolbar>
+        <UpsertHeader />
+      </UpsertToolbar>
 
-      <Suspense>
-        <CreateCategoryForm />
-      </Suspense>
-    </>
+      <CreateCategoryForm />
+    </UpsertProvider>
   );
 }

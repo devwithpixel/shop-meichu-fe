@@ -1,4 +1,4 @@
-import LoginForm from "@/components/form/admin/login-form";
+import LoginForm from "./_components/form";
 import GuestOnly from "@/components/middleware/guest-only";
 
 import type { Metadata } from "next";

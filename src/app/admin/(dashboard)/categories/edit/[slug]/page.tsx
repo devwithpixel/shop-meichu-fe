@@ -1,7 +1,17 @@
-import { getCategoryData } from "@/lib/api/categories";
+import { deleteCategory, getCategoryData } from "@/lib/api/categories";
+import { getProductsByCategory } from "@/lib/api/products";
 import { UpdateCategoryForm } from "./_components/form";
-import { Suspense } from "react";
-import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
+import {
+  DeleteAction,
+  UpsertActions,
+  UpsertBreadcrumb,
+  UpsertHeader,
+  UpsertProvider,
+  UpsertToolbar,
+} from "@/components/resource/upsert";
+import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 
 export default async function Page({
   params,
@@ -9,26 +19,41 @@ export default async function Page({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { data } = await getCategoryData(slug, {
-    init: {
-      next: {
-        revalidate: 0,
-      },
-    },
-  });
+  const { data } = await getCategoryData(slug);
+  const { data: products } = await getProductsByCategory(slug);
+
+  if (!data) {
+    notFound();
+  }
 
   return (
-    <>
-      <AdminBreadcrumb
-        type="update"
-        modelRoute="/admin/categories"
-        modelName="Categories"
-        title={data.name}
-      />
+    <UpsertProvider
+      type="update"
+      resourceUrl="/admin/categories"
+      model={{
+        plural: "Categories",
+        singular: "Category",
+      }}
+      title={data.name}
+    >
+      <UpsertBreadcrumb />
+      <UpsertToolbar>
+        <UpsertHeader />
+        <UpsertActions>
+          <Button variant="outline" asChild>
+            <Link href={`/collections/${slug}`} target="_blank">
+              Preview
+            </Link>
+          </Button>
+          <DeleteAction
+            action={deleteCategory}
+            id={data.slug}
+            disabled={products.length > 0}
+          />
+        </UpsertActions>
+      </UpsertToolbar>
 
-      <Suspense>
-        <UpdateCategoryForm data={data} />
-      </Suspense>
-    </>
+      <UpdateCategoryForm data={data} />
+    </UpsertProvider>
   );
 }

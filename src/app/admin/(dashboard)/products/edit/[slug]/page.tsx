@@ -1,7 +1,16 @@
 import { getAllCategories } from "@/lib/api/categories";
-import { getProductData } from "@/lib/api/products";
-import { Suspense } from "react";
-import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
+import { deleteProduct, getProductData } from "@/lib/api/products";
+import {
+  DeleteAction,
+  UpsertActions,
+  UpsertBreadcrumb,
+  UpsertHeader,
+  UpsertProvider,
+  UpsertToolbar,
+} from "@/components/resource/upsert";
+import { Button } from "@/components/ui/button";
+import { notFound } from "next/navigation";
+import Link from "next/link";
 import UpdateProductForm from "./_components/form";
 
 export default async function Page({
@@ -25,16 +34,34 @@ export default async function Page({
     },
   });
 
+  if (!productData) {
+    notFound();
+  }
+
   return (
-    <Suspense>
-      <AdminBreadcrumb
-        type="update"
-        modelRoute="/admin/products"
-        modelName="Products"
-        title={productData.name}
-      />
+    <UpsertProvider
+      type="update"
+      resourceUrl="/admin/products"
+      model={{
+        plural: "Products",
+        singular: "Product",
+      }}
+      title={productData.name}
+    >
+      <UpsertBreadcrumb />
+      <UpsertToolbar>
+        <UpsertHeader />
+        <UpsertActions>
+          <Button variant="outline" asChild>
+            <Link href={`/products/${slug}`} target="_blank">
+              Preview
+            </Link>
+          </Button>
+          <DeleteAction action={deleteProduct} id={productData.slug} />
+        </UpsertActions>
+      </UpsertToolbar>
 
       <UpdateProductForm data={productData} categories={categoryData} />
-    </Suspense>
+    </UpsertProvider>
   );
 }

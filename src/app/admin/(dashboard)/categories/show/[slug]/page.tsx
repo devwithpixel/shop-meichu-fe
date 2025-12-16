@@ -1,7 +1,11 @@
 import { getCategoryData } from "@/lib/api/categories";
 import { ShowCategoryForm } from "./_components/section";
-import { Suspense } from "react";
-import AdminBreadcrumb from "@/components/breadcrumb/admin-breadcrumb";
+import {
+  UpsertBreadcrumb,
+  UpsertHeader,
+  UpsertProvider,
+  UpsertToolbar,
+} from "@/components/resource/upsert";
 import { getProductsByCategory } from "@/lib/api/products";
 
 export default async function Page({
@@ -27,17 +31,21 @@ export default async function Page({
   });
 
   return (
-    <>
-      <AdminBreadcrumb
-        type="show"
-        modelRoute="/admin/categories"
-        modelName="Categories"
-        title={data.name}
-      />
+    <UpsertProvider
+      type="show"
+      resourceUrl="/admin/categories"
+      model={{
+        plural: "Categories",
+        singular: "Category",
+      }}
+      title={data.name}
+    >
+      <UpsertBreadcrumb />
+      <UpsertToolbar>
+        <UpsertHeader />
+      </UpsertToolbar>
 
-      <Suspense>
-        <ShowCategoryForm data={data} products={products} />
-      </Suspense>
-    </>
+      <ShowCategoryForm data={data} products={products} />
+    </UpsertProvider>
   );
 }

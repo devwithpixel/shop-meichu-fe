@@ -41,9 +41,11 @@ export default function DescriptionSection({
                 </AccordionTrigger>
 
                 <AccordionContent className="text-balance pe-4">
-                  <ScrollArea className="min-h-10 max-h-40 overflow-y-auto px-4 scrollbar-custom">
-                    <Markdown>{field.content}</Markdown>
-                    <ScrollBar />
+                  <ScrollArea className="min-h-10 max-h-40 overflow-y-auto px-4 scrollbar-custom prose">
+                    <article className="prose prose-invert">
+                      <Markdown>{field.content}</Markdown>
+                      <ScrollBar />
+                    </article>
                   </ScrollArea>
                 </AccordionContent>
               </AccordionItem>

@@ -7,12 +7,14 @@ import {
   CheckCheckIcon,
   CheckIcon,
   ClockIcon,
+  MailIcon,
   MoreHorizontal,
   PencilIcon,
   PhoneIcon,
   TextIcon,
   XIcon,
 } from "lucide-react";
+import { FaFacebook, FaInstagram, FaWhatsapp } from "react-icons/fa";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -339,6 +341,13 @@ export const requestsColumn: ColumnDef<Request>[] = [
     enableColumnFilter: true,
     meta: {
       label: "Contact Platform",
+      variant: "multiSelect",
+      options: [
+        { label: "Facebook", value: "facebook", icon: FaFacebook },
+        { label: "Instagram", value: "instagram", icon: FaInstagram },
+        { label: "Email", value: "email", icon: MailIcon },
+        { label: "Whatsapp", value: "whatsapp", icon: FaWhatsapp },
+      ],
     },
   },
   {
