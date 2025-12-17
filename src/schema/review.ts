@@ -10,5 +10,11 @@ export const reviewSchema = z.object({
     .array(imageValidation)
     .min(1, "The avatar field is required.")
     .max(1, "The avatar field must be at most 1 image."),
-  name: z.string().min(1, "The name field is required."),
+  name: z
+    .string()
+    .min(1, "The name field is required.")
+    .max(255, "The name field must be at most 255 characters long."),
+  location: z
+    .string()
+    .max(255, "The location field must be at most 255 characters long."),
 });

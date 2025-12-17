@@ -54,7 +54,6 @@ export function CollectionForm({ data }: { data?: Collection }) {
 
   const onSubmit = useCallback(
     async (formData: z.infer<typeof upsertCollectionSchema>) => {
-      console.log(form.getFieldState("heading.thumbnail"));
       if (form.getFieldState("heading.thumbnail").isDirty) {
         const headingThumbnailResult = await createImage(
           formData.heading.thumbnail

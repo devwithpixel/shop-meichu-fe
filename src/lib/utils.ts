@@ -1,4 +1,5 @@
 import { StrapiImage } from "@/types/strapi/media/image";
+import { StrapiVideo } from "@/types/strapi/media/video";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -61,7 +62,9 @@ export function formatCurrency(price: number) {
   }).format(price);
 }
 
-export async function fetchImageAsFile(file: StrapiImage): Promise<File> {
+export async function fetchImageAsFile(
+  file: StrapiImage | StrapiVideo
+): Promise<File> {
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${file.url}`
   );

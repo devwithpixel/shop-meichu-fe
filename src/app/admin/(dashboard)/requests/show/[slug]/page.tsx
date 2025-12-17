@@ -20,7 +20,7 @@ function generateContactLink(
     case "email":
       return `mailto:${contact}`;
     case "whatsapp":
-      return `https://wa.me/${contact}`;
+      return `https://wa.me/${contact.replace(/\D/g, "")}`;
     case "facebook":
       if (contact.startsWith("http") || contact.startsWith("facebook.com")) {
         return contact;

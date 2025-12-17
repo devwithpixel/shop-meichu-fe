@@ -6,6 +6,7 @@ import {
   ShoppingCart,
   Mail,
   BookImage,
+  Users,
 } from "lucide-react";
 
 export const sidebarConfig: SidebarNavigationGroupProps[] = [
@@ -46,6 +47,11 @@ export const sidebarConfig: SidebarNavigationGroupProps[] = [
         title: "Collection",
         href: "/admin/collection",
         icon: BookImage,
+      },
+      {
+        title: "About Us",
+        href: "/admin/about-us",
+        icon: Users,
       },
     ],
   },

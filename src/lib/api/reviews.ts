@@ -7,17 +7,17 @@ import {
 } from "./base";
 import { updateTag } from "next/cache";
 import type { StrapiResponse } from "@/types/strapi/response";
-import type { Subscriber } from "@/types/strapi/models/subscriber";
+import type { Review } from "@/types/strapi/models/review";
 import type { ResultContract } from "@/types/api-return";
 
-export async function getAllSubscribers(
+export async function getAllReviews(
   params?: ExtendedParams
-): Promise<StrapiResponse<Subscriber[]>> {
-  const response = await extendedFetchWithAuth("/subscribers", {
+): Promise<StrapiResponse<Review[]>> {
+  const response = await extendedFetch("/reviews", {
     init: {
       next: {
-        revalidate: 0,
-        tags: ["subscribers"],
+        revalidate: 60,
+        tags: ["reviews"],
       },
     },
     ...params,
@@ -26,10 +26,10 @@ export async function getAllSubscribers(
   return await response.json();
 }
 
-export async function createSubscriber<T>(
+export async function createReview<T>(
   data: T
-): Promise<ResultContract<Subscriber>> {
-  const response = await extendedFetch("/subscribers", {
+): Promise<ResultContract<Review>> {
+  const response = await extendedFetchWithAuth("/reviews", {
     init: {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -50,10 +50,10 @@ export async function createSubscriber<T>(
   return { type: "success", data: await response.json() };
 }
 
-export async function deleteSubscriber(
+export async function deleteReview(
   documentId: string
 ): Promise<ResultContract<null>> {
-  const response = await extendedFetchWithAuth(`/subscribers/${documentId}`, {
+  const response = await extendedFetchWithAuth(`/reviews/${documentId}`, {
     init: {
       method: "DELETE",
     },
@@ -68,6 +68,6 @@ export async function deleteSubscriber(
     return { type: "error", message: "An error occurred" };
   }
 
-  updateTag("subscribers");
+  updateTag("reviews");
   return { type: "success", data: null };
 }

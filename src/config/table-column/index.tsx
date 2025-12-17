@@ -419,7 +419,7 @@ export const requestsColumn: ColumnDef<Request>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuItem asChild>
               <Link href={`/admin/requests/show/${row.original.documentId}`}>
-                View Items
+                View
               </Link>
             </DropdownMenuItem>
             {!["cancelled", "completed"].includes(

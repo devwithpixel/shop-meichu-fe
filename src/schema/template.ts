@@ -19,3 +19,21 @@ export const imageValidation = z
       message: "Only JPEG, PNG images are allowed.",
     }
   );
+
+export const videoSchema = z
+  .instanceof(File, { message: "Please select a video file." })
+  .refine((file) => file.size > 0, {
+    message: "Video file is required.",
+  })
+  .refine((file) => file.size <= 10 * 1024 * 1024, {
+    message: "Video file size must be less than 10 MB.",
+  })
+  .refine(
+    (file) => {
+      const validTypes = ["video/mp4", "video/mpeg"];
+      return validTypes.includes(file.type);
+    },
+    {
+      message: "Only MP4, MPEG videos are allowed.",
+    }
+  );
