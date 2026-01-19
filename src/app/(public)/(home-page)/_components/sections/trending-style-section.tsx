@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Flip } from "gsap/Flip";
 import { useGSAP } from "@gsap/react";
 import { HiOutlineArrowUpRight } from "react-icons/hi2";
 import { GoArrowUpRight } from "react-icons/go";
@@ -10,11 +9,9 @@ import { formatCurrency } from "@/lib/utils";
 import { bgColors, bgCardColor } from "@/lib/data/color";
 import StrapiImage from "@/components/global/strapi-image";
 import gsap from "gsap";
-
-import type { TrendingStyleSection } from "@/types/strapi/components/home-page/trending-style-section";
 import Link from "next/link";
 
-gsap.registerPlugin(Flip);
+import type { TrendingStyleSection } from "@/types/strapi/components/home-page/trending-style-section";
 
 export default function TrendingStyleSection({
   data,
