@@ -20,7 +20,8 @@ jobs:
           echo "NODE_ENV=production" >> .env
           echo "NEXT_PUBLIC_APP_URL=${{ vars.NEXT_PUBLIC_APP_URL }}" >> .env
           echo "NEXT_PUBLIC_BACKEND_BASE_URL=${{ vars.NEXT_PUBLIC_BACKEND_BASE_URL }}" >> .env
-          echo "NEXT_PUBLIC_API_URL=\"\$NEXT_PUBLIC_BACKEND_BASE_URL/api\"" >> .env
+          echo "NEXT_PUBLIC_BACKEND_API_URL=\"\$NEXT_PUBLIC_BACKEND_BASE_URL/api\"" >> .env
+          echo "SESSION_SECRET=${{ secrets.SESSION_SECRET }}" >> .env
 
       - name: Login to private Docker registry
         uses: docker/login-action@v3
