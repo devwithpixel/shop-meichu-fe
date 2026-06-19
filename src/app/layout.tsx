@@ -42,10 +42,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: globalData.siteName || "Shop Meichu",
     description: globalData.siteDescription || "",
-    icons: globalData.favicon && {
-      icon: `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${globalData.favicon.url}`,
-      apple: `${process.env.NEXT_PUBLIC_BACKEND_BASE_URL}${globalData.favicon.url}`,
-    },
   };
 }
 
