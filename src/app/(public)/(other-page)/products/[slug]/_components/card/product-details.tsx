@@ -36,13 +36,8 @@ const ProductDetails = forwardRef<HTMLDivElement, ProductDetailsProps>(
               <h1 className="font-medium text-xl font-rubik cursor-pointer hover:text-gray-400">
                 {product.name}
               </h1>
-
               <p className="text-xl font-bold leading-9 font-inter">
                 {formatCurrency(product.price)}
-              </p>
-              <p className="text-xs font-medium text-gray-800">
-                Taxes included. <span className="underline">Shipping</span>{" "}
-                calculated at checkout.
               </p>
             </div>
 

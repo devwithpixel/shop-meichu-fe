@@ -56,10 +56,7 @@ export function base64ToFile(
 }
 
 export function formatCurrency(price: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "IDR",
-  }).format(price);
+  return `${new Intl.NumberFormat("en-US").format(price)} credits`;
 }
 
 export async function fetchImageAsFile(
