@@ -2,7 +2,7 @@ import { createLoader, parseAsInteger } from "nuqs/server";
 
 const paginationParams = {
   page: parseAsInteger.withDefault(1),
-  perPage: parseAsInteger.withDefault(6),
+  perPage: parseAsInteger.withDefault(20),
 };
 
 export const paginationLoader = createLoader(paginationParams);
@@ -10,11 +10,17 @@ export const paginationLoader = createLoader(paginationParams);
 export function buildPaginationUrl(
   baseUrl: string,
   page: number,
-  perPage: number
+  perPage: number,
+  extraParams?: Record<string, string>
 ): string {
   const params = new URLSearchParams();
   params.set("page", String(page));
   if (perPage !== 8) params.set("perPage", String(perPage));
+  if (extraParams) {
+    for (const [key, value] of Object.entries(extraParams)) {
+      params.set(key, value);
+    }
+  }
 
   return `${baseUrl}?${params.toString()}`;
 }

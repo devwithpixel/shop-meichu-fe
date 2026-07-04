@@ -54,7 +54,7 @@ export default function ProductDetailSection({
         ref: createRef<HTMLDivElement | null>(),
       },
       specification: {
-        label: "SPECIFICATIONS",
+        label: "DETAIL PRODUCT",
         ref: createRef<HTMLDivElement | null>(),
       },
     }),
@@ -272,9 +272,8 @@ export default function ProductDetailSection({
                   }
                 }}
                 onClick={() => navigationScrollTo(value.ref)}
-                className={`relative z-10 px-5 lg:px-6 py-2.5 text-xs font-semibold rounded-full transition-colors ${
-                  active === i ? "text-white" : "text-gray-800"
-                }`}
+                className={`relative z-10 px-5 lg:px-6 py-2.5 text-xs font-semibold rounded-full transition-colors ${active === i ? "text-white" : "text-gray-800"
+                  }`}
               >
                 {value.label}
               </button>

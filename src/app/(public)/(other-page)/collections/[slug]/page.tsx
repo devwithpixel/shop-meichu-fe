@@ -19,6 +19,7 @@ import IconElement from "@/components/ui/icon-element";
 import ProductCard from "@/components/card/product-card";
 import HeaderPage from "@/components/header/header-page";
 import SetFooter from "./_components/set-footer";
+import SortSelector from "./_components/sort-selector";
 import Link from "next/link";
 
 import type { Metadata } from "next";
@@ -53,9 +54,13 @@ export default async function CollectionsPage({
   const currentPage = Math.max(1, page);
   const currentPerPage = Math.max(1, perPage);
 
+  const resolvedSearchParams = await searchParams;
+  const sortParam = typeof resolvedSearchParams.sort === "string" ? resolvedSearchParams.sort : undefined;
+
   const { slug } = await params;
   const { data: products, meta } = await getProductsByCategory(slug, {
     populate: "*",
+    sort: sortParam ? [sortParam] : undefined,
     pagination: {
       page: currentPage,
       pageSize: currentPerPage,
@@ -71,9 +76,10 @@ export default async function CollectionsPage({
   const pagination = meta?.pagination;
   const totalPages = pagination?.pageCount || 1;
   const pageNumbers = getPageNumbers(currentPage, totalPages);
+  const paginationExtra = sortParam ? { sort: sortParam } : undefined;
 
   return (
-    <div className="bg-[#D9E4E8]">
+    <div className="bg-[#F5F5F5]">
       <HeaderPage
         type="collections"
         image={category.heading?.thumbnail}
@@ -85,11 +91,14 @@ export default async function CollectionsPage({
       <div className="relative">
         <IconElement variant={2} />
         <div className="px-5 py-10 space-y-6 md:space-y-14 h-full">
-          <Link href="/collections">
-            <button className="z-10 mb-12 px-5 py-1.5 bg-black text-white flex items-center justify-center gap-2 rounded-full">
-              All Collections
-            </button>
-          </Link>
+          <div className="flex items-center justify-between mb-12">
+            <Link href="/collections">
+              <button className="z-10 px-5 py-1.5 bg-black text-white flex items-center justify-center gap-2 rounded-full">
+                All Collections
+              </button>
+            </Link>
+            <SortSelector />
+          </div>
 
           <div className="flex items-center justify-center md:justify-start lg:justify-start flex-wrap gap-y-14 md:gap-y-14 lg:gap-y-14 gap-2 md:gap-5.5 lg:gap-4 pb-6 overflow-x-scroll lg:overflow-x-visible">
             {products.map((product) => (
@@ -109,7 +118,8 @@ export default async function CollectionsPage({
                     ? buildPaginationUrl(
                         `/collections/${slug}`,
                         currentPage - 1,
-                        currentPerPage
+                        currentPerPage,
+                        paginationExtra
                       )
                     : "#"
                 }
@@ -131,7 +141,8 @@ export default async function CollectionsPage({
                     href={buildPaginationUrl(
                       `/collections/${slug}`,
                       pageNum,
-                      currentPerPage
+                      currentPerPage,
+                      paginationExtra
                     )}
                     isActive={pageNum === currentPage}
                   >
@@ -148,7 +159,8 @@ export default async function CollectionsPage({
                     ? buildPaginationUrl(
                         `/collections/${slug}`,
                         currentPage + 1,
-                        currentPerPage
+                        currentPerPage,
+                        paginationExtra
                       )
                     : "#"
                 }

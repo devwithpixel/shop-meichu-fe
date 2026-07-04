@@ -1,4 +1,4 @@
-  "use client";
+"use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
 import { cn } from "@/lib/utils";
@@ -31,19 +31,48 @@ export default function Navbar({
   const navigations: Navigation[] = useMemo(() => {
     const apiNavigations = data.navigations as Navigation[];
 
-    const targetIndex = 1; 
+    const targetIndex = 1;
 
     const newNavigations = [...apiNavigations];
 
     if (categories && categories.length > 0) {
+      const preferredOrder = [
+        "Head Collection",
+        "Hair Collection",
+        "Request Products",
+        "Couple Collection",
+        "Spring Collection",
+        "Summer Collection",
+        "Fall Collection",
+        "Christmas Collection",
+        "Halloween Collection",
+      ];
+
+      const categoryItems = categories.map((category) => ({
+        title: category.name,
+        url: `/collections/${category.slug}`,
+      }));
+
+      const requestProductItem = {
+        title: "Request product",
+        url: "/request-product",
+      };
+
+      const allItems = [...categoryItems, requestProductItem];
+
+      allItems.sort((a, b) => {
+        const indexA = preferredOrder.indexOf(a.title);
+        const indexB = preferredOrder.indexOf(b.title);
+        const orderA = indexA === -1 ? preferredOrder.length : indexA;
+        const orderB = indexB === -1 ? preferredOrder.length : indexB;
+        return orderA - orderB;
+      });
+
       newNavigations[targetIndex] = {
-        ...newNavigations[targetIndex], 
+        ...newNavigations[targetIndex],
         subNavigation: {
           type: "single",
-          items: categories.map((category) => ({
-            title: category.name,
-            url: `/collections/${category.slug}`,
-          })),
+          items: allItems,
         },
       };
     }

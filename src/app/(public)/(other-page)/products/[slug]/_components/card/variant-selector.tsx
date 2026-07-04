@@ -12,18 +12,17 @@ export default function VariantSelector({
   return (
     <div className="my-5">
       <p className="font-rubik font-bold text-xs mb-2">
-        VARIANT: {activeIndex + 1} / {images.length}
+        DETAIL PRODUCT: {activeIndex + 1} / {images.length}
       </p>
 
       <div className="flex items-center ps-0.5 gap-1.5 py-1 max-w-full overflow-x-auto scrollbar-hide">
         {images.map((image, index) => (
           <div
             key={index}
-            className={`bg-gray-400 cursor-pointer rounded-sm shrink-0 transition-all ${
-              activeIndex === index
-                ? "border-2 border-black scale-105"
-                : "border border-gray-300 hover:border-gray-500"
-            }`}
+            className={`bg-gray-400 cursor-pointer rounded-sm shrink-0 transition-all ${activeIndex === index
+              ? "border-2 border-black scale-105"
+              : "border border-gray-300 hover:border-gray-500"
+              }`}
             onClick={() => onVariantChange(index)}
           >
             <img
